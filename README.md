@@ -35,8 +35,16 @@ Commands:
 * Whats Playing  
   Returns information about the current song playing on the named player
   
-Interactive Mode:
+Interactive Mode:  
     
+An interactive mode is supported where multiple commands may be issued in one session. The target player is remembered between requests so that it does not have to be specified. e.g.
+
+* "Alexa open muzak"
+* "select player1"
+* "play"
+* "set volume to 25"
+* "exit"
+
 Credits
 -------
 * This skill uses an enhanced version of Piotr Raczynski's squeezenode Node.JS module. It has been modified to support basic HTTP authentication as well as additional functionality
