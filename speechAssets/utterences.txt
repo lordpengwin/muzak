@@ -1,0 +1,61 @@
+StartPlayer start
+StartPlayer play {Player}
+StartPlayer play music in {Player}
+StartPlayer start {Player}
+StartPlayer start player in {Player}
+StartPlayer start player {Player}
+
+StopPlayer stop
+StopPlayer stop {Player}
+StopPlayer stop player in {Player}
+StopPlayer stop player {Player}
+StopPlayer turn off {Player}
+StopPlayer kill {Player}
+
+SyncPlayers sync with {SecondPlayer}
+SyncPlayers sync to {SecondPlayer}
+SyncPlayers sync {FirstPlayer} with {SecondPlayer}
+SyncPlayers sync {FirstPlayer} to {SecondPlayer}
+SyncPlayers sync {FirstPlayer} and {SecondPlayer}
+SyncPlayers synchronize {FirstPlayer} with {SecondPlayer}
+SyncPlayers synchronize {FirstPlayer} to {SecondPlayer}
+SyncPlayers synchronize {FirstPlayer} and {SecondPlayer}
+
+UnsyncPlayer unsync
+UnsyncPlayer unsync {Player}
+UnsyncPlayer unsynchronize {Player}
+
+IncreaseVolume increase volume
+IncreaseVolume increase volume {Player}
+IncreaseVolume increase {Player}
+IncreaseVolume increase volume in {Player}
+IncreaseVolume turn up volume in {Player}
+IncreaseVolume turn up {Player}
+IncreaseVolume turn it up
+
+DecreaseVolume decrease volume
+DecreaseVolume decrease volume {Player}
+DecreaseVolume decrease volume in {Player}
+DecreaseVolume turn down volume in {Player}
+DecreaseVolume turn down {Player}
+DecreaseVolume turn it down
+
+SetVolume set volume to {Volume}
+SetVolume set volume {Player} to {Volume}
+SetVolume set volume in {Player} to {Volume}
+SetVolume set volume to {Volume} in {Player}
+SetVolume set {Player} to {Volume}
+
+WhatsPlaying what is playing
+WhatsPlaying what's playing
+WhatsPlaying what is playing in the {Player}
+WhatsPlaying what are we listening to in the {Player}
+WhatsPlaying whats playing in {Player}
+WhatsPlaying whats on in {Player}
+
+SelectPlayer select {Player}
+SelectPlayer choose {Player}
+SelectPlayer pick {Player}
+
+Close close
+Close exit

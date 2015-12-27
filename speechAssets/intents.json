@@ -1,0 +1,97 @@
+{
+  "intents": [
+    {
+      "intent": "StartPlayer",
+      "slots": [
+        {
+          "name": "Player",
+          "type": "PLAYERS"
+        }
+      ]
+    },
+    {
+      "intent": "StopPlayer",
+      "slots": [
+        {
+          "name": "Player",
+          "type": "PLAYERS"
+        }
+      ]
+    },
+    {
+      "intent": "SyncPlayers",
+      "slots": [
+        {
+          "name": "FirstPlayer",
+          "type": "PLAYERS"
+        },
+        {
+          "name": "SecondPlayer",
+          "type": "PLAYERS"
+        }
+      ]
+    },
+    {
+      "intent": "UnsyncPlayer",
+      "slots": [
+        {
+          "name": "Player",
+          "type": "PLAYERS"
+        }
+      ]
+    },
+    {
+      "intent": "IncreaseVolume",
+      "slots": [
+        {
+          "name": "Player",
+          "type": "PLAYERS"
+        }
+      ]
+    },
+    {
+      "intent": "DecreaseVolume",
+      "slots": [
+        {
+          "name": "Player",
+          "type": "PLAYERS"
+        }
+      ]
+    },
+    {
+      "intent": "SetVolume",
+      "slots": [
+        {
+          "name": "Player",
+          "type": "PLAYERS"
+        },
+        {
+          "name": "Volume",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+    {
+      "intent": "WhatsPlaying",
+      "slots": [
+        {
+          "name": "Player",
+          "type": "PLAYERS"
+        }
+      ]
+    },
+    {
+      "intent": "SelectPlayer",
+      "slots": [
+        {
+          "name": "Player",
+          "type": "PLAYERS"
+        }
+      ]
+    },
+    {
+      "intent": "Close",
+      "slots": []
+    }
+  ]
+}
