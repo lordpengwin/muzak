@@ -10,7 +10,7 @@ Configuration:
 
 * Edit the provided config.js file and enter the required values to allow the skill to connect to your squeezebox server
 * Edit the Players.txt file to name your squeezebox players.
-* Download and install https://github.com/lordpengwin/squeezenode in a local directory called node_modules
+* Download and install https://github.com/lordpengwin/squeezenode in a local directory called node_modules/squeezenode
   
 Publish the Skill
  
