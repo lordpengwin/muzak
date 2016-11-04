@@ -80,11 +80,11 @@ function onLaunch(launchRequest, session, callback) {
 
     console.log("onLaunch requestId=" + launchRequest.requestId + ", sessionId=" + session.sessionId);
 
-    // Connect to the squeeze server and wait for it to finish its registration. We do this to make sure that it is online
+    // Connect to the squeeze server and wait for it to finish its registration.  We do this to make sure that it is online.
 
     var squeezeserver = new SqueezeServer(config.squeezeserverURL, config.squeezeserverPort, config.squeezeServerUsername, config.squeezeServerPassword);
     squeezeserver.on('register', function() {
-        startInteractiveSession(callback)
+        startInteractiveSession(callback);
     });
 }
 
@@ -121,7 +121,7 @@ function onIntent(intentRequest, session, callback) {
                 dispatchIntent(squeezeserver, reply.result, intentRequest.intent, session, callback);
             } else
                 callback(session.attributes, buildSpeechletResponse("Get Players", "Failed to get list of players", null, true));
-        })
+        });
     });
 }
 
@@ -143,14 +143,18 @@ function dispatchIntent(squeezeserver, players, intent, session, callback) {
 
     if ("SyncPlayers" == intentName) {
         syncPlayers(squeezeserver, players, intent, session, callback);
+		
+	} else if ("NamePlayers" == intentName) {
+		namePlayers(players, session, callback);
+		
     } else {
 
         // Try to find the target player
 
-        var player = findPlayerObject(squeezeserver, players, ((typeof intent.slots.Player.value !== 'undefined') && (intent.slots.Player.value != null) ?
+        var player = findPlayerObject(squeezeserver, players, ((typeof intent.slots.Player.value !== 'undefined') && (intent.slots.Player.value !== null) ?
                                                                            intent.slots.Player.value :
                                                                            (typeof session.attributes !== 'undefined' ? session.attributes.player : "")));
-        if (player == null) {
+        if (player === null) {
 
             // Couldn't find the player, return an error response
 
@@ -166,8 +170,16 @@ function dispatchIntent(squeezeserver, players, intent, session, callback) {
 
             if ("StartPlayer" == intentName) {
                 startPlayer(player, session, callback);
+			} else if ("RandomizePlayer" == intentName) {
+				randomizePlayer(player, session, callback);
             } else if ("StopPlayer" == intentName) {
                 stopPlayer(player, session, callback);
+            } else if ("PausePlayer" == intentName) {
+                pausePlayer(player, session, callback);
+            } else if ("PreviousTrack" == intentName) {
+                praviousTrack(player, session, callback);
+            } else if ("NextTrack" == intentName) {
+                nextTrack(player, session, callback);
             } else if ("UnsyncPlayer" == intentName) {
                 unsyncPlayer(player, session, callback);
             } else if ("SetVolume" == intentName) {
@@ -181,7 +193,7 @@ function dispatchIntent(squeezeserver, players, intent, session, callback) {
             } else if ("SelectPlayer" == intentName) {
                 selectPlayer(player, session, callback);
             } else {
-                callback(session.attributes, buildSpeechletResponse("Muzak", intentName + " is not a valid request", repromptText, session.new));
+                callback(session.attributes, buildSpeechletResponse("squeezebox", intentName + " is not a valid request", repromptText, session.new));
                 throw " intent";
             }
         }
@@ -208,8 +220,8 @@ function startInteractiveSession(callback) {
     // If we wanted to initialize the session to have some attributes we could add those here.
 
     var sessionAttributes = {};
-    var cardTitle = "Muzak Started";
-    var speechOutput = "Muzak Online";
+    var cardTitle = "Squeezebox Started";
+    var speechOutput = "Squeezebox control started";
     var shouldEndSession = false;
 
     // Format the default response
@@ -226,8 +238,8 @@ function startInteractiveSession(callback) {
 function closeInteractiveSession(callback) {
 
     var sessionAttributes = {};
-    var cardTitle = "Muzak Closed";
-    var speechOutput = "Muzak Offline";
+    var cardTitle = "Squeezebox Closed";
+    var speechOutput = "Squeezebox control ended";
     var shouldEndSession = true;
 
     // Format the default response
@@ -236,7 +248,7 @@ function closeInteractiveSession(callback) {
 }
 
 /**
- * Start a player to play random tracks
+ * Start a player to play the last used playlist item(s)
  *
  * @param player The player to start
  * @param session The current session
@@ -251,16 +263,45 @@ function startPlayer(player, session, callback) {
 
         // Start the player
 
-        player.randomPlay("tracks", function(reply) {
+		player.play(function(reply) {
             if (reply.ok)
-                callback(session.attributes, buildSpeechletResponse("Start Player", "Playing " + player.name, null, session.new));
+                callback(session.attributes, buildSpeechletResponse("Start Player", "Playing " + player.name + " squeezebox", null, session.new));
             else
-                callback(session.attributes, buildSpeechletResponse("Start Player", "Failed to start player " + player.name, null, true));
+                callback(session.attributes, buildSpeechletResponse("Start Player", "Failed to start player " + player.name + " squeezebox", null, true));
         });
 
     } catch (ex) {
         console.log("Caught exception in startPlayer %j", ex);
         callback(session.attributes, buildSpeechletResponse("Start Player", "Caught Exception", null, true));
+    }
+}
+
+/**
+ * Start a player to play random tracks
+ *
+ * @param player The player to start
+ * @param session The current session
+ * @param callback The callback to use to return the result
+ */
+
+function randomizePlayer(player, session, callback) {
+
+    console.log("In randomizePlayer with player %s", player.name);
+
+    try {
+
+        // Start and radomize the player
+
+		player.randomPlay("tracks", function(reply) {
+            if (reply.ok)
+                callback(session.attributes, buildSpeechletResponse("Randomizing Player", "Randomizing. Playing " + player.name + " squeezebox", null, session.new));
+            else
+                callback(session.attributes, buildSpeechletResponse("Randomizing Player", "Failed to randomize and play " + player.name + " squeezebox", null, true));
+        });
+
+    } catch (ex) {
+        console.log("Caught exception in randomizePlayer %j", ex);
+        callback(session.attributes, buildSpeechletResponse("Randomize Player", "Caught Exception", null, true));
     }
 }
 
@@ -297,16 +338,109 @@ function stopPlayer(player, session, callback) {
 
         player.power(0, function(reply) {
             if (reply.ok)
-                callback(session.attributes, buildSpeechletResponse("Stop Player", "Stopped " + player.name, null, session.new));
+                callback(session.attributes, buildSpeechletResponse("Stop Player", "Stopped " + player.name + " squeezebox", null, session.new));
             else {
                 console.log("Reply %j", reply);
-                callback(session.attributes, buildSpeechletResponse("Stop Player", "Failed to stop player " + player.name, null, true));
+                callback(session.attributes, buildSpeechletResponse("Stop Player", "Failed to stop player " + player.name + " squeezebox", null, true));
             }
         });
 
     } catch (ex) {
         console.log("Caught exception in stopPlayer %j", ex);
         callback(session.attributes, buildSpeechletResponse("Stop Player", "Caught Exception", null, true));
+    }
+}
+
+/**
+ * Pause a player
+ *
+ * @param player The player to stop
+ * @param session The current session
+ * @param callback The callback to use to return the result
+ */
+
+function pausePlayer(player, session, callback) {
+
+    try {
+
+        console.log("In pausePlayer with player %s", player.name);
+
+        // Pause the player
+
+        player.pause(function(reply) {
+            if (reply.ok)
+                callback(session.attributes, buildSpeechletResponse("Pause Player", "Pauseed " + player.name + " squeezebox", null, session.new));
+            else {
+                console.log("Reply %j", reply);
+                callback(session.attributes, buildSpeechletResponse("Pause Player", "Failed to pause player " + player.name + " squeezebox", null, true));
+            }
+        });
+
+    } catch (ex) {
+        console.log("Caught exception in pausePlayer %j", ex);
+        callback(session.attributes, buildSpeechletResponse("Pause Player", "Caught Exception", null, true));
+    }
+}
+
+/**
+ * Play previous track on player
+ *
+ * @param player The player to skip back 1 track
+ * @param session The current session
+ * @param callback The callback to use to return the result
+ */
+
+function previousTrack(player, session, callback) {
+
+    try {
+
+        console.log("In previousTrack with player %s", player.name);
+
+        // Skip back 1 track on the player
+
+        player.previous(function(reply) {
+            if (reply.ok)
+                callback(session.attributes, buildSpeechletResponse("Skip Back", "Skipped back " + player.name + " squeezebox", null, session.new));
+            else {
+                console.log("Reply %j", reply);
+                callback(session.attributes, buildSpeechletResponse("Skip Back", "Failed to skip back player " + player.name + " squeezebox", null, true));
+            }
+        });
+
+    } catch (ex) {
+        console.log("Caught exception in previousTrack %j", ex);
+        callback(session.attributes, buildSpeechletResponse("Skip Back", "Caught Exception", null, true));
+    }
+}
+
+/**
+ * Play next track on player
+ *
+ * @param player The player to skip forward 1 track
+ * @param session The current session
+ * @param callback The callback to use to return the result
+ */
+
+function nextTrack(player, session, callback) {
+
+    try {
+
+        console.log("In nextTrack with player %s", player.name);
+
+        // Skip forward 1 track on the player
+
+        player.next(function(reply) {
+            if (reply.ok)
+                callback(session.attributes, buildSpeechletResponse("Skip Forward", "Skipped forward " + player.name + " squeezebox", null, session.new));
+            else {
+                console.log("Reply %j", reply);
+                callback(session.attributes, buildSpeechletResponse("Skip Forward", "Failed to skip forward player " + player.name + " squeezebox", null, true));
+            }
+        });
+
+    } catch (ex) {
+        console.log("Caught exception in nextTrack %j", ex);
+        callback(session.attributes, buildSpeechletResponse("Skip Forward", "Caught Exception", null, true));
     }
 }
 
@@ -370,6 +504,48 @@ function syncPlayers(squeezeserver, players, intent, session, callback) {
         console.log("Caught exception in syncPlayers %j for " + player1 + " and " + player2, ex);
         callback(session.attributes, buildSpeechletResponse("Sync Players", "Caught Exception", null, true));
     }
+}
+
+/**
+ * Report player count and names
+ *
+ * @param players A list of players on the server
+ * @param session The current session
+ * @param callback The callback to use to return the result
+ */
+
+function namePlayers(players, session, callback) {
+	var playernames = null;
+	var numplayers = 0;
+
+	try {
+		// Build a list of player names
+		for (var pl in players) {
+			numplayers = numplayers + 1;
+			if (playernames == null) {
+				playernames = normalizePlayer(players[pl].name.toLowerCase());
+			} else {
+				playernames = playernames + ". " + normalizePlayer(players[pl].name.toLowerCase());
+			}
+		}	
+
+		// Report back the player count and individual names
+		if (playernames == null) {
+			callback(session.attributes, buildSpeechletResponse("Name Players", "There are no squeezeboxes currently in your system", null, session.new));
+		} else {
+			var singleplural;
+			if (numplayers > 1) {
+				singleplural = " squeezeboxes.";
+			} else {
+				singleplural = " squeezebox.";
+			}
+			callback(session.attributes, buildSpeechletResponse("Name Players", "You have " + numplayers + singleplural + playernames, null, session.new));
+		}
+
+	} catch (ex) {
+        console.log("Caught exception while reporting player count and names", ex);
+        callback(session.attributes, buildSpeechletResponse("Name Players", "Caught exception while reporting squeezebox names", null, true));
+	}
 }
 
 /**
