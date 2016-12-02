@@ -147,6 +147,9 @@ function dispatchIntent(squeezeserver, players, intent, session, callback) {
 	} else if ("NamePlayers" == intentName) {
 		namePlayers(players, session, callback);
 		
+	} else if ("Help" == intentName) {
+		giveHelp(session, callback);
+		
     } else {
 
         // Try to find the target player
@@ -193,7 +196,7 @@ function dispatchIntent(squeezeserver, players, intent, session, callback) {
             } else if ("SelectPlayer" == intentName) {
                 selectPlayer(player, session, callback);
             } else {
-                callback(session.attributes, buildSpeechletResponse("squeezebox", intentName + " is not a valid request", repromptText, session.new));
+                callback(session.attributes, buildSpeechletResponse("Invalid Request", intentName + " is not a valid request", repromptText, session.new));
                 throw " intent";
             }
         }
@@ -220,7 +223,7 @@ function startInteractiveSession(callback) {
     // If we wanted to initialize the session to have some attributes we could add those here.
 
     var sessionAttributes = {};
-    var cardTitle = "Squeezebox Started";
+    var cardTitle = "Control Started";
     var speechOutput = "Squeezebox control started";
     var shouldEndSession = false;
 
@@ -238,7 +241,7 @@ function startInteractiveSession(callback) {
 function closeInteractiveSession(callback) {
 
     var sessionAttributes = {};
-    var cardTitle = "Squeezebox Closed";
+    var cardTitle = "Control Ended";
     var speechOutput = "Squeezebox control ended";
     var shouldEndSession = true;
 
@@ -535,9 +538,9 @@ function namePlayers(players, session, callback) {
 		} else {
 			var singleplural;
 			if (numplayers > 1) {
-				singleplural = " squeezeboxes.";
+				singleplural = " squeezeboxes. ";
 			} else {
-				singleplural = " squeezebox.";
+				singleplural = " squeezebox. ";
 			}
 			callback(session.attributes, buildSpeechletResponse("Name Players", "You have " + numplayers + singleplural + playernames, null, session.new));
 		}
@@ -649,9 +652,38 @@ function unsyncPlayer(player, session, callback) {
 }
 
 /**
+ * Provide the user a list of commands that they can say
+ *
+ * @param session The current session
+ * @param callback The callback to use to return the result
+ */
+
+function giveHelp(session, callback) {
+	console.log("In giveHelp");
+	callback(session.attributes, buildSpeechletResponse("Help", "You can say things like. " +
+																"start player X, " + 
+																"unpause player X, " +  
+																"randomize player X, " +  
+																"stop player X, " +  
+																"pause player X, " +  
+																"previous song on player X, " +  
+																"next song on player X, " +  
+																"synchronize player X with player Y, " +  
+																"unsynchronize player X, " +  
+																"increase volume on player X, " +  
+																"decrease volume on player X, " +  
+																"set volume on player X to one to one hundred, " +  
+																"what's playing on player X, " +  
+																"set player X, " +   
+																"what are my player names, " +   
+																"exit, " +   
+																"help.", 
+																"What do you want to do?", false));
+}
+
+/**
  * Find out what is playing on a player.
  *
- * @param squeezeserver The handler to the SqueezeServer
  * @param player The player to get the information for
  * @param session The current session
  * @param callback The callback to use to return the result
@@ -659,7 +691,7 @@ function unsyncPlayer(player, session, callback) {
 
 function whatsPlaying(player, session, callback) {
 
-    console.log("In whatIsPlaying with player %s", player.name);
+    console.log("In whatsPlaying with player %s", player.name);
 
     try {
 
@@ -679,26 +711,26 @@ function whatsPlaying(player, session, callback) {
 
                             if (reply.ok) {
                                 var album = reply.result;
-                                callback(session.attributes, buildSpeechletResponse("Whats Playing", "Player " + player.name + " is playing " + title + " by " + artist + " from " + album, null, session.new));
+                                callback(session.attributes, buildSpeechletResponse("What's Playing", "Player " + player.name + " is playing " + title + " by " + artist + " from " + album, null, session.new));
                             } else {
                                 console.log("Failed to get album");
-                                callback(session.attributes, buildSpeechletResponse("Whats Playing", "Player " + player.name + " is playing " + title + " by " + artist, null, session.new));
+                                callback(session.attributes, buildSpeechletResponse("What's Playing", "Player " + player.name + " is playing " + title + " by " + artist, null, session.new));
                             }
                         });
                     } else {
                         console.log("Failed to get current artist");
-                        callback(session.attributes, buildSpeechletResponse("Whats Playing", "Player " + player.name + " is playing " + title, null, session.new));
+                        callback(session.attributes, buildSpeechletResponse("What's Playing", "Player " + player.name + " is playing " + title, null, session.new));
                     }
                 });
             } else {
                 console.log("Failed to getCurrentTitle %j", reply);
-                callback(session.attributes, buildSpeechletResponse("Whats Player", "Failed to get current song for  " + player.name, null, true));
+                callback(session.attributes, buildSpeechletResponse("What's Playing", "Failed to get current song for  " + player.name, null, true));
             }
         });
 
     } catch (ex) {
-        console.log("Caught exception in whatIsplaying %j", ex);
-        callback(session.attributes, buildSpeechletResponse("Whats Playing", "Caught Exception", null, true));
+        console.log("Caught exception in whatsPlaying %j", ex);
+        callback(session.attributes, buildSpeechletResponse("What's Playing", "Caught Exception", null, true));
     }
 }
 
@@ -767,8 +799,8 @@ function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
         },
         card: {
             type: "Simple",
-            title: "SessionSpeechlet - " + title,
-            content: "SessionSpeechlet - " + output
+            title: "Squeezebox Server - " + title,
+            content: "Squeezebox Server - " + output
         },
         reprompt: {
             outputSpeech: {

@@ -27,6 +27,8 @@ StartPlayer unpause player in {Player} squeeze box
 StartPlayer unpause player {Player} squeeze box
 
 RandomizePlayer randomize
+RandomizePlayer randomize {Player}
+RandomizePlayer randomize player {Player}
 RandomizePlayer random play
 RandomizePlayer random play {Player}
 RandomizePlayer random play music in {Player}
@@ -250,31 +252,41 @@ WhatsPlaying what's playing in the {Player}
 WhatsPlaying what is playing on the {Player}
 WhatsPlaying what's playing on the {Player}
 WhatsPlaying what are we listening to in the {Player}
-WhatsPlaying whats playing in {Player}
-WhatsPlaying whats playing in the {Player}
-WhatsPlaying whats on in {Player}
-WhatsPlaying whats on in the {Player}
-WhatsPlaying whats on the {Player}
-WhatsPlaying whats on in the {Player}
+WhatsPlaying what's playing in {Player}
+WhatsPlaying what's playing in the {Player}
+WhatsPlaying what's on in {Player}
+WhatsPlaying what's on {Player}
+WhatsPlaying what's on {Player} squeeze box
+WhatsPlaying what's on player {Player}
+WhatsPlaying what's on squeeze box {Player}
+WhatsPlaying what's on in the {Player}
+WhatsPlaying what's on the {Player}
+WhatsPlaying what's on in the {Player}
 WhatsPlaying what is playing in the {Player} squeeze box
 WhatsPlaying what's playing in the {Player} squeeze box
-WhatsPlaying what is playing on the {Player} squeeze box
+WhatsPlaying what's playing on the {Player} squeeze box
 WhatsPlaying what's playing on the {Player} squeeze box
 WhatsPlaying what are we listening to in the {Player} squeeze box
-WhatsPlaying whats playing in {Player} squeeze box
-WhatsPlaying whats playing in the {Player} squeeze box
-WhatsPlaying whats on in {Player} squeeze box
-WhatsPlaying whats on in the {Player} squeeze box
-WhatsPlaying whats on the {Player} squeeze box
-WhatsPlaying whats on in the {Player} squeeze box
+WhatsPlaying what's playing in {Player} squeeze box
+WhatsPlaying what's playing in the {Player} squeeze box
+WhatsPlaying what's on in {Player} squeeze box
+WhatsPlaying what's on in the {Player} squeeze box
+WhatsPlaying what's on the {Player} squeeze box
 
 SelectPlayer select {Player}
+SelectPlayer select player {Player}
+SelectPlayer select squeeze box {Player}
+SelectPlayer use {Player}
+SelectPlayer use player {Player}
+SelectPlayer use squeeze box {Player}
 SelectPlayer select the {Player}
 SelectPlayer choose {Player}
 SelectPlayer choose the {Player}
 SelectPlayer pick {Player}
 SelectPlayer pick the {Player}
 SelectPlayer set {Player}
+SelectPlayer set player {Player}
+SelectPlayer set squeeze box {Player}
 SelectPlayer set the {Player}
 SelectPlayer select {Player} squeeze box
 SelectPlayer select the {Player} squeeze box
@@ -310,3 +322,14 @@ Close end
 Close quit
 Close power off
 Close turn off
+
+Help what can I say
+Help what do I say
+Help help
+Help what do I do
+Help what can I do
+Help help me
+Help give me help
+Help assistance
+Help how do I
+Help how do I do things

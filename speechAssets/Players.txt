@@ -1,3 +1,6 @@
-player1
-player2
-player3
+Back Deck
+Basement
+Living Room And Kitchen
+Master Bed And Bath
+Play Room
+Upper Deck

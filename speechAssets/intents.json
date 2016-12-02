@@ -132,6 +132,10 @@
     {
       "intent": "NamePlayers",
       "slots": []
+    },
+    {
+      "intent": "Help",
+      "slots": []
     }
   ]
 }
