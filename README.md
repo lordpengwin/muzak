@@ -23,7 +23,7 @@ Publish the Skill
 Commands:
 
 * Start Player  
-  Starts the named player using a random play list of songs
+  Starts the named player using the last played song or playlist
 * Stop Player  
   Stops the named player
 * Set Volume  
@@ -36,6 +36,16 @@ Commands:
   Unsyncs the named player
 * Whats Playing  
   Returns information about the current song playing on the named player
+* Name My Players
+  Return a list of all the player names in your network
+* Randomize Player
+  Starts the named player using a random song
+* Previous Track
+  Plays the previous track using the named player
+* Next Track
+  Plays the next track using the named player
+* Help
+  List all the commands that can be said
 
 Interactive Mode:  
 
