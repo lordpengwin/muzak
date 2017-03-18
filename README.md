@@ -10,9 +10,8 @@ Configuration:
 
 * Create an Alexa skill to use to connect to your server using the provided files in speechAssets. Note: you will need to modify Players.txt to match the names of the players in your network and use it to populate a custom slot.
 * Edit the provided config.js file and enter the required values to allow the skill to connect to your squeezebox server
- * This should include the URL and credentials for your Logitech Media Server and the App ID of the Alexa skill created above
-* Download and install https://github.com/lordpengwin/squeezenode in a local directory of muzak called node_modules/squeezenode-lordpengwin
- * `cd` to the node_modules/squeezenode-lordpengwin directory and execute 'npm install'. This should download and install the dependencies that squeezenode needs.
+* This should include the URL and credentials for your Logitech Media Server and the App ID of the Alexa skill created above
+* Run `npm install` to download npm dependencies.
 
 Publish the Skill
 
