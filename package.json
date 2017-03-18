@@ -4,6 +4,6 @@
   "description": "Amazon Echo Skill for Logitech/Squeezebox Media Server",
   "license": "MIT",
   "dependencies": {
-    "squeezenode": "^0.1.0"
+    "squeezenode-lordpengwin": "git+https://github.com/lordpengwin/squeezenode.git"
   }
 }
