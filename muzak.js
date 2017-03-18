@@ -5,7 +5,7 @@
 
 //  Integration with the squeeze server
 
-var SqueezeServer = require('squeezenode-lordpengwin');
+var SqueezeServer = require('squeezenode');
 var repromptText = "What do you want me to do";
 
 // Configuration
@@ -143,13 +143,13 @@ function dispatchIntent(squeezeserver, players, intent, session, callback) {
 
     if ("SyncPlayers" == intentName) {
         syncPlayers(squeezeserver, players, intent, session, callback);
-		
+
 	} else if ("NamePlayers" == intentName) {
 		namePlayers(players, session, callback);
-		
+
 	} else if ("Help" == intentName) {
 		giveHelp(session, callback);
-		
+
     } else {
 
         // Try to find the target player
@@ -530,7 +530,7 @@ function namePlayers(players, session, callback) {
 			} else {
 				playernames = playernames + ". " + normalizePlayer(players[pl].name.toLowerCase());
 			}
-		}	
+		}
 
 		// Report back the player count and individual names
 		if (playernames == null) {
@@ -661,23 +661,23 @@ function unsyncPlayer(player, session, callback) {
 function giveHelp(session, callback) {
 	console.log("In giveHelp");
 	callback(session.attributes, buildSpeechletResponse("Help", "You can say things like. " +
-																"start player X, " + 
-																"unpause player X, " +  
-																"randomize player X, " +  
-																"stop player X, " +  
-																"pause player X, " +  
-																"previous song on player X, " +  
-																"next song on player X, " +  
-																"synchronize player X with player Y, " +  
-																"unsynchronize player X, " +  
-																"increase volume on player X, " +  
-																"decrease volume on player X, " +  
-																"set volume on player X to one to one hundred, " +  
-																"what's playing on player X, " +  
-																"set player X, " +   
-																"what are my player names, " +   
-																"exit, " +   
-																"help.", 
+																"start player X, " +
+																"unpause player X, " +
+																"randomize player X, " +
+																"stop player X, " +
+																"pause player X, " +
+																"previous song on player X, " +
+																"next song on player X, " +
+																"synchronize player X with player Y, " +
+																"unsynchronize player X, " +
+																"increase volume on player X, " +
+																"decrease volume on player X, " +
+																"set volume on player X to one to one hundred, " +
+																"what's playing on player X, " +
+																"set player X, " +
+																"what are my player names, " +
+																"exit, " +
+																"help.",
 																"What do you want to do?", false));
 }
 
