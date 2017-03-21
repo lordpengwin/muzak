@@ -180,7 +180,7 @@ function dispatchIntent(squeezeserver, players, intent, session, callback) {
             } else if ("PausePlayer" == intentName) {
                 pausePlayer(player, session, callback);
             } else if ("PreviousTrack" == intentName) {
-                praviousTrack(player, session, callback);
+                previousTrack(player, session, callback);
             } else if ("NextTrack" == intentName) {
                 nextTrack(player, session, callback);
             } else if ("UnsyncPlayer" == intentName) {
@@ -372,7 +372,7 @@ function pausePlayer(player, session, callback) {
 
         player.pause(function(reply) {
             if (reply.ok)
-                callback(session.attributes, buildSpeechletResponse("Pause Player", "Pauseed " + player.name + " squeezebox", null, session.new));
+                callback(session.attributes, buildSpeechletResponse("Pause Player", "Paused " + player.name + " squeezebox", null, session.new));
             else {
                 console.log("Reply %j", reply);
                 callback(session.attributes, buildSpeechletResponse("Pause Player", "Failed to pause player " + player.name + " squeezebox", null, true));
