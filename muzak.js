@@ -157,7 +157,7 @@ function dispatchIntent(squeezeserver, players, intent, session, callback) {
         var player = findPlayerObject(squeezeserver, players, ((typeof intent.slots.Player.value !== 'undefined') && (intent.slots.Player.value !== null) ?
                                                                            intent.slots.Player.value :
                                                                            (typeof session.attributes !== 'undefined' ? session.attributes.player : "")));
-        if (player === null) {
+        if (player === null || player === undefined) {
 
             // Couldn't find the player, return an error response
 
@@ -740,7 +740,7 @@ function whatsPlaying(player, session, callback) {
  * @param squeezeserver The SqueezeServer to get the Player object from
  * @param players A list of players to search
  * @param name The name of the player to find
- * @returns The target player or null if it is not found
+ * @returns The target player or undefined if it is not found
  */
 
 function findPlayerObject(squeezeserver, players, name) {
@@ -770,6 +770,8 @@ function findPlayerObject(squeezeserver, players, name) {
  */
 
 function normalizePlayer(playerName) {
+
+    playerName || (playerName = ''); // protect against `playerName` being undefined
 
     // After the switch to custom slots multi name players like living room became living-room. Revert the string back to what it was
 
