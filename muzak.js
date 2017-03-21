@@ -143,13 +143,13 @@ function dispatchIntent(squeezeserver, players, intent, session, callback) {
 
     if ("SyncPlayers" == intentName) {
         syncPlayers(squeezeserver, players, intent, session, callback);
-		
-	} else if ("NamePlayers" == intentName) {
-		namePlayers(players, session, callback);
-		
-	} else if ("Help" == intentName) {
-		giveHelp(session, callback);
-		
+
+    } else if ("NamePlayers" == intentName) {
+        namePlayers(players, session, callback);
+
+    } else if ("Help" == intentName) {
+        giveHelp(session, callback);
+
     } else {
 
         // Try to find the target player
@@ -173,8 +173,8 @@ function dispatchIntent(squeezeserver, players, intent, session, callback) {
 
             if ("StartPlayer" == intentName) {
                 startPlayer(player, session, callback);
-			} else if ("RandomizePlayer" == intentName) {
-				randomizePlayer(player, session, callback);
+            } else if ("RandomizePlayer" == intentName) {
+                randomizePlayer(player, session, callback);
             } else if ("StopPlayer" == intentName) {
                 stopPlayer(player, session, callback);
             } else if ("PausePlayer" == intentName) {
@@ -266,7 +266,7 @@ function startPlayer(player, session, callback) {
 
         // Start the player
 
-		player.play(function(reply) {
+        player.play(function(reply) {
             if (reply.ok)
                 callback(session.attributes, buildSpeechletResponse("Start Player", "Playing " + player.name + " squeezebox", null, session.new));
             else
@@ -295,7 +295,7 @@ function randomizePlayer(player, session, callback) {
 
         // Start and radomize the player
 
-		player.randomPlay("tracks", function(reply) {
+        player.randomPlay("tracks", function(reply) {
             if (reply.ok)
                 callback(session.attributes, buildSpeechletResponse("Randomizing Player", "Randomizing. Playing " + player.name + " squeezebox", null, session.new));
             else
@@ -518,37 +518,37 @@ function syncPlayers(squeezeserver, players, intent, session, callback) {
  */
 
 function namePlayers(players, session, callback) {
-	var playernames = null;
-	var numplayers = 0;
+    var playernames = null;
+    var numplayers = 0;
 
-	try {
-		// Build a list of player names
-		for (var pl in players) {
-			numplayers = numplayers + 1;
-			if (playernames == null) {
-				playernames = normalizePlayer(players[pl].name.toLowerCase());
-			} else {
-				playernames = playernames + ". " + normalizePlayer(players[pl].name.toLowerCase());
-			}
-		}	
+    try {
+        // Build a list of player names
+        for (var pl in players) {
+            numplayers = numplayers + 1;
+            if (playernames == null) {
+                playernames = normalizePlayer(players[pl].name.toLowerCase());
+            } else {
+                playernames = playernames + ". " + normalizePlayer(players[pl].name.toLowerCase());
+            }
+        }
 
-		// Report back the player count and individual names
-		if (playernames == null) {
-			callback(session.attributes, buildSpeechletResponse("Name Players", "There are no squeezeboxes currently in your system", null, session.new));
-		} else {
-			var singleplural;
-			if (numplayers > 1) {
-				singleplural = " squeezeboxes. ";
-			} else {
-				singleplural = " squeezebox. ";
-			}
-			callback(session.attributes, buildSpeechletResponse("Name Players", "You have " + numplayers + singleplural + playernames, null, session.new));
-		}
+        // Report back the player count and individual names
+        if (playernames == null) {
+            callback(session.attributes, buildSpeechletResponse("Name Players", "There are no squeezeboxes currently in your system", null, session.new));
+        } else {
+            var singleplural;
+            if (numplayers > 1) {
+                singleplural = " squeezeboxes. ";
+            } else {
+                singleplural = " squeezebox. ";
+            }
+            callback(session.attributes, buildSpeechletResponse("Name Players", "You have " + numplayers + singleplural + playernames, null, session.new));
+        }
 
-	} catch (ex) {
+    } catch (ex) {
         console.log("Caught exception while reporting player count and names", ex);
         callback(session.attributes, buildSpeechletResponse("Name Players", "Caught exception while reporting squeezebox names", null, true));
-	}
+    }
 }
 
 /**
@@ -659,26 +659,26 @@ function unsyncPlayer(player, session, callback) {
  */
 
 function giveHelp(session, callback) {
-	console.log("In giveHelp");
-	callback(session.attributes, buildSpeechletResponse("Help", "You can say things like. " +
-																"start player X, " + 
-																"unpause player X, " +  
-																"randomize player X, " +  
-																"stop player X, " +  
-																"pause player X, " +  
-																"previous song on player X, " +  
-																"next song on player X, " +  
-																"synchronize player X with player Y, " +  
-																"unsynchronize player X, " +  
-																"increase volume on player X, " +  
-																"decrease volume on player X, " +  
-																"set volume on player X to one to one hundred, " +  
-																"what's playing on player X, " +  
-																"set player X, " +   
-																"what are my player names, " +   
-																"exit, " +   
-																"help.", 
-																"What do you want to do?", false));
+    console.log("In giveHelp");
+    callback(session.attributes, buildSpeechletResponse("Help", "You can say things like. " +
+                                                                "start player X, " +
+                                                                "unpause player X, " +
+                                                                "randomize player X, " +
+                                                                "stop player X, " +
+                                                                "pause player X, " +
+                                                                "previous song on player X, " +
+                                                                "next song on player X, " +
+                                                                "synchronize player X with player Y, " +
+                                                                "unsynchronize player X, " +
+                                                                "increase volume on player X, " +
+                                                                "decrease volume on player X, " +
+                                                                "set volume on player X to one to one hundred, " +
+                                                                "what's playing on player X, " +
+                                                                "set player X, " +
+                                                                "what are my player names, " +
+                                                                "exit, " +
+                                                                "help.",
+                                                                "What do you want to do?", false));
 }
 
 /**
