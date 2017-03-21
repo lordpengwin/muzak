@@ -10,7 +10,43 @@
       ]
     },
     {
+      "intent": "RandomizePlayer",
+      "slots": [
+        {
+          "name": "Player",
+          "type": "PLAYERS"
+        }
+      ]
+    },
+    {
       "intent": "StopPlayer",
+      "slots": [
+        {
+          "name": "Player",
+          "type": "PLAYERS"
+        }
+      ]
+    },
+    {
+      "intent": "PausePlayer",
+      "slots": [
+        {
+          "name": "Player",
+          "type": "PLAYERS"
+        }
+      ]
+    },
+    {
+      "intent": "PreviousTrack",
+      "slots": [
+        {
+          "name": "Player",
+          "type": "PLAYERS"
+        }
+      ]
+    },
+    {
+      "intent": "NextTrack",
       "slots": [
         {
           "name": "Player",
@@ -91,6 +127,14 @@
     },
     {
       "intent": "Close",
+      "slots": []
+    },
+    {
+      "intent": "NamePlayers",
+      "slots": []
+    },
+    {
+      "intent": "Help",
       "slots": []
     }
   ]
