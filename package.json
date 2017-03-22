@@ -12,6 +12,7 @@
   ],
   "devDependencies": {
     "claudia": "^2.9.0"
+  },
   "dependencies": {
     "squeezenode-lordpengwin": "git+https://github.com/lordpengwin/squeezenode.git"
   }
