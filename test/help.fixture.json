@@ -1,0 +1,12 @@
+{
+  "session": {},
+  "request": {
+    "type": "IntentRequest",
+    "locale": "en-US",
+    "intent": {
+      "name": "Help",
+      "slots": {}
+    }
+  },
+  "version": "1.0"
+}
