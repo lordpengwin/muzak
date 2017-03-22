@@ -24,14 +24,7 @@ exports.handler = function (event, context) {
 
     try {
 
-        console.log("event.session.application.applicationId=" + event.session.application.applicationId);
         console.log("Event is %j", event);
-
-        // Limit access to only the configured application ID
-
-        if (event.session.application.applicationId !== config.alexaAppID) {
-             context.fail("Invalid Application ID");
-         }
 
         if (event.session.new) {
             onSessionStarted({requestId: event.request.requestId}, event.session);
