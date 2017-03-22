@@ -5,5 +5,8 @@
   "license": "MIT",
   "dependencies": {
     "squeezenode-lordpengwin": "git+https://github.com/lordpengwin/squeezenode.git"
+  },
+  "devDependencies": {
+    "claudia": "^2.9.0"
   }
 }
