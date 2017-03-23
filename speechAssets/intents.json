@@ -10,6 +10,31 @@
       ]
     },
     {
+      "intent": "PlayPlaylist",
+      "slots": [
+        {
+          "name": "Player",
+          "type": "PLAYERS"
+        },
+        {
+          "name": "Artist",
+          "type": "AMAZON.LITERAL"
+        },
+        {
+          "name": "Album",
+          "type": "AMAZON.LITERAL"
+        },
+        {
+          "name": "Song",
+          "type": "AMAZON.LITERAL"
+        },
+        {
+          "name": "Playlist",
+          "type": "AMAZON.LITERAL"
+        }
+      ]
+    },
+    {
       "intent": "RandomizePlayer",
       "slots": [
         {
@@ -126,16 +151,13 @@
       ]
     },
     {
-      "intent": "Close",
-      "slots": []
+      "intent": "Close"
     },
     {
-      "intent": "NamePlayers",
-      "slots": []
+      "intent": "NamePlayers"
     },
     {
-      "intent": "Help",
-      "slots": []
+      "intent": "Help"
     }
   ]
 }
