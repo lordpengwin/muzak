@@ -6,6 +6,7 @@
 //  Integration with the squeeze server
 
 var SqueezeServer = require('squeezenode-lordpengwin');
+var _ = require('lodash');
 var repromptText = "What do you want me to do";
 
 // Configuration
@@ -96,13 +97,11 @@ function onIntent(intentRequest, session, callback) {
     // Check for a Close intent
 
     if (intentRequest.intent.intentName == "Close") {
-
         closeInteractiveSession(callback);
         return;
     }
 
     // Connect to the squeeze server and wait for it to finish its registration
-
     var squeezeserver = new SqueezeServer(config.squeezeserverURL, config.squeezeserverPort, config.squeezeServerUsername, config.squeezeServerPassword);
     squeezeserver.on('register', function() {
 
@@ -166,6 +165,8 @@ function dispatchIntent(squeezeserver, players, intent, session, callback) {
 
             if ("StartPlayer" == intentName) {
                 startPlayer(player, session, callback);
+            } else if ("PlayPlaylist" == intentName) {
+                playPlaylist(player, intent, session, callback);
             } else if ("RandomizePlayer" == intentName) {
                 randomizePlayer(player, session, callback);
             } else if ("StopPlayer" == intentName) {
@@ -270,6 +271,49 @@ function startPlayer(player, session, callback) {
         console.log("Caught exception in startPlayer %j", ex);
         callback(session.attributes, buildSpeechletResponse("Start Player", "Caught Exception", null, true));
     }
+}
+
+/**
+ * Function for the PlayPlaylist intent, which is used to play specifically
+ * requested content - an artist, album, song, or playlist.
+ *
+ * @param {Object} player - The squeezeserver player.
+ * @param {Object} intent - The intent object.
+ * @param {Object} session - The session object from the Alexa Skills Kit request.
+ * @param {function} callback - The callback function.
+ */
+function playPlaylist(player, intent, session, callback) {
+    // need to add the ability to play specific content to the squeezenode module
+    //
+    // The basic outline is something like:
+    // 1) parse `intent` to determine what we're looking for. Possible combos:
+    //  - artist
+    //  - album
+    //  - song (maybe reject this? ask for the artist or album in addition?)
+    //  - artist && album
+    //  - album && song
+    //  - artist && song
+    //  - artist && album && song
+    //  - playlist
+    //  - if playlist is present in combination with other slots, I say throw away
+    //    the other slots and just search for the playlist.
+    //
+    // 2) After parsing the intent object, search for the content using the squeezenode
+    //    player object. (Search functionality needs to be added to squeezenode first!!)
+    //
+    // 3) Process search results. Possibilities are:
+    //    - No results. Response..
+    //    - Ambiguious / multiple results. Respond asking for clarification. (Maybe that's v2...)
+    //    - Clear results. Proceed in function.
+    //
+    // 3) clear the current playlist using player.clearPlaylist()
+    // 4) add the search results using player.addToPlaylist()
+    // 5) play the playlist using player.play()
+    // 6) Respond.
+    //
+    // Note: Be sure to navigate your way out of callback hell since squeezenode
+    // uses callbacks, not promises and this is the first instance of needing multiple
+    // squeezenode functions in one intent handler. Blah.
 }
 
 /**
@@ -748,8 +792,13 @@ function findPlayerObject(squeezeserver, players, name) {
     //       is a weird javascript timing thing
 
     for (var pl in players) {
-        if (players[pl].name.toLowerCase() === name)
+        if (
+            players[pl].name.toLowerCase() === name || // name matches the requested player
+            (name === "" && players.length === 1)      // name is undefined and there's only one player,
+                                                       // so assume that's the one we want.
+        ) {
             return squeezeserver.players[players[pl].playerid];
+        }
     }
 
     console.log("Player %s not found", name);
