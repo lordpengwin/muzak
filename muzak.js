@@ -302,7 +302,7 @@ function playPlaylist(player, intent, session, callback) {
     //    player object. (Search functionality needs to be added to squeezenode first!!)
     //
     // 3) Process search results. Possibilities are:
-    //    - No results. Response..
+    //    - No results. Respond.
     //    - Ambiguious / multiple results. Respond asking for clarification. (Maybe that's v2...)
     //    - Clear results. Proceed in function.
     //
@@ -314,6 +314,11 @@ function playPlaylist(player, intent, session, callback) {
     // Note: Be sure to navigate your way out of callback hell since squeezenode
     // uses callbacks, not promises and this is the first instance of needing multiple
     // squeezenode functions in one intent handler. Blah.
+    //
+    // Note note: The LMS api also has a `playlist loadalbum` method that we could add to
+    // squeezenode to make playing albums more straightforward. I don't think that would
+    // work for individual songs though, so using the search method for everything might be more
+    // flexible.
 }
 
 /**
