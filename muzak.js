@@ -287,11 +287,12 @@ function playPlaylist(player, intent, session, callback) {
 
     // Transform our slot data into a friendlier object.
     _.each(possibleSlots, function(slotName) {
-        values[slotName] = _.get(intentSlots, slotName + ".value");
+        values[slotName] = _.startCase( // TODO: omg the LMS api is friggin case sensitive
+            _.get(intentSlots, slotName + ".value")
+        );
     });
 
     var reply = function(result) {
-        var speechlet;
         var text = "Whoops, something went wrong."
 
         if (_.get(result, "ok")) {
@@ -321,9 +322,9 @@ function playPlaylist(player, intent, session, callback) {
             method: 'playlist',
             params: [
                 'loadalbum',
-                _.get(values, 'genre', '*'),  // LMS wants an asterisk if nothing if specified
-                _.get(values, 'artist', '*'),
-                _.get(values, 'album', '*')
+                _.isEmpty(values.genre) ? "*" : values.genre,  // LMS wants an asterisk if nothing if specified
+                _.isEmpty(values.artist) ? "*" : values.artist,
+                _.isEmpty(values.album) ? "*" : values.album
             ]
         }).then(reply);
     }
