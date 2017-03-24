@@ -1,0 +1,30 @@
+{
+  "session": {},
+  "request": {
+    "type": "IntentRequest",
+    "locale": "en-US",
+    "intent": {
+      "name": "PlayPlaylist",
+      "slots": {
+        "Artist": {
+          "name": "Artist",
+          "value": "The Beatles"
+        },
+        "Player": {
+          "name": "Player"
+        },
+        "Song": {
+          "name": "Song"
+        },
+        "Playlist": {
+          "name": "Playlist"
+        },
+        "Album": {
+          "name": "Album",
+          "value": "Abbey Road"
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
