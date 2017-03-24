@@ -25,7 +25,7 @@
           "type": "AMAZON.LITERAL"
         },
         {
-          "name": "Song",
+          "name": "Genre",
           "type": "AMAZON.LITERAL"
         },
         {
