@@ -275,50 +275,58 @@ function startPlayer(player, session, callback) {
 
 /**
  * Function for the PlayPlaylist intent, which is used to play specifically
- * requested content - an artist, album, song, or playlist.
+ * requested content - an artist, album, genre, or playlist.
  *
  * @param {Object} player - The squeezeserver player.
  * @param {Object} intent - The intent object.
- * @param {Object} session - The session object from the Alexa Skills Kit request.
- * @param {function} callback - The callback function.
  */
 function playPlaylist(player, intent, session, callback) {
-    // need to add the ability to play specific content to the squeezenode module
-    //
-    // The basic outline is something like:
-    // 1) parse `intent` to determine what we're looking for. Possible combos:
-    //  - artist
-    //  - album
-    //  - song (maybe reject this? ask for the artist or album in addition?)
-    //  - artist && album
-    //  - album && song
-    //  - artist && song
-    //  - artist && album && song
-    //  - playlist
-    //  - if playlist is present in combination with other slots, I say throw away
-    //    the other slots and just search for the playlist.
-    //
-    // 2) After parsing the intent object, search for the content using the squeezenode
-    //    player object. (Search functionality needs to be added to squeezenode first!!)
-    //
-    // 3) Process search results. Possibilities are:
-    //    - No results. Respond.
-    //    - Ambiguious / multiple results. Respond asking for clarification. (Maybe that's v2...)
-    //    - Clear results. Proceed in function.
-    //
-    // 3) clear the current playlist using player.clearPlaylist()
-    // 4) add the search results using player.addToPlaylist()
-    // 5) play the playlist using player.play()
-    // 6) Respond.
-    //
-    // Note: Be sure to navigate your way out of callback hell since squeezenode
-    // uses callbacks, not promises and this is the first instance of needing multiple
-    // squeezenode functions in one intent handler. Blah.
-    //
-    // Note note: The LMS api also has a `playlist loadalbum` method that we could add to
-    // squeezenode to make playing albums more straightforward. I don't think that would
-    // work for individual songs though, so using the search method for everything might be more
-    // flexible.
+    var possibleSlots = ["artist", "album", "genre", "playlist"];
+    var intentSlots = _.mapKeys(_.get(intent, "slots"), (value, key) => { return key.toLowerCase()});
+    var values = {}
+
+    // Transform our slot data into a friendlier object.
+    _.each(possibleSlots, function(slotName) {
+        values[slotName] = _.get(intentSlots, slotName + ".value");
+    });
+
+    var reply = function(result) {
+        var speechlet;
+        var text = "Whoops, something went wrong."
+
+        if (_.get(result, "ok")) {
+            // This is all gross and kludge-y, but w/e.
+            text = "Playing ";
+            if (values.playlist) {
+                text += values.playlist + " playlist."
+            } else {
+                if (values.album)                  text += values.album;
+                if (values.album && values.artist) text += ' by ';
+                if (values.artist)                 text += values.artist;
+            }
+        }
+
+        callback(session.attributes, buildSpeechletResponse("Play Playlist", text, null, true));
+    };
+
+    // If a value for playlist is present, ignore everything else and play that
+    // playlist, otherwise play whatever artist and/or artist is present.
+    if (values.playlist) {
+        player.callMethod({
+            method: 'playlist',
+            params: ['play', values.playlist]
+        }).then(reply);
+    } else {
+        player.callMethod({
+            method: 'playlist',
+            params: [
+                'loadalbum',
+                _.get(values, 'genre', '*'),  // LMS wants an asterisk if nothing if specified
+                _.get(values, 'artist', '*'),
+                _.get(values, 'album', '*')
+            ]
+        }).then(reply);
+    }
 }
 
 /**
