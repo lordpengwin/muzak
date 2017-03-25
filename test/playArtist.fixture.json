@@ -1,0 +1,29 @@
+{
+  "session": {},
+  "request": {
+    "type": "IntentRequest",
+    "locale": "en-US",
+    "intent": {
+      "name": "PlayPlaylist",
+      "slots": {
+        "Artist": {
+          "name": "Artist",
+          "value": "Sleater-Kinney"
+        },
+        "Player": {
+          "name": "Player"
+        },
+        "Song": {
+          "name": "Song"
+        },
+        "Playlist": {
+          "name": "Playlist"
+        },
+        "Album": {
+          "name": "Album"
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

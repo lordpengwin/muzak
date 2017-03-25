@@ -6,6 +6,7 @@
 //  Integration with the squeeze server
 
 var SqueezeServer = require('squeezenode-lordpengwin');
+var _ = require('lodash');
 var repromptText = "What do you want me to do";
 
 // Configuration
@@ -96,13 +97,11 @@ function onIntent(intentRequest, session, callback) {
     // Check for a Close intent
 
     if (intentRequest.intent.intentName == "Close") {
-
         closeInteractiveSession(callback);
         return;
     }
 
     // Connect to the squeeze server and wait for it to finish its registration
-
     var squeezeserver = new SqueezeServer(config.squeezeserverURL, config.squeezeserverPort, config.squeezeServerUsername, config.squeezeServerPassword);
     squeezeserver.on('register', function() {
 
@@ -166,6 +165,8 @@ function dispatchIntent(squeezeserver, players, intent, session, callback) {
 
             if ("StartPlayer" == intentName) {
                 startPlayer(player, session, callback);
+            } else if ("PlayPlaylist" == intentName) {
+                playPlaylist(player, intent, session, callback);
             } else if ("RandomizePlayer" == intentName) {
                 randomizePlayer(player, session, callback);
             } else if ("StopPlayer" == intentName) {
@@ -269,6 +270,63 @@ function startPlayer(player, session, callback) {
     } catch (ex) {
         console.log("Caught exception in startPlayer %j", ex);
         callback(session.attributes, buildSpeechletResponse("Start Player", "Caught Exception", null, true));
+    }
+}
+
+/**
+ * Function for the PlayPlaylist intent, which is used to play specifically
+ * requested content - an artist, album, genre, or playlist.
+ *
+ * @param {Object} player - The squeezeserver player.
+ * @param {Object} intent - The intent object.
+ */
+function playPlaylist(player, intent, session, callback) {
+    var possibleSlots = ["artist", "album", "genre", "playlist"];
+    var intentSlots = _.mapKeys(_.get(intent, "slots"), (value, key) => { return key.toLowerCase()});
+    var values = {}
+
+    // Transform our slot data into a friendlier object.
+    _.each(possibleSlots, function(slotName) {
+        values[slotName] = _.startCase( // TODO: omg the LMS api is friggin case sensitive
+            _.get(intentSlots, slotName + ".value")
+        );
+    });
+
+    var reply = function(result) {
+        var text = "Whoops, something went wrong."
+
+        if (_.get(result, "ok")) {
+            // This is all gross and kludge-y, but w/e.
+            text = "Playing ";
+            if (values.playlist) {
+                text += values.playlist + " playlist."
+            } else {
+                if (values.album)                  text += values.album;
+                if (values.album && values.artist) text += ' by ';
+                if (values.artist)                 text += values.artist;
+            }
+        }
+
+        callback(session.attributes, buildSpeechletResponse("Play Playlist", text, null, true));
+    };
+
+    // If a value for playlist is present, ignore everything else and play that
+    // playlist, otherwise play whatever artist and/or artist is present.
+    if (values.playlist) {
+        player.callMethod({
+            method: 'playlist',
+            params: ['play', values.playlist]
+        }).then(reply);
+    } else {
+        player.callMethod({
+            method: 'playlist',
+            params: [
+                'loadalbum',
+                _.isEmpty(values.genre) ? "*" : values.genre,  // LMS wants an asterisk if nothing if specified
+                _.isEmpty(values.artist) ? "*" : values.artist,
+                _.isEmpty(values.album) ? "*" : values.album
+            ]
+        }).then(reply);
     }
 }
 
@@ -748,8 +806,13 @@ function findPlayerObject(squeezeserver, players, name) {
     //       is a weird javascript timing thing
 
     for (var pl in players) {
-        if (players[pl].name.toLowerCase() === name)
+        if (
+            players[pl].name.toLowerCase() === name || // name matches the requested player
+            (name === "" && players.length === 1)      // name is undefined and there's only one player,
+                                                       // so assume that's the one we want.
+        ) {
             return squeezeserver.players[players[pl].playerid];
+        }
     }
 
     console.log("Player %s not found", name);
