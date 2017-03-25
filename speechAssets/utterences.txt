@@ -158,6 +158,7 @@ NextTrack play the next song in the {Player} squeeze box
 NextTrack next song on the {Player} squeeze box
 NextTrack play the next song on the {Player} squeeze box
 NextTrack skip forward {Player}
+NextTrack skip {Player}
 NextTrack skip forward in {Player} squeeze box
 NextTrack skip forward on {Player} squeeze box
 

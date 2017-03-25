@@ -19,7 +19,7 @@ How To Use
 * Set up your AWS credentials following [the instructions here](https://claudiajs.com/tutorials/installing.html#configuring-access-credentials).
 * Run `claudia create --region us-east-1 --handler muzak.handler`
 * **Note**: If you already have an existing Lambda function for muzak, you can pass the name of your function to `claudia create` using the `--name` parameter.
-* You can publish future code changes by simply executing `claudia update`.
+* You can publish future code changes by simply executing `claudia update --name muzak --region us-east-1 --handler muzak.handler`.
 
 
 #### Manually
