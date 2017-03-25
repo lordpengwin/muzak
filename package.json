@@ -4,7 +4,7 @@
   "description": "Amazon Echo Skill for Logitech/Squeezebox Media Server",
   "license": "MIT",
   "scripts": {
-      "test": "claudia test-lambda --event test/help.fixture.json"
+    "test": "claudia test-lambda --event test/help.fixture.json"
   },
   "files": [
     "config.js",
@@ -14,6 +14,7 @@
     "claudia": "^2.9.0"
   },
   "dependencies": {
+    "lodash": "^4.17.4",
     "squeezenode-lordpengwin": "git+https://github.com/lordpengwin/squeezenode.git"
   }
 }

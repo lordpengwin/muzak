@@ -1,0 +1,29 @@
+{
+  "session": {},
+  "request": {
+    "type": "IntentRequest",
+    "locale": "en-US",
+    "intent": {
+      "name": "PlayPlaylist",
+      "slots": {
+        "Artist": {
+          "name": "Artist"
+        },
+        "Player": {
+          "name": "Player"
+        },
+        "Song": {
+          "name": "Song"
+        },
+        "Playlist": {
+          "name": "Playlist"
+        },
+        "Album": {
+          "name": "Album",
+          "value": "Revolver"
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
