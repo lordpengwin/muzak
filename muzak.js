@@ -280,30 +280,47 @@ function startPlayer(player, session, callback) {
  * @param {Object} player - The squeezeserver player.
  * @param {Object} intent - The intent object.
  */
+
 function playPlaylist(player, intent, session, callback) {
-    var possibleSlots = ["artist", "album", "genre", "playlist"];
-    var intentSlots = _.mapKeys(_.get(intent, "slots"), (value, key) => { return key.toLowerCase()});
-    var values = {}
+
+    console.log("In playPlaylist with intent %j", intent);
+    var possibleSlots = ["Artist", "Album", "Genre", "Playlist"];
+    var intentSlots = _.mapKeys(_.get(intent, "slots"), (value, key) => {return key.charAt(0).toUpperCase() + key.toLowerCase().substring(1)});
+    var values = {};
 
     // Transform our slot data into a friendlier object.
-    _.each(possibleSlots, function(slotName) {
+
+    _.each(possibleSlots, function (slotName) {
         values[slotName] = _.startCase( // TODO: omg the LMS api is friggin case sensitive
             _.get(intentSlots, slotName + ".value")
         );
     });
 
-    var reply = function(result) {
+    console.log("before reply");
+    var reply = function (result) {
+
+        // Format the text of the response based on what sort of playlist was requested
+
         var text = "Whoops, something went wrong."
 
         if (_.get(result, "ok")) {
             // This is all gross and kludge-y, but w/e.
             text = "Playing ";
             if (values.playlist) {
-                text += values.playlist + " playlist."
+                text += values.Playlist + " playlist."
             } else {
-                if (values.album)                  text += values.album;
-                if (values.album && values.artist) text += ' by ';
-                if (values.artist)                 text += values.artist;
+
+                if (values.Genre)
+                    text += "songs in the " + values.Genre + " genre";
+                else {
+
+                    if (values.Album)
+                        text += values.Album;
+                    if (values.Album && values.Artist)
+                        text += ' by ';
+                    if (values.Artist)
+                        text += values.Artist;
+                }
             }
         }
 
@@ -312,23 +329,24 @@ function playPlaylist(player, intent, session, callback) {
 
     // If a value for playlist is present, ignore everything else and play that
     // playlist, otherwise play whatever artist and/or artist is present.
-    if (values.playlist) {
+
+    if (values.Playlist) {
         player.callMethod({
             method: 'playlist',
-            params: ['play', values.playlist]
+            params: ['play', values.Playlist]
         }).then(reply);
     } else {
         player.callMethod({
             method: 'playlist',
-            params: [
-                'loadalbum',
-                _.isEmpty(values.genre) ? "*" : values.genre,  // LMS wants an asterisk if nothing if specified
-                _.isEmpty(values.artist) ? "*" : values.artist,
-                _.isEmpty(values.album) ? "*" : values.album
-            ]
+                params: [
+                    'loadalbum',
+                    _.isEmpty(values.Genre) ? "*" : values.Genre,  // LMS wants an asterisk if nothing if specified
+                    _.isEmpty(values.Artist) ? "*" : values.Artist,
+                    _.isEmpty(values.Album) ? "*" : values.Album
+                ]
         }).then(reply);
     }
-}
+};
 
 /**
  * Start a player to play random tracks
@@ -569,6 +587,7 @@ function syncPlayers(squeezeserver, players, intent, session, callback) {
  */
 
 function namePlayers(players, session, callback) {
+
     var playernames = null;
     var numplayers = 0;
 
