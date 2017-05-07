@@ -17,3 +17,10 @@ node_modules/
 muzak.zip
 claudia.json
 config.js
+artist.js
+album.js
+genre.js
+speechAssets/speechAssets.json
+
+# VS Code
+.vscode

@@ -8,13 +8,16 @@
   },
   "files": [
     "config.js",
-    "muzak.js"
+    "muzak.js",
+    "artist.js",
+    "album.js",
+    "genre.js"
   ],
   "devDependencies": {
     "claudia": "^2.9.0"
   },
   "dependencies": {
     "lodash": "^4.17.4",
-    "squeezenode-lordpengwin": "git+https://github.com/lordpengwin/squeezenode.git"
+    "geoffAtHome": "git+https://github.com/geoffAtHome/squeezenode.git"
   }
 }
