@@ -21,16 +21,15 @@ var defaultAssets = require('./default-assets.js');
 
 // Add the players from config to the defaultAssets
 defaultAssets.types.push({ "name": "PLAYERS", "values": getPlayerArray(config.players) });
+dumpSlotText("PLAYERS", defaultAssets.types);
 /**
  * Check if the albums is valid from the point of view if being in an utterance
  *
  * @param genre The genre to test
  * @return true if it's valid, false otherwise
  */
-
 function isValidSlot(slot) {
 
-    // var illegalChars = new RegExp("[0-9\/\\\\&,!+_\\*\\(\\)\\[\\]]");
     var illegalChars = new RegExp(/[/#_*!]/g);
     return !illegalChars.test(slot);
 }
@@ -117,12 +116,27 @@ function dumpToFile(slot, reply, assets) {
             var values = { "name": slot.toUpperCase(), "values": getArray(result) };
             assets.types.push(values);
 
+            // Dump out to speech assets
+            dumpSlotText(slot, assets.types);
+
             var text = 'module.exports = ' + JSON.stringify(result, null, 2) + ';';
             fs.writeFile('./' + slot + '.js', text, 'utf8', callback);
             resolve(reply);
         }
     );
 }
+
+function dumpSlotText(slot, types) {
+    var index = _.findIndex(types, function(o) { return o.name == slot.toUpperCase(); });
+    var text = '';
+    var array = types[index].values;
+    for (var loop = 0; loop < array.length; loop++) {
+        text += array[loop].name.value + '\n';
+    }
+
+    fs.writeFile('./speechAssets/' + slot.toUpperCase() + '.txt', text, 'utf8', callback);
+}
+
 
 function writeAssets(assets) {
     fs.writeFile('./speechAssets/speechAssets.json', JSON.stringify(assets, null, 2), 'utf8', callback);

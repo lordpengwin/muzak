@@ -21,6 +21,10 @@ artist.js
 album.js
 genre.js
 speechAssets/speechAssets.json
+speechAssets/ALBUM.txt
+speechAssets/ARTIST.txt
+speechAssets/GENRE.txt
+speechAssets/PLAYERS.txt
 
 # VS Code
 .vscode
