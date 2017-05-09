@@ -1,5 +1,5 @@
 // Default speech assets.
-// When create-assets is run, the artists, albums and genre slots are filled out
+// When create-assets is run, the ARTIST, ALBUM and GENRE slots are filled out
 // from your squeezebox server
 module.exports = {
     "intents": [
@@ -194,17 +194,17 @@ module.exports = {
                 },
                 {
                     "name": "Artist",
-                    "type": "ARTISTS",
+                    "type": "ARTIST",
                     "samples": []
                 },
                 {
                     "name": "Album",
-                    "type": "ALBUMS",
+                    "type": "ALBUM",
                     "samples": []
                 },
                 {
                     "name": "Genre",
-                    "type": "GENRES",
+                    "type": "GENRE",
                     "samples": []
                 }
             ]
@@ -508,18 +508,6 @@ module.exports = {
         }
     ],
     "types": [
-        {
-            "name": "ALBUMS",
-            "values": []
-        },
-        {
-            "name": "ARTISTS",
-            "values": []
-        },
-        {
-            "name": "GENRES",
-            "values": []
-        },
         {
             "name": "PLAYERS",
             "values": [

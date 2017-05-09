@@ -81,7 +81,7 @@ function uniq(a, slot) {
             var item = [lowerCase, value];
             array.push(item);
         } else {
-            console.log(value);
+            // console.log(value);
         }
 
     }
@@ -112,20 +112,8 @@ function dumpToFile(slot, reply, assets) {
 
             // Make results unique
             var result = uniq(reply.result, slot);
-
-            switch (slot) {
-                case 'album':
-                   assets.types[0].values = getArray(result);
-                    break;
-
-                case 'artist':
-                   assets.types[1].values = getArray(result);
-                    break;
-
-                case 'genre':
-                    assets.types[2].values = getArray(result);
-                    break;
-            }
+            var values = { "name": slot.toUpperCase(), "values": getArray(result) };
+            assets.types.push(values);
 
             var text = 'module.exports = ' + JSON.stringify(result, null, 2) + ';';
             fs.writeFile('./' + slot + '.js', text, 'utf8', callback);
