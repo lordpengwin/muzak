@@ -28,7 +28,8 @@ var defaultAssets = require('./default-assets.js');
 
 function isValidSlot(slot) {
 
-    var illegalChars = new RegExp("[0-9\/\\\\&,!+_\\*\\(\\)\\[\\]]");
+    // var illegalChars = new RegExp("[0-9\/\\\\&,!+_\\*\\(\\)\\[\\]]");
+    var illegalChars = new RegExp(/[/#_*!]/g);
     return !illegalChars.test(slot);
 }
 
@@ -42,11 +43,16 @@ function doNotIgnore(slot) {
     if (unknown.test(slot)) {
         return false;
     }
+    var untitled = new RegExp(/untitled/i);
+    if (untitled.test(slot)) {
+        return false;
+    }
+    if (slot === "<Undefined>") {
+        return false;
+    }
     if (slot === "アリシア・キーズ") {
         return false;
     }
-
-
     if (slot === "流行音乐") {
         return false;
     }
@@ -57,7 +63,9 @@ function doNotIgnore(slot) {
 }
 
 function fixUpSlot(value) {
-    var result = value.toLowerCase().replace("/", " ").replace(";", " ").replace("`", " ").trim();
+    var charsToSpaces = new RegExp(/[):?\-~(!`+"\[\]\\/\;]/g);
+    var removeMultipleSpaces = new RegExp(/  /g);
+    var result = value.toLowerCase().replace(charsToSpaces, " ").replace(removeMultipleSpaces, " ").trim();
     return result;
 }
 
@@ -72,7 +80,10 @@ function uniq(a, slot) {
             var lowerCase = fixUpSlot(value);
             var item = [lowerCase, value];
             array.push(item);
+        } else {
+            console.log(value);
         }
+
     }
     var unified = _.uniqWith(array, comparator)
 
@@ -104,11 +115,11 @@ function dumpToFile(slot, reply, assets) {
 
             switch (slot) {
                 case 'album':
-                    assets.types[0].values = getArray(result);
+                   assets.types[0].values = getArray(result);
                     break;
 
                 case 'artist':
-                    assets.types[1].values = getArray(result);
+                   assets.types[1].values = getArray(result);
                     break;
 
                 case 'genre':
