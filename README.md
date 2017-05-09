@@ -8,10 +8,9 @@ How To Use
 
 ### Configuration:
 
-* Copy the provided `config.js-sample` file and enter the required values to allow the skill to connect to your squeezebox server. Save as `config.js`.
+* Copy the provided `config.js-sample` file and enter the required values to allow the skill to connect to your squeezebox server. Update the players array with the name of your Squeezebox players. Save as `config.js`.
 * This should include the URL and credentials for your Logitech Media Server and the App ID of the Alexa skill created above
 * Run `npm install` to download npm dependencies.
-* Update default-assets.js to include the name of your Squeeze box players
 * Run node ./create-assets.js to produce speechAssets/speechAssets.json
 * Create an Alexa skill to use to connect to your server.
 * Use the speechAssets.json to configure you Alexa Skiil via the Skill Builder Beta. Drag and drop the file on the code editor.

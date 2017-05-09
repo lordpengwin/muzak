@@ -19,6 +19,8 @@ var SqueezeServer = require('squeezenode-lordpengwin');
 var config = require('./config');
 var defaultAssets = require('./default-assets.js');
 
+// Add the players from config to the defaultAssets
+defaultAssets.types.push({ "name": "PLAYERS", "values": getPlayerArray(config.players) });
 /**
  * Check if the albums is valid from the point of view if being in an utterance
  *
@@ -135,6 +137,20 @@ function getArray(a) {
             }
         };
         value.name.value = a[loop][0];
+        output.push(value);
+    }
+    return output;
+}
+
+function getPlayerArray(a) {
+    var output = [];
+    for (var loop = 0; loop < a.length; loop++) {
+        var value = {
+            name: {
+                value: ""
+            }
+        };
+        value.name.value = a[loop];
         output.push(value);
     }
     return output;

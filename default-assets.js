@@ -508,25 +508,5 @@ module.exports = {
         }
     ],
     "types": [
-        {
-            "name": "PLAYERS",
-            "values": [
-                {
-                    "name": {
-                        "value": "Our room"
-                    }
-                },
-                {
-                    "name": {
-                        "value": "Front room"
-                    }
-                },
-                {
-                    "name": {
-                        "value": "Phone"
-                    }
-                }
-            ]
-        }
     ]
 };

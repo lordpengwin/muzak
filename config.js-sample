@@ -10,4 +10,7 @@ config.squeezeserverPort = 9000;
 config.squeezeServerUsername = "your username";
 config.squeezeServerPassword = "your password";
 
+// List the name of your squeezebox players 
+config.players = [ "Player one", "Player two", "Player three" ];
+
 module.exports = config;
