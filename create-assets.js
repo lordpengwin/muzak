@@ -78,8 +78,8 @@ function fixUpSlot(value) {
 // Job done!
 function uniq(a, slot) {
     var array = [];
-    for (var loop = 0; loop < a.length; loop++) {
-        var value = a[loop][slot]; // .toLowerCase();
+    _.forEach(a, function (entry) {
+        var value = entry[slot];
         if (isValidSlot(value) && doNotIgnore(value)) {
             var lowerCase = fixUpSlot(value);
             var item = [lowerCase, value];
@@ -87,8 +87,7 @@ function uniq(a, slot) {
         } else {
             // console.log(value);
         }
-
-    }
+    });
     var unified = _.uniqWith(array, comparator)
 
     return unified;
@@ -133,44 +132,44 @@ function dumpSlotText(slot, types) {
     var index = _.findIndex(types, function (o) { return o.name == slot.toUpperCase(); });
     var text = '';
     var array = types[index].values;
-    for (var loop = 0; loop < array.length; loop++) {
-        text += array[loop].name.value + '\n';
-    }
+    _.forEach(array, function (value) {
+        text += value.name.value + '\n';
+    });
 
     fs.writeFile('./speechAssets/' + slot.toUpperCase() + '.txt', text, 'utf8', callback);
 }
 
 function dumpUtterencesText(intents) {
     var text = '';
-    for (var loop = 0; loop < intents.length; loop++) {
+    _.forEach(intents, function (intent) {
         // Get the intent
-        var name = intents[loop].name;
-        var samples = intents[loop].samples;
+        var name = intent.name;
+        var samples = intent.samples;
         // Add a line for each sample
-        for (var sample = 0; sample < samples.length; sample++) {
-            text += name + ' ' + samples[sample] + '\n';
-        }
+        _.forEach(samples, function (sample) {
+            text += name + ' ' + sample + '\n';
+        });
         // Add a blank line
         text += '\n';
-    }
+    });
     fs.writeFile('./speechAssets/utterences.txt', text, 'utf8', callback);
 }
 
 function dumpIntentsJson(intents) {
     var json = { "intents": [] };
-    for (var loop = 0; loop < intents.length; loop++) {
+    _.forEach(intents, function (value) {
         // Get the intent
-        var intent = { "intent": intents[loop].name };
-        var slots = intents[loop].slots;
+        var intent = { "intent": value.name };
+        var slots = value.slots;
         // Do we have any slots?
         if (slots && slots.length != 0) {
-            for (var slot = 0; slot < slots.length; slot++) {
-                delete slots[slot].samples;
-            }
-            intent = { "intent": intents[loop].name, "slots": slots };
+            _.forEach(slots, function (slot) {
+                delete slot.samples;
+            });
+            intent = { "intent": value.name, "slots": slots };
         }
         json.intents.push(intent);
-    }
+    });
     fs.writeFile('./speechAssets/intents.json', JSON.stringify(json, null, 2), 'utf8', callback);
 }
 
@@ -181,29 +180,18 @@ function writeAssets(assets) {
 
 function getArray(a) {
     var output = [];
-    for (var loop = 0; loop < a.length; loop++) {
-        var value = {
-            name: {
-                value: ""
-            }
-        };
-        value.name.value = a[loop][0];
-        output.push(value);
-    }
+    _.forEach(a, function (value) {
+        output.push({ "name": { "value": value[0] } });
+    });
     return output;
 }
 
+
 function getPlayerArray(a) {
     var output = [];
-    for (var loop = 0; loop < a.length; loop++) {
-        var value = {
-            name: {
-                value: ""
-            }
-        };
-        value.name.value = a[loop];
-        output.push(value);
-    }
+    _.forEach(a, function (value) {
+        output.push({ "name": { "value": value } });
+    });
     return output;
 }
 
