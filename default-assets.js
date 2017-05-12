@@ -184,7 +184,7 @@ module.exports = {
                 "to play {Artist}",
                 "to play the album {Album} by the {Artist}",
                 "to play the album {Album} by {Artist}",
-                "to play {Artist} {Album}"                
+                "to play {Artist} {Album}"
             ],
             "slots": [
                 {
@@ -275,6 +275,10 @@ module.exports = {
         {
             "name": "RandomizePlayer",
             "samples": [
+                "shuffle",
+                "shuffle music",
+                "shuffle {Player}",
+                "shuffle music on {Player}",
                 "randomize",
                 "randomize {Player}",
                 "randomize player {Player}",
