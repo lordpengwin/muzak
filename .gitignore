@@ -25,6 +25,8 @@ speechAssets/ALBUM.txt
 speechAssets/ARTIST.txt
 speechAssets/GENRE.txt
 speechAssets/PLAYERS.txt
+speechAssets/utterences.txt
+speechAssets/intents.json
 
 # VS Code
 .vscode

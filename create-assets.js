@@ -22,6 +22,9 @@ var defaultAssets = require('./default-assets.js');
 // Add the players from config to the defaultAssets
 defaultAssets.types.push({ "name": "PLAYERS", "values": getPlayerArray(config.players) });
 dumpSlotText("PLAYERS", defaultAssets.types);
+dumpUtterencesText(defaultAssets.intents);
+dumpIntentsJson(defaultAssets.intents);
+
 /**
  * Check if the albums is valid from the point of view if being in an utterance
  *
@@ -127,7 +130,7 @@ function dumpToFile(slot, reply, assets) {
 }
 
 function dumpSlotText(slot, types) {
-    var index = _.findIndex(types, function(o) { return o.name == slot.toUpperCase(); });
+    var index = _.findIndex(types, function (o) { return o.name == slot.toUpperCase(); });
     var text = '';
     var array = types[index].values;
     for (var loop = 0; loop < array.length; loop++) {
@@ -135,6 +138,40 @@ function dumpSlotText(slot, types) {
     }
 
     fs.writeFile('./speechAssets/' + slot.toUpperCase() + '.txt', text, 'utf8', callback);
+}
+
+function dumpUtterencesText(intents) {
+    var text = '';
+    for (var loop = 0; loop < intents.length; loop++) {
+        // Get the intent
+        var name = intents[loop].name;
+        var samples = intents[loop].samples;
+        // Add a line for each sample
+        for (var sample = 0; sample < samples.length; sample++) {
+            text += name + ' ' + samples[sample] + '\n';
+        }
+        // Add a blank line
+        text += '\n';
+    }
+    fs.writeFile('./speechAssets/utterences.txt', text, 'utf8', callback);
+}
+
+function dumpIntentsJson(intents) {
+    var json = { "intents": [] };
+    for (var loop = 0; loop < intents.length; loop++) {
+        // Get the intent
+        var intent = { "intent": intents[loop].name };
+        var slots = intents[loop].slots;
+        // Do we have any slots?
+        if (slots && slots.length != 0) {
+            for (var slot = 0; slot < slots.length; slot++) {
+                delete slots[slot].samples;
+            }
+            intent = { "intent": intents[loop].name, "slots": slots };
+        }
+        json.intents.push(intent);
+    }
+    fs.writeFile('./speechAssets/intents.json', JSON.stringify(json, null, 2), 'utf8', callback);
 }
 
 
