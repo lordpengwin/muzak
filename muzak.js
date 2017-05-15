@@ -15,7 +15,7 @@ var config = require('./config');
 var albums = require('./album.js');
 var artists = require('./artist.js');
 var genres = require('./genre.js');
-var info = {Album: albums, Artist: artists, Genre: genres };
+var info = { Album: albums, Artist: artists, Genre: genres };
 /**
  * Route the incoming request based on type (LaunchRequest, IntentRequest,
  * etc.) The JSON body of the request is provided in the event parameter.
@@ -145,67 +145,149 @@ function dispatchIntent(squeezeserver, players, intent, session, callback) {
     var intentName = intent.name;
     console.log("Got intent: %j", intent);
     console.log("Session is %j", session);
+    switch (intent) {
 
-    if ("SyncPlayers" == intentName) {
-        syncPlayers(squeezeserver, players, intent, session, callback);
+        case "SyncPlayers":
+            syncPlayers(squeezeserver, players, intent, session, callback);
+            break;
 
-    } else if ("NamePlayers" == intentName) {
-        namePlayers(players, session, callback);
 
-    } else if ("AMAZON.HelpIntent" == intentName) {
-        giveHelp(session, callback);
+        case "NamePlayers":
+            namePlayers(players, session, callback);
+            break;
+
+        case "AMAZON.HelpIntent":
+            giveHelp(session, callback);
+            break;
+
+        default:
+            dispatchSecondaryIntent(squeezeserver, players, intent, session, callback);
+            break;
+    }
+};
+
+function dispatchSecondaryIntent(squeezeserver, players, intent, session, callback) {
+
+    // Try to find the target player
+    var player = findPlayerObject(squeezeserver, players, ((typeof intent.slots.Player.value !== 'undefined') && (intent.slots.Player.value !== null) ?
+        intent.slots.Player.value :
+        (typeof session.attributes !== 'undefined' ? session.attributes.player : "")));
+    if (player === null || player === undefined) {
+
+        // Couldn't find the player, return an error response
+
+        console.log("Player not found: " + intent.slots.Player.value);
+        callback(session.attributes, buildSpeechletResponse(intentName, "Player not found", null, session.new));
 
     } else {
 
-        // Try to find the target player
+        console.log("Player is " + player);
+        session.attributes = { player: player.name.toLowerCase() };
 
-        var player = findPlayerObject(squeezeserver, players, ((typeof intent.slots.Player.value !== 'undefined') && (intent.slots.Player.value !== null) ?
-            intent.slots.Player.value :
-            (typeof session.attributes !== 'undefined' ? session.attributes.player : "")));
-        if (player === null || player === undefined) {
+        // Call the target intent
+        switch (intentName) {
+            case "AMAZON.CancelIntent":
+                break;
 
-            // Couldn't find the player, return an error response
-
-            console.log("Player not found: " + intent.slots.Player.value);
-            callback(session.attributes, buildSpeechletResponse(intentName, "Player not found", null, session.new));
-
-        } else {
-
-            console.log("Player is " + player);
-            session.attributes = { player: player.name.toLowerCase() };
-
-            // Call the target intent
-
-            if ("StartPlayer" == intentName) {
-                startPlayer(player, session, callback);
-            } else if ("PlayPlaylist" == intentName) {
-                playPlaylist(player, intent, session, callback);
-            } else if ("RandomizePlayer" == intentName) {
-                randomizePlayer(player, session, callback);
-            } else if ("StopPlayer" == intentName) {
-                stopPlayer(player, session, callback);
-            } else if ("PausePlayer" == intentName) {
+            case "AMAZON.PauseIntent":
                 pausePlayer(player, session, callback);
-            } else if ("PreviousTrack" == intentName) {
-                previousTrack(player, session, callback);
-            } else if ("NextTrack" == intentName) {
+                break;
+
+            case "AMAZON.ResumeIntent":
+                pausePlayer(player, session, callback);
+                break;
+
+            case "AMAZON.StopIntent":
+                stopPlayer(player, session, callback);
+                break;
+
+            case "AMAZON.CancelIntent":
+                break;
+
+            case "AMAZON.LoopOffIntent":
+                break;
+
+            case "AMAZON.LoopOnIntent":
+                break;
+
+            case "AMAZON.NextIntent":
                 nextTrack(player, session, callback);
-            } else if ("UnsyncPlayer" == intentName) {
+                break;
+
+            case "AMAZON.PreviousIntent":
+                previousTrack(player, session, callback);
+                break;
+
+            case "AMAZON.RepeatIntent":
+                break;
+
+            case "AMAZON.ShuffleOffIntent":
+                shuffleOffPlayer(player, session, callback);
+                break;
+
+            case "AMAZON.ShuffleOnIntent":
+                shuffleOnPlayer(player, session, callback);
+                break;
+
+            case "AMAZON.StartOverIntent":
+                break;
+
+            case "StartPlayer":
+                startPlayer(player, session, callback);
+                break;
+
+            case "PlayPlaylist":
+                playPlaylist(player, intent, session, callback);
+                break;
+
+            case "RandomizePlayer":
+                randomizePlayer(player, session, callback);
+                break;
+
+            case "StopPlayer":
+                stopPlayer(player, session, callback);
+                break;
+
+            case "PausePlayer":
+                pausePlayer(player, session, callback);
+                break;
+
+            case "PreviousTrack":
+                previousTrack(player, session, callback);
+                break;
+
+            case "NextTrack":
+                nextTrack(player, session, callback);
+                break;
+
+            case "UnsyncPlayer":
                 unsyncPlayer(player, session, callback);
-            } else if ("SetVolume" == intentName) {
+                break;
+
+            case "SetVolume":
                 setPlayerVolume(player, Number(intent.slots.Volume.value), session, callback);
-            } else if ("IncreaseVolume" == intentName) {
+                break;
+
+            case "IncreaseVolume":
                 getPlayerVolume(player, session, callback, 10);
-            } else if ("DecreaseVolume" == intentName) {
+                break;
+
+            case "DecreaseVolume":
                 getPlayerVolume(player, session, callback, -10);
-            } else if ("WhatsPlaying" == intentName) {
+                break;
+
+            case "WhatsPlaying":
                 whatsPlaying(player, session, callback);
-            } else if ("SelectPlayer" == intentName) {
+                break;
+
+            case "SelectPlayer":
                 selectPlayer(player, session, callback);
-            } else {
+                break;
+
+            default:
                 callback(session.attributes, buildSpeechletResponse("Invalid Request", intentName + " is not a valid request", repromptText, session.new));
                 throw " intent";
-            }
+
         }
     }
 }
@@ -332,8 +414,10 @@ function playPlaylist(player, intent, session, callback) {
             if (values.playlist) {
                 text += values.Playlist + " playlist."
             } else {
-
-                if (values.Genre)
+                // Check that we have a genre, album or artist
+                if (_.isEmpty(values.Genre) && _.isEmpty(values.Album) && _.isEmpty(values.Artist)) {
+                    text = "";
+                } else if (values.Genre)
                     text += "songs in the " + values.Genre + " genre";
                 else {
 
@@ -346,28 +430,33 @@ function playPlaylist(player, intent, session, callback) {
                 }
             }
         }
-
-        callback(session.attributes, buildSpeechletResponse("Play Playlist", text, null, true));
+        if (text != "") {
+            callback(session.attributes, buildSpeechletResponse("Play Playlist", text, null, true));
+        } else {
+            callback(session.attributes, buildSpeechletResponse("Play Playlist", "You request was not found in the library. Please try again", repromptText, false));
+        }
     };
 
     // If a value for playlist is present, ignore everything else and play that
     // playlist, otherwise play whatever artist and/or artist is present.
+    if (!_.isEmpty(values.Playlist) || !_.isEmpty(values.Genre) || !_.isEmpty(values.Album) || !_.isEmpty(values.Artist)) {
 
-    if (values.Playlist) {
-        player.callMethod({
-            method: 'playlist',
-            params: ['play', values.Playlist]
-        }).then(reply);
-    } else {
-        player.callMethod({
-            method: 'playlist',
-            params: [
-                'loadalbum',
-                _.isEmpty(values.Genre) ? "*" : values.Genre,  // LMS wants an asterisk if nothing if specified
-                _.isEmpty(values.Artist) ? "*" : values.Artist,
-                _.isEmpty(values.Album) ? "*" : values.Album
-            ]
-        }).then(reply);
+        if (values.Playlist) {
+            player.callMethod({
+                method: 'playlist',
+                params: ['play', values.Playlist]
+            }).then(reply);
+        } else {
+            player.callMethod({
+                method: 'playlist',
+                params: [
+                    'loadalbum',
+                    _.isEmpty(values.Genre) ? "*" : values.Genre,  // LMS wants an asterisk if nothing if specified
+                    _.isEmpty(values.Artist) ? "*" : values.Artist,
+                    _.isEmpty(values.Album) ? "*" : values.Album
+                ]
+            }).then(reply);
+        }
     }
 };
 
@@ -399,6 +488,66 @@ function randomizePlayer(player, session, callback) {
         callback(session.attributes, buildSpeechletResponse("Randomize Player", "Caught Exception", null, true));
     }
 }
+
+/**
+ * Start a player to play shuffle tracks
+ *
+ * @param player The player to start
+ * @param session The current session
+ * @param callback The callback to use to return the result
+ */
+
+function shuffleOnPlayer(player, session, callback) {
+
+    console.log("In randomizePlayer with player %s", player.name);
+
+    try {
+
+        // Start and radomize the player
+
+        player.shuffleOnPlay("tracks", function (reply) {
+            if (reply.ok)
+                callback(session.attributes, buildSpeechletResponse("Shuffling Player", "Shuffling. Playing " + player.name + " squeezebox", null, session.new));
+            else
+                callback(session.attributes, buildSpeechletResponse("Shuffling Player", "Failed to shuffle and play " + player.name + " squeezebox", null, true));
+        });
+
+    } catch (ex) {
+        console.log("Caught exception in randomizePlayer %j", ex);
+        callback(session.attributes, buildSpeechletResponse("Shuffling Player", "Caught Exception", null, true));
+    }
+}
+
+
+/**
+ * Start a player to play shuffle tracks
+ *
+ * @param player The player to start
+ * @param session The current session
+ * @param callback The callback to use to return the result
+ */
+
+function shuffleOffPlayer(player, session, callback) {
+
+    console.log("In randomizePlayer with player %s", player.name);
+
+    try {
+
+        // Start and radomize the player
+
+        player.shuffleOffPlay("tracks", function (reply) {
+            if (reply.ok)
+                callback(session.attributes, buildSpeechletResponse("Stop shuffling Player", "Shuffling. Playing " + player.name + " squeezebox", null, session.new));
+            else
+                callback(session.attributes, buildSpeechletResponse("Stop shuffling Player", "Failed to stop shuffle and play " + player.name + " squeezebox", null, true));
+        });
+
+    } catch (ex) {
+        console.log("Caught exception in randomizePlayer %j", ex);
+        callback(session.attributes, buildSpeechletResponse("Stop shuffling Player", "Caught Exception", null, true));
+    }
+}
+
 
 /**
  * Select the given player for an interactive session.
