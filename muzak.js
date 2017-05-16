@@ -60,10 +60,10 @@ function lookupInfo(slot, value) {
     if (value) {
         var check = value.toLowerCase();
         var result = info[slot].filter(function (obj) {
-            return obj.toLowerCase() === check;
+            return obj[0] === check;
         })[0];
 
-        return result;
+        return result[1];
     }
 }
 
@@ -168,6 +168,7 @@ function dispatchIntent(squeezeserver, players, intent, session, callback) {
 
 function dispatchSecondaryIntent(squeezeserver, players, intent, session, callback) {
 
+    var intentName = intent.name;
     // Try to find the target player
     var player = findPlayerObject(squeezeserver, players, ((typeof intent.slots.Player.value !== 'undefined') && (intent.slots.Player.value !== null) ?
         intent.slots.Player.value :
@@ -186,9 +187,6 @@ function dispatchSecondaryIntent(squeezeserver, players, intent, session, callba
 
         // Call the target intent
         switch (intentName) {
-            case "AMAZON.CancelIntent":
-                break;
-
             case "AMAZON.PauseIntent":
                 pausePlayer(player, session, callback);
                 break;
@@ -202,6 +200,7 @@ function dispatchSecondaryIntent(squeezeserver, players, intent, session, callba
                 break;
 
             case "AMAZON.CancelIntent":
+                stopPlayer(player, session, callback);
                 break;
 
             case "AMAZON.LoopOffIntent":
@@ -242,14 +241,6 @@ function dispatchSecondaryIntent(squeezeserver, players, intent, session, callba
 
             case "RandomizePlayer":
                 randomizePlayer(player, session, callback);
-                break;
-
-            case "StopPlayer":
-                stopPlayer(player, session, callback);
-                break;
-
-            case "PausePlayer":
-                pausePlayer(player, session, callback);
                 break;
 
             case "PreviousTrack":
@@ -383,6 +374,8 @@ function playPlaylist(player, intent, session, callback) {
     var intentSlots = _.mapKeys(_.get(intent, "slots"), (value, key) => { return key.charAt(0).toUpperCase() + key.toLowerCase().substring(1) });
     var values = {};
 
+    console.log("Map keys done");
+    
     // Transform our slot data into a friendlier object.
 
     _.each(possibleSlots, function (slotName) {

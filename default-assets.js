@@ -1,45 +1,97 @@
+// "SyncPlayers":
+// "NamePlayers":
+// "AMAZON.HelpIntent":
+// "AMAZON.PauseIntent":
+// "AMAZON.ResumeIntent":
+// "AMAZON.StopIntent":
+// "AMAZON.CancelIntent":
+// "AMAZON.LoopOffIntent": xxx
+// "AMAZON.LoopOnIntent": xxx
+// "AMAZON.NextIntent": xxx
+// "AMAZON.PreviousIntent": xxx
+// "AMAZON.RepeatIntent": xxxx
+// "AMAZON.ShuffleOffIntent": zzz
+// "AMAZON.ShuffleOnIntent": xxx
+// "AMAZON.StartOverIntent": xxx
+// "StartPlayer":
+// "PlayPlaylist":
+// "RandomizePlayer":
+// "PreviousTrack":
+// "NextTrack":
+// "UnsyncPlayer":
+// "SetVolume":
+// "IncreaseVolume":
+// "DecreaseVolume":
+// "WhatsPlaying":
+// "SelectPlayer":
 // Default speech assets.
 // When create-assets is run, the ARTIST, ALBUM and GENRE slots are filled out
 // from your squeezebox server
 module.exports = {
     "intents": [
         {
+            "name": "AMAZON.LoopOffIntent",
+            "samples": [
+            ]
+        },
+        {
+            "name": "AMAZON.LoopOnIntent",
+            "samples": [
+            ]
+        },
+        {
+            "name": "AMAZON.NextIntent",
+            "samples": [
+            ]
+        },
+        {
+            "name": "AMAZON.PreviousIntent",
+            "samples": [
+            ]
+        },
+        {
+            "name": "AMAZON.RepeatIntent",
+            "samples": [
+            ]
+        },
+        {
+            "name": "AMAZON.ShuffleOffIntent",
+            "samples": [
+            ]
+        },
+        {
+            "name": "AMAZON.ShuffleOnIntent",
+            "samples": [
+            ]
+        },
+        {
+            "name": "AMAZON.StartOverIntent",
+            "samples": [
+            ]
+        },
+        {
             "name": "AMAZON.CancelIntent",
             "samples": [
-                "Cancel"
             ]
         },
         {
             "name": "AMAZON.HelpIntent",
             "samples": [
-                "what can I say",
-                "what do I say",
-                "help",
-                "what do I do",
-                "what can I do",
-                "help me",
-                "give me help",
-                "assistance",
-                "how do I",
-                "how do I do things"
             ]
         },
         {
             "name": "AMAZON.PauseIntent",
             "samples": [
-                "pause"
             ]
         },
         {
             "name": "AMAZON.ResumeIntent",
             "samples": [
-                "Resume"
             ]
         },
         {
             "name": "AMAZON.StopIntent",
             "samples": [
-                "stop"
             ]
         },
         {
@@ -275,10 +327,6 @@ module.exports = {
         {
             "name": "RandomizePlayer",
             "samples": [
-                "shuffle",
-                "shuffle music",
-                "shuffle {Player}",
-                "shuffle music on {Player}",
                 "randomize",
                 "randomize {Player}",
                 "randomize player {Player}",
