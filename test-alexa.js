@@ -141,6 +141,32 @@ var playPinkFloyd = {
     "version": "1.0"
 };
 
+var shuffle = {
+    "session": {
+        "sessionId": "SessionId.9ff46a93-d276-4fda-9e36-a60844f48c64",
+        "application": {
+            "applicationId": "amzn1.ask.skill.d7815bc8-b1fa-408b-81ab-03def6670e0f"
+        },
+        "attributes": {
+            "player": "our room"
+        },
+        "user": {
+            "userId": "amzn1.ask.account.AH4CSKQDMVFG4W7OFXU6XTSNCOMUHXXQB4W27JLRLX42RJCMF6V7HWVWWEDZT4JXTEDQ7K2DEEKZXBOVSN3BV3EUOVYLLP2565JICIWN4GWNAHBPFRQ2SYDDXQZGRPCIWNOQW6NXG7OWADY7JRPKDC6RGH4KM4NV7K7UWFSTUBZAJFLLTDU7TMPAU4K5ERPKFUIJYLTMNGVOAJQ"
+        },
+        "new": false
+    },
+    "request": {
+        "type": "IntentRequest",
+        "requestId": "EdwRequestId.ba2289c2-ac8e-4f71-a3f3-84a546048223",
+        "locale": "en-GB",
+        "timestamp": "2017-05-01T15:57:49Z",
+        "intent": {
+            "name": "AMAZON.ShuffleOnIntent",
+        }
+    },
+    "version": "1.0"
+};
+
 function succeed(response) {
     console.log("Success");
     console.log("=======");
@@ -164,8 +190,6 @@ function lookup(value) {
 
 context = { succeed, fail };
 
-var result = lookup("dark side of the moon");
-
 alexa.handler(event, context);
-alexa.handler(playDarkSideOfTheMoon, context);
+alexa.handler(shuffle, context);
 // alexa.handler(playPinkFloyd, context);

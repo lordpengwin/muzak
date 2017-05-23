@@ -164,20 +164,23 @@ function dispatchIntent(squeezeserver, players, intent, session, callback) {
             dispatchSecondaryIntent(squeezeserver, players, intent, session, callback);
             break;
     }
-};
+}
 
 function dispatchSecondaryIntent(squeezeserver, players, intent, session, callback) {
 
     var intentName = intent.name;
+
+    // Get the name of the player to look-up from the intent slot if present
+    var name = ((typeof intent.slots !== 'undefined') && (typeof intent.slots.Player.value !== 'undefined') && (intent.slots.Player.value !== null) ? intent.slots.Player.value :
+        (typeof session.attributes !== 'undefined' ? session.attributes.player : ""));
+    
     // Try to find the target player
-    var player = findPlayerObject(squeezeserver, players, ((typeof intent.slots.Player.value !== 'undefined') && (intent.slots.Player.value !== null) ?
-        intent.slots.Player.value :
-        (typeof session.attributes !== 'undefined' ? session.attributes.player : "")));
+    var player = findPlayerObject(squeezeserver, players, name);
     if (player === null || player === undefined) {
 
         // Couldn't find the player, return an error response
 
-        console.log("Player not found: " + intent.slots.Player.value);
+        console.log("Player not found: " + name);
         callback(session.attributes, buildSpeechletResponse(intentName, "Player not found", null, session.new));
 
     } else {
@@ -221,11 +224,11 @@ function dispatchSecondaryIntent(squeezeserver, players, intent, session, callba
                 break;
 
             case "AMAZON.ShuffleOffIntent":
-                shuffleOffPlayer(player, session, callback);
+                stopShuffle(player, session, callback);
                 break;
 
             case "AMAZON.ShuffleOnIntent":
-                shuffleOnPlayer(player, session, callback);
+                startShuffle(player, session, callback);
                 break;
 
             case "AMAZON.StartOverIntent":
@@ -490,7 +493,7 @@ function randomizePlayer(player, session, callback) {
  * @param callback The callback to use to return the result
  */
 
-function shuffleOnPlayer(player, session, callback) {
+function startShuffle(player, session, callback) {
 
     console.log("In randomizePlayer with player %s", player.name);
 
@@ -498,7 +501,7 @@ function shuffleOnPlayer(player, session, callback) {
 
         // Start and radomize the player
 
-        player.shuffleOnPlay("tracks", function (reply) {
+        player.startShuffle(function (reply) {
             if (reply.ok)
                 callback(session.attributes, buildSpeechletResponse("Shuffling Player", "Shuffling. Playing " + player.name + " squeezebox", null, session.new));
             else
@@ -520,7 +523,7 @@ function shuffleOnPlayer(player, session, callback) {
  * @param callback The callback to use to return the result
  */
 
-function shuffleOffPlayer(player, session, callback) {
+function stopShuffle(player, session, callback) {
 
     console.log("In randomizePlayer with player %s", player.name);
 
@@ -528,7 +531,7 @@ function shuffleOffPlayer(player, session, callback) {
 
         // Start and radomize the player
 
-        player.shuffleOffPlay("tracks", function (reply) {
+        player.stopShuffle(function (reply) {
             if (reply.ok)
                 callback(session.attributes, buildSpeechletResponse("Stop shuffling Player", "Shuffling. Playing " + player.name + " squeezebox", null, session.new));
             else
