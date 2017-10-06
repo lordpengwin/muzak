@@ -28,71 +28,57 @@
 // When create-assets is run, the ARTIST, ALBUM and GENRE slots are filled out
 // from your squeezebox server
 module.exports = {
-    "intents": [
-        {
+    "intents": [{
             "name": "AMAZON.LoopOffIntent",
-            "samples": [
-            ]
+            "samples": []
         },
         {
             "name": "AMAZON.LoopOnIntent",
-            "samples": [
-            ]
+            "samples": []
         },
         {
             "name": "AMAZON.NextIntent",
-            "samples": [
-            ]
+            "samples": []
         },
         {
             "name": "AMAZON.PreviousIntent",
-            "samples": [
-            ]
+            "samples": []
         },
         {
             "name": "AMAZON.RepeatIntent",
-            "samples": [
-            ]
+            "samples": []
         },
         {
             "name": "AMAZON.ShuffleOffIntent",
-            "samples": [
-            ]
+            "samples": []
         },
         {
             "name": "AMAZON.ShuffleOnIntent",
-            "samples": [
-            ]
+            "samples": []
         },
         {
             "name": "AMAZON.StartOverIntent",
-            "samples": [
-            ]
+            "samples": []
         },
         {
             "name": "AMAZON.CancelIntent",
-            "samples": [
-            ]
+            "samples": []
         },
         {
             "name": "AMAZON.HelpIntent",
-            "samples": [
-            ]
+            "samples": []
         },
         {
             "name": "AMAZON.PauseIntent",
-            "samples": [
-            ]
+            "samples": []
         },
         {
             "name": "AMAZON.ResumeIntent",
-            "samples": [
-            ]
+            "samples": []
         },
         {
             "name": "AMAZON.StopIntent",
-            "samples": [
-            ]
+            "samples": []
         },
         {
             "name": "DecreaseVolume",
@@ -113,13 +99,11 @@ module.exports = {
                 "turn down volume on {Player} squeeze box",
                 "turn down {Player} squeeze box"
             ],
-            "slots": [
-                {
-                    "name": "Player",
-                    "type": "PLAYERS",
-                    "samples": []
-                }
-            ]
+            "slots": [{
+                "name": "Player",
+                "type": "PLAYERS",
+                "samples": []
+            }]
         },
         {
             "name": "IncreaseVolume",
@@ -142,30 +126,30 @@ module.exports = {
                 "turn up volume on {Player} squeeze box",
                 "turn up {Player} squeeze box"
             ],
-            "slots": [
-                {
-                    "name": "Player",
-                    "type": "PLAYERS",
-                    "samples": []
-                }
-            ]
+            "slots": [{
+                "name": "Player",
+                "type": "PLAYERS",
+                "samples": []
+            }]
         },
         {
             "name": "NamePlayers",
             "samples": [
+                "name players",
+                "name squeeze boxes",
+                "name my players",
+                "name my squeeze boxes",
                 "what are my players",
                 "how many players do I have",
-                "how may players are there",
+                "how many players are there",
+                "how many squeeze boxes do I have",
+                "how many squeeze boxes are there",
                 "what players are there",
-                "name my players",
                 "what players do I have",
                 "what are my player names",
                 "what are the names of my players",
                 "what are my squeeze boxes",
-                "how many squeeze boxes do I have",
-                "how may squeeze boxes are there",
                 "what squeeze boxes are there",
-                "name my squeeze boxes",
                 "what squeeze boxes do I have",
                 "what are my squeeze box names",
                 "what are the names of my squeeze boxes"
@@ -204,13 +188,11 @@ module.exports = {
                 "play the next song on the {Player} squeeze box",
                 "skip {Player}"
             ],
-            "slots": [
-                {
-                    "name": "Player",
-                    "type": "PLAYERS",
-                    "samples": []
-                }
-            ]
+            "slots": [{
+                "name": "Player",
+                "type": "PLAYERS",
+                "samples": []
+            }]
         },
         {
             "name": "PlayPlaylist",
@@ -238,8 +220,7 @@ module.exports = {
                 "to play the album {Album} by {Artist}",
                 "to play {Artist} {Album}"
             ],
-            "slots": [
-                {
+            "slots": [{
                     "name": "Player",
                     "type": "PLAYERS",
                     "samples": []
@@ -316,13 +297,11 @@ module.exports = {
                 "last song on the {Player} squeeze box",
                 "play the last song on the {Player} squeeze box"
             ],
-            "slots": [
-                {
-                    "name": "Player",
-                    "type": "PLAYERS",
-                    "samples": []
-                }
-            ]
+            "slots": [{
+                "name": "Player",
+                "type": "PLAYERS",
+                "samples": []
+            }]
         },
         {
             "name": "RandomizePlayer",
@@ -350,13 +329,11 @@ module.exports = {
                 "randomize music in {Player} squeeze box",
                 "randomize music on {Player} squeeze box"
             ],
-            "slots": [
-                {
-                    "name": "Player",
-                    "type": "PLAYERS",
-                    "samples": []
-                }
-            ]
+            "slots": [{
+                "name": "Player",
+                "type": "PLAYERS",
+                "samples": []
+            }]
         },
         {
             "name": "SelectPlayer",
@@ -385,13 +362,11 @@ module.exports = {
                 "set {Player} squeeze box",
                 "set the {Player} squeeze box"
             ],
-            "slots": [
-                {
-                    "name": "Player",
-                    "type": "PLAYERS",
-                    "samples": []
-                }
-            ]
+            "slots": [{
+                "name": "Player",
+                "type": "PLAYERS",
+                "samples": []
+            }]
         },
         {
             "name": "SetVolume",
@@ -421,8 +396,7 @@ module.exports = {
                 "change volume to {Volume} on {Player} squeeze box",
                 "change {Player} squeeze box to {Volume}"
             ],
-            "slots": [
-                {
+            "slots": [{
                     "name": "Player",
                     "type": "PLAYERS",
                     "samples": []
@@ -465,13 +439,11 @@ module.exports = {
                 "unpause player in {Player} squeeze box",
                 "unpause player {Player} squeeze box"
             ],
-            "slots": [
-                {
-                    "name": "Player",
-                    "type": "PLAYERS",
-                    "samples": []
-                }
-            ]
+            "slots": [{
+                "name": "Player",
+                "type": "PLAYERS",
+                "samples": []
+            }]
         },
         {
             "name": "SyncPlayers",
@@ -493,8 +465,7 @@ module.exports = {
                 "synchronize {FirstPlayer} squeeze box to {SecondPlayer} squeeze box",
                 "synchronize {FirstPlayer} squeeze box and {SecondPlayer} squeeze box"
             ],
-            "slots": [
-                {
+            "slots": [{
                     "name": "FirstPlayer",
                     "type": "PLAYERS",
                     "samples": []
@@ -515,13 +486,11 @@ module.exports = {
                 "unsync {Player} squeeze box",
                 "unsynchronize {Player} squeeze box"
             ],
-            "slots": [
-                {
-                    "name": "Player",
-                    "type": "PLAYERS",
-                    "samples": []
-                }
-            ]
+            "slots": [{
+                "name": "Player",
+                "type": "PLAYERS",
+                "samples": []
+            }]
         },
         {
             "name": "WhatsPlaying",
@@ -550,15 +519,12 @@ module.exports = {
                 "what's on in the {Player} squeeze box",
                 "what's on the {Player} squeeze box"
             ],
-            "slots": [
-                {
-                    "name": "Player",
-                    "type": "PLAYERS",
-                    "samples": []
-                }
-            ]
+            "slots": [{
+                "name": "Player",
+                "type": "PLAYERS",
+                "samples": []
+            }]
         }
     ],
-    "types": [
-    ]
+    "types": []
 };

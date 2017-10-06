@@ -78,7 +78,7 @@ function fixUpSlot(value) {
 // Job done!
 function uniq(a, slot) {
     var array = [];
-    _.forEach(a, function (entry) {
+    _.forEach(a, function(entry) {
         var value = entry[slot];
         if (isValidSlot(value) && doNotIgnore(value)) {
             var lowerCase = fixUpSlot(value);
@@ -88,7 +88,7 @@ function uniq(a, slot) {
             // console.log(value);
         }
     });
-    var unified = _.uniqWith(array, comparator)
+    var unified = _.uniqWith(array, comparator);
 
     return unified;
 
@@ -107,7 +107,7 @@ function callback(response) {
 
 function dumpToFile(slot, reply, assets) {
     return new Promise(
-        function (resolve, reject) {
+        function(resolve, reject) {
             if (!reply.ok) {
                 console.log("Failed to get " + slot + " from server");
                 reject(reply);
@@ -129,10 +129,10 @@ function dumpToFile(slot, reply, assets) {
 }
 
 function dumpSlotText(slot, types) {
-    var index = _.findIndex(types, function (o) { return o.name == slot.toUpperCase(); });
+    var index = _.findIndex(types, function(o) { return o.name == slot.toUpperCase(); });
     var text = '';
     var array = types[index].values;
-    _.forEach(array, function (value) {
+    _.forEach(array, function(value) {
         text += value.name.value + '\n';
     });
 
@@ -141,12 +141,12 @@ function dumpSlotText(slot, types) {
 
 function dumpUtterencesText(intents) {
     var text = '';
-    _.forEach(intents, function (intent) {
+    _.forEach(intents, function(intent) {
         // Get the intent
         var name = intent.name;
         var samples = intent.samples;
         // Add a line for each sample
-        _.forEach(samples, function (sample) {
+        _.forEach(samples, function(sample) {
             text += name + ' ' + sample + '\n';
         });
         // Add a blank line
@@ -157,13 +157,13 @@ function dumpUtterencesText(intents) {
 
 function dumpIntentsJson(intents) {
     var json = { "intents": [] };
-    _.forEach(intents, function (value) {
+    _.forEach(intents, function(value) {
         // Get the intent
         var intent = { "intent": value.name };
         var slots = value.slots;
         // Do we have any slots?
         if (slots && slots.length != 0) {
-            _.forEach(slots, function (slot) {
+            _.forEach(slots, function(slot) {
                 delete slot.samples;
             });
             intent = { "intent": value.name, "slots": slots };
@@ -180,7 +180,7 @@ function writeAssets(assets) {
 
 function getArray(a) {
     var output = [];
-    _.forEach(a, function (value) {
+    _.forEach(a, function(value) {
         output.push({ "name": { "value": value[0] } });
     });
     return output;
@@ -189,7 +189,7 @@ function getArray(a) {
 
 function getPlayerArray(a) {
     var output = [];
-    _.forEach(a, function (value) {
+    _.forEach(a, function(value) {
         output.push({ "name": { "value": value } });
     });
     return output;
@@ -197,8 +197,8 @@ function getPlayerArray(a) {
 
 function getResults(func) {
     return new Promise(
-        function (resolve, reject) {
-            var dumpResponse = function (reply) {
+        function(resolve, reject) {
+            var dumpResponse = function(reply) {
                 if (reply.ok) {
                     resolve(reply);
                 } else {
@@ -212,7 +212,7 @@ function getResults(func) {
 // Create a SqueezeServer object and connect to the server
 
 var squeezeserver = new SqueezeServer(config.squeezeserverURL, config.squeezeserverPort, config.squeezeServerUsername, config.squeezeServerPassword);
-squeezeserver.on('register', function () {
+squeezeserver.on('register', function() {
 
     var assets = defaultAssets;
     // Get a list of the albums on the server and print it out in the form of an utterance

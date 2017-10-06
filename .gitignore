@@ -30,3 +30,4 @@ speechAssets/intents.json
 
 # VS Code
 .vscode
+package-lock.json
