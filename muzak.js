@@ -26,9 +26,8 @@ var info = { Album: albums, Artist: artists, Genre: genres, Playlist: playlists 
  * @param event
  * @param context
  */
-
 exports.handler = function(event, context) {
-
+    "use strict";
     try {
 
         console.log("Event is %j", event);
@@ -60,6 +59,7 @@ exports.handler = function(event, context) {
 };
 
 function lookupInfo(slot, value) {
+    "use strict";
     if (value) {
         var check = value.toLowerCase();
         var result = info[slot].filter(function(obj) {
@@ -75,6 +75,7 @@ function lookupInfo(slot, value) {
  */
 
 function onSessionStarted(sessionStartedRequest, session) {
+    "use strict";
     console.log("onSessionStarted requestId=" + sessionStartedRequest.requestId + ", sessionId=" + session.sessionId);
 }
 
@@ -88,27 +89,30 @@ function onSessionStarted(sessionStartedRequest, session) {
  */
 
 function onLaunch(launchRequest, session, callback) {
-
+    "use strict";
     console.log("onLaunch requestId=" + launchRequest.requestId + ", sessionId=" + session.sessionId);
 
     // check to see if we need to open an ssh tunnel
     if (config.ssh_tunnel) {
-
+        console.log("Opening tunnel");
         var tunnel = require('tunnel-ssh');
         var server = tunnel(config.ssh_tunnel, function(error, server) {
             if (error) {
                 console.log(error);
             }
         });
-        // Use a listener to handle errors outside the callback 
+        console.log("Tunnel open");
+        // Use a listener to handle errors outside the callback
         server.on('error', function(err) {
-            // console.error('Something bad happened:', err);
+            console.error('Something bad happened:', err);
         });
+        console.log("Error unhandler");
     }
 
     // Connect to the squeeze server and wait for it to finish its registration.  We do this to make sure that it is online.
     var squeezeserver = new SqueezeServer(config.squeezeserverURL, config.squeezeserverPort, config.squeezeServerUsername, config.squeezeServerPassword);
     squeezeserver.on('register', function() {
+        console.log("SqueezeServer registered");
         startInteractiveSession(callback);
     });
 }
@@ -122,7 +126,7 @@ function onLaunch(launchRequest, session, callback) {
  */
 
 function onIntent(intentRequest, session, callback) {
-
+    "use strict";
     console.log("onIntent requestId=" + intentRequest.requestId + ", sessionId=" + session.sessionId);
 
     // Check for a Close intent
@@ -132,6 +136,22 @@ function onIntent(intentRequest, session, callback) {
         return;
     }
 
+    // check to see if we need to open an ssh tunnel
+    if (config.ssh_tunnel) {
+        console.log("Opening tunnel");
+        var tunnel = require('tunnel-ssh');
+        var server = tunnel(config.ssh_tunnel, function(error, server) {
+            if (error) {
+                console.log(error);
+            }
+        });
+        console.log("Tunnel open");
+        // Use a listener to handle errors outside the callback
+        server.on('error', function(err) {
+            console.error('Something bad happened:', err);
+        });
+        console.log("Error unhandler");
+    }
     // Connect to the squeeze server and wait for it to finish its registration
     var squeezeserver = new SqueezeServer(config.squeezeserverURL, config.squeezeserverPort, config.squeezeServerUsername, config.squeezeServerPassword);
     squeezeserver.on('register', function() {
@@ -141,8 +161,9 @@ function onIntent(intentRequest, session, callback) {
             if (reply.ok) {
                 console.log("getPlayers: %j", reply);
                 dispatchIntent(squeezeserver, reply.result, intentRequest.intent, session, callback);
-            } else
+            } else {
                 callback(session.attributes, buildSpeechletResponse("Get Players", "Failed to get list of players", null, true));
+            }
         });
     });
 }
@@ -158,7 +179,7 @@ function onIntent(intentRequest, session, callback) {
  */
 
 function dispatchIntent(squeezeserver, players, intent, session, callback) {
-
+    "use strict";
     var intentName = intent.name;
     console.log("Got intent: %j", intent);
     console.log("Session is %j", session);
@@ -185,6 +206,7 @@ function dispatchIntent(squeezeserver, players, intent, session, callback) {
 
 function dispatchSecondaryIntent(squeezeserver, players, intent, session, callback) {
 
+    "use strict";
     var intentName = intent.name;
 
     // Get the name of the player to look-up from the intent slot if present
@@ -309,6 +331,7 @@ function dispatchSecondaryIntent(squeezeserver, players, intent, session, callba
  */
 
 function onSessionEnded(sessionEndedRequest, session) {
+    "use strict";
     console.log("onSessionEnded requestId=" + sessionEndedRequest.requestId + ", sessionId=" + session.sessionId);
 }
 
@@ -321,7 +344,7 @@ function onSessionEnded(sessionEndedRequest, session) {
 function startInteractiveSession(callback) {
 
     // If we wanted to initialize the session to have some attributes we could add those here.
-
+    "use strict";
     var sessionAttributes = {};
     var cardTitle = "Control Started";
     var speechOutput = "Squeezebox control started";
@@ -339,7 +362,7 @@ function startInteractiveSession(callback) {
  */
 
 function closeInteractiveSession(callback) {
-
+    "use strict";
     var sessionAttributes = {};
     var cardTitle = "Control Ended";
     var speechOutput = "Squeezebox control ended";
@@ -359,7 +382,7 @@ function closeInteractiveSession(callback) {
  */
 
 function startPlayer(player, session, callback) {
-
+    "use strict";
     console.log("In startPlayer with player %s", player.name);
 
     try {
@@ -367,10 +390,12 @@ function startPlayer(player, session, callback) {
         // Start the player
 
         player.play(function(reply) {
-            if (reply.ok)
+            if (reply.ok) {
                 callback(session.attributes, buildSpeechletResponse("Start Player", "Playing " + player.name + " squeezebox", null, session.new));
-            else
+            }
+            else {
                 callback(session.attributes, buildSpeechletResponse("Start Player", "Failed to start player " + player.name + " squeezebox", null, true));
+            }
         });
 
     } catch (ex) {
@@ -388,10 +413,10 @@ function startPlayer(player, session, callback) {
  */
 
 function playPlaylist(player, intent, session, callback) {
-
+    "use strict";
     console.log("In playPlaylist with intent %j", intent);
     var possibleSlots = ["Artist", "Album", "Genre", "Playlist"];
-    var intentSlots = _.mapKeys(_.get(intent, "slots"), (value, key) => { return key.charAt(0).toUpperCase() + key.toLowerCase().substring(1) });
+    var intentSlots = _.mapKeys(_.get(intent, "slots"), (value, key) => { return key.charAt(0).toUpperCase() + key.toLowerCase().substring(1); });
     var values = {};
 
     console.log("Map keys done");
@@ -419,31 +444,35 @@ function playPlaylist(player, intent, session, callback) {
 
         // Format the text of the response based on what sort of playlist was requested
 
-        var text = "Whoops, something went wrong."
+        var text = "Whoops, something went wrong.";
 
         if (_.get(result, "ok")) {
             // This is all gross and kludge-y, but w/e.
             text = "Playing ";
             if (values.playlist) {
-                text += values.Playlist + " playlist."
+                text += values.Playlist + " playlist.";
             } else {
                 // Check that we have a genre, album or artist
                 if (_.isEmpty(values.Genre) && _.isEmpty(values.Album) && _.isEmpty(values.Artist)) {
                     text = "";
-                } else if (values.Genre)
+                } else if (values.Genre) {
                     text += "songs in the " + values.Genre + " genre";
+                }
                 else {
 
-                    if (values.Album)
+                    if (values.Album) {
                         text += values.Album;
-                    if (values.Album && values.Artist)
+                    }
+                    if (values.Album && values.Artist)  {
                         text += ' by ';
-                    if (values.Artist)
+                    }
+                    if (values.Artist) {
                         text += values.Artist;
+                    }
                 }
             }
         }
-        if (text != "") {
+        if (text !== "") {
             callback(session.attributes, buildSpeechletResponse("Play Playlist", text, null, true));
         } else {
             callback(session.attributes, buildSpeechletResponse("Play Playlist", "You request was not found in the library. Please try again", repromptText, false));
@@ -471,7 +500,7 @@ function playPlaylist(player, intent, session, callback) {
             }).then(reply);
         }
     }
-};
+}
 
 /**
  * Start a player to play random tracks
@@ -482,7 +511,7 @@ function playPlaylist(player, intent, session, callback) {
  */
 
 function randomizePlayer(player, session, callback) {
-
+    "use strict";
     console.log("In randomizePlayer with player %s", player.name);
 
     try {
@@ -490,10 +519,12 @@ function randomizePlayer(player, session, callback) {
         // Start and radomize the player
 
         player.randomPlay("tracks", function(reply) {
-            if (reply.ok)
+            if (reply.ok) {
                 callback(session.attributes, buildSpeechletResponse("Randomizing Player", "Randomizing. Playing " + player.name + " squeezebox", null, session.new));
-            else
+            }
+            else {
                 callback(session.attributes, buildSpeechletResponse("Randomizing Player", "Failed to randomize and play " + player.name + " squeezebox", null, true));
+            }
         });
 
     } catch (ex) {
@@ -512,6 +543,7 @@ function randomizePlayer(player, session, callback) {
 
 function startShuffle(player, session, callback) {
 
+    "use strict";
     console.log("In randomizePlayer with player %s", player.name);
 
     try {
@@ -519,10 +551,12 @@ function startShuffle(player, session, callback) {
         // Start and radomize the player
 
         player.startShuffle(function(reply) {
-            if (reply.ok)
+            if (reply.ok) {
                 callback(session.attributes, buildSpeechletResponse("Shuffling Player", "Shuffling. Playing " + player.name + " squeezebox", null, session.new));
-            else
+            }
+            else {
                 callback(session.attributes, buildSpeechletResponse("Shuffling Player", "Failed to shuffle and play " + player.name + " squeezebox", null, true));
+            }
         });
 
     } catch (ex) {
@@ -541,7 +575,7 @@ function startShuffle(player, session, callback) {
  */
 
 function stopShuffle(player, session, callback) {
-
+    "use strict";
     console.log("In randomizePlayer with player %s", player.name);
 
     try {
@@ -549,10 +583,12 @@ function stopShuffle(player, session, callback) {
         // Start and radomize the player
 
         player.stopShuffle(function(reply) {
-            if (reply.ok)
+            if (reply.ok) {
                 callback(session.attributes, buildSpeechletResponse("Stop shuffling Player", "Shuffling. Playing " + player.name + " squeezebox", null, session.new));
-            else
+            }
+            else {
                 callback(session.attributes, buildSpeechletResponse("Stop shuffling Player", "Failed to stop shuffle and play " + player.name + " squeezebox", null, true));
+            }
         });
 
     } catch (ex) {
@@ -573,7 +609,7 @@ function stopShuffle(player, session, callback) {
 function selectPlayer(player, session, callback) {
 
     // The player is already selected
-
+    "use strict";
     callback(session.attributes, buildSpeechletResponse("Select Player", "Selected player " + player.name, null, false));
 }
 
@@ -586,7 +622,7 @@ function selectPlayer(player, session, callback) {
  */
 
 function stopPlayer(player, session, callback) {
-
+    "use strict";
     try {
 
         console.log("In stopPlayer with player %s", player.name);
@@ -724,8 +760,8 @@ function syncPlayers(squeezeserver, players, intent, session, callback) {
         // Try to find the target players. We need the sqeezeserver player object for the first, but only the player info
         // object for the second.
 
-        player1 = findPlayerObject(squeezeserver, players, ((typeof intent.slots.FirstPlayer.value !== 'undefined') && (intent.slots.FirstPlayer.value != null) ? intent.slots.FirstPlayer.value : session.attributes.player));
-        if (player1 == null) {
+        player1 = findPlayerObject(squeezeserver, players, ((typeof intent.slots.FirstPlayer.value !== 'undefined') && (intent.slots.FirstPlayer.value !== null) ? intent.slots.FirstPlayer.value : session.attributes.player));
+        if (player1 === null) {
 
             // Couldn't find the player, return an error response
 
@@ -780,7 +816,7 @@ function namePlayers(players, session, callback) {
         // Build a list of player names
         for (var pl in players) {
             numplayers = numplayers + 1;
-            if (playernames == null) {
+            if (playernames === null) {
                 playernames = normalizePlayer(players[pl].name.toLowerCase());
             } else {
                 playernames = playernames + ". " + normalizePlayer(players[pl].name.toLowerCase());
@@ -788,7 +824,7 @@ function namePlayers(players, session, callback) {
         }
 
         // Report back the player count and individual names
-        if (playernames == null) {
+        if (playernames === null) {
             callback(session.attributes, buildSpeechletResponse("Name Players", "There are no squeezeboxes currently in your system", null, session.new));
         } else {
             var singleplural;
@@ -1071,7 +1107,7 @@ function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
             }
         },
         shouldEndSession: shouldEndSession
-    }
+    };
 }
 
 /**
@@ -1088,5 +1124,5 @@ function buildResponse(sessionAttributes, speechletResponse) {
         version: "1.0",
         sessionAttributes: sessionAttributes,
         response: speechletResponse
-    }
+    };
 }

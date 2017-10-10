@@ -11,7 +11,8 @@
     "muzak.js",
     "artist.js",
     "album.js",
-    "genre.js"
+    "genre.js",
+    "playlist.js"
   ],
   "devDependencies": {
     "claudia": "^2.9.0"
