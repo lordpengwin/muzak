@@ -432,7 +432,7 @@ function playPlaylist(player, intent, session, callback) {
                 break;
 
             default:
-                values[slotName] = _.startCase( // TODO: omg the LMS api is friggin case sensitive
+                values[slotName] = _.startCase(
                     _.get(intentSlots, slotName + ".value")
                 );
                 break;
@@ -630,8 +630,9 @@ function stopPlayer(player, session, callback) {
         // Stop the player
 
         player.power(0, function(reply) {
-            if (reply.ok)
+            if (reply.ok) {
                 callback(session.attributes, buildSpeechletResponse("Stop Player", "Stopped " + player.name + " squeezebox", null, session.new));
+            }
             else {
                 console.log("Reply %j", reply);
                 callback(session.attributes, buildSpeechletResponse("Stop Player", "Failed to stop player " + player.name + " squeezebox", null, true));
@@ -653,7 +654,7 @@ function stopPlayer(player, session, callback) {
  */
 
 function pausePlayer(player, session, callback) {
-
+    "use strict";
     try {
 
         console.log("In pausePlayer with player %s", player.name);
@@ -661,8 +662,9 @@ function pausePlayer(player, session, callback) {
         // Pause the player
 
         player.pause(function(reply) {
-            if (reply.ok)
+            if (reply.ok) {
                 callback(session.attributes, buildSpeechletResponse("Pause Player", "Paused " + player.name + " squeezebox", null, session.new));
+            }
             else {
                 console.log("Reply %j", reply);
                 callback(session.attributes, buildSpeechletResponse("Pause Player", "Failed to pause player " + player.name + " squeezebox", null, true));
@@ -684,7 +686,7 @@ function pausePlayer(player, session, callback) {
  */
 
 function previousTrack(player, session, callback) {
-
+    "use strict";
     try {
 
         console.log("In previousTrack with player %s", player.name);
@@ -692,8 +694,9 @@ function previousTrack(player, session, callback) {
         // Skip back 1 track on the player
 
         player.previous(function(reply) {
-            if (reply.ok)
+            if (reply.ok) {
                 callback(session.attributes, buildSpeechletResponse("Skip Back", "Skipped back " + player.name + " squeezebox", null, session.new));
+            }
             else {
                 console.log("Reply %j", reply);
                 callback(session.attributes, buildSpeechletResponse("Skip Back", "Failed to skip back player " + player.name + " squeezebox", null, true));
@@ -715,7 +718,7 @@ function previousTrack(player, session, callback) {
  */
 
 function nextTrack(player, session, callback) {
-
+    "use strict";
     try {
 
         console.log("In nextTrack with player %s", player.name);
@@ -723,8 +726,9 @@ function nextTrack(player, session, callback) {
         // Skip forward 1 track on the player
 
         player.next(function(reply) {
-            if (reply.ok)
+            if (reply.ok) {
                 callback(session.attributes, buildSpeechletResponse("Skip Forward", "Skipped forward " + player.name + " squeezebox", null, session.new));
+            }
             else {
                 console.log("Reply %j", reply);
                 callback(session.attributes, buildSpeechletResponse("Skip Forward", "Failed to skip forward player " + player.name + " squeezebox", null, true));
@@ -749,8 +753,8 @@ function nextTrack(player, session, callback) {
 
 function syncPlayers(squeezeserver, players, intent, session, callback) {
 
-    //// TODO: Need to make sure that both players are turned on.
-
+    // Need to make sure that both players are turned on.
+    "use strict";
     var player1 = null;
     var player2 = null;
     try {
