@@ -10,6 +10,18 @@ config.squeezeserverPort = 9000;
 config.squeezeServerUsername = "your username";
 config.squeezeServerPassword = "your password";
 
+// If you do not want to use ssh ssh_tunnel can be null
+
+config.ssh_tunnel = {
+    host: 'your ssh host',
+    password: 'your ssh password',
+    port: 22,
+    username: 'your ssh username',
+    keepAlive: true,
+    dstPort: 9000,
+    dstAddr: 'your ssh destination address'
+};
+
 // List the name of your squeezebox players 
 config.players = [ "Player one", "Player two", "Player three" ];
 

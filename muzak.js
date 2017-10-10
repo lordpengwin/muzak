@@ -10,12 +10,15 @@ var _ = require('lodash');
 var repromptText = "What do you want me to do";
 
 // Configuration
-
 var config = require('./config');
+
+// Slot info
 var albums = require('./album.js');
 var artists = require('./artist.js');
 var genres = require('./genre.js');
-var info = { Album: albums, Artist: artists, Genre: genres };
+var playlists = require('./playlist.js');
+var info = { Album: albums, Artist: artists, Genre: genres, Playlist: playlists };
+
 /**
  * Route the incoming request based on type (LaunchRequest, IntentRequest,
  * etc.) The JSON body of the request is provided in the event parameter.
@@ -24,7 +27,7 @@ var info = { Album: albums, Artist: artists, Genre: genres };
  * @param context
  */
 
-exports.handler = function (event, context) {
+exports.handler = function(event, context) {
 
     try {
 
@@ -59,7 +62,7 @@ exports.handler = function (event, context) {
 function lookupInfo(slot, value) {
     if (value) {
         var check = value.toLowerCase();
-        var result = info[slot].filter(function (obj) {
+        var result = info[slot].filter(function(obj) {
             return obj[0] === check;
         })[0];
 
@@ -88,10 +91,24 @@ function onLaunch(launchRequest, session, callback) {
 
     console.log("onLaunch requestId=" + launchRequest.requestId + ", sessionId=" + session.sessionId);
 
-    // Connect to the squeeze server and wait for it to finish its registration.  We do this to make sure that it is online.
+    // check to see if we need to open an ssh tunnel
+    if (config.ssh_tunnel) {
 
+        var tunnel = require('tunnel-ssh');
+        var server = tunnel(config.ssh_tunnel, function(error, server) {
+            if (error) {
+                console.log(error);
+            }
+        });
+        // Use a listener to handle errors outside the callback 
+        server.on('error', function(err) {
+            // console.error('Something bad happened:', err);
+        });
+    }
+
+    // Connect to the squeeze server and wait for it to finish its registration.  We do this to make sure that it is online.
     var squeezeserver = new SqueezeServer(config.squeezeserverURL, config.squeezeserverPort, config.squeezeServerUsername, config.squeezeServerPassword);
-    squeezeserver.on('register', function () {
+    squeezeserver.on('register', function() {
         startInteractiveSession(callback);
     });
 }
@@ -117,10 +134,10 @@ function onIntent(intentRequest, session, callback) {
 
     // Connect to the squeeze server and wait for it to finish its registration
     var squeezeserver = new SqueezeServer(config.squeezeserverURL, config.squeezeserverPort, config.squeezeServerUsername, config.squeezeServerPassword);
-    squeezeserver.on('register', function () {
+    squeezeserver.on('register', function() {
 
         // Get the list of players as any request will require them
-        squeezeserver.getPlayers(function (reply) {
+        squeezeserver.getPlayers(function(reply) {
             if (reply.ok) {
                 console.log("getPlayers: %j", reply);
                 dispatchIntent(squeezeserver, reply.result, intentRequest.intent, session, callback);
@@ -173,7 +190,7 @@ function dispatchSecondaryIntent(squeezeserver, players, intent, session, callba
     // Get the name of the player to look-up from the intent slot if present
     var name = ((typeof intent.slots !== 'undefined') && (typeof intent.slots.Player.value !== 'undefined') && (intent.slots.Player.value !== null) ? intent.slots.Player.value :
         (typeof session.attributes !== 'undefined' ? session.attributes.player : ""));
-    
+
     // Try to find the target player
     var player = findPlayerObject(squeezeserver, players, name);
     if (player === null || player === undefined) {
@@ -349,7 +366,7 @@ function startPlayer(player, session, callback) {
 
         // Start the player
 
-        player.play(function (reply) {
+        player.play(function(reply) {
             if (reply.ok)
                 callback(session.attributes, buildSpeechletResponse("Start Player", "Playing " + player.name + " squeezebox", null, session.new));
             else
@@ -378,10 +395,10 @@ function playPlaylist(player, intent, session, callback) {
     var values = {};
 
     console.log("Map keys done");
-    
+
     // Transform our slot data into a friendlier object.
 
-    _.each(possibleSlots, function (slotName) {
+    _.each(possibleSlots, function(slotName) {
         switch (slotName) {
             case 'Artist':
             case 'Album':
@@ -398,7 +415,7 @@ function playPlaylist(player, intent, session, callback) {
     });
 
     console.log("before reply");
-    var reply = function (result) {
+    var reply = function(result) {
 
         // Format the text of the response based on what sort of playlist was requested
 
@@ -447,7 +464,7 @@ function playPlaylist(player, intent, session, callback) {
                 method: 'playlist',
                 params: [
                     'loadalbum',
-                    _.isEmpty(values.Genre) ? "*" : values.Genre,  // LMS wants an asterisk if nothing if specified
+                    _.isEmpty(values.Genre) ? "*" : values.Genre, // LMS wants an asterisk if nothing if specified
                     _.isEmpty(values.Artist) ? "*" : values.Artist,
                     _.isEmpty(values.Album) ? "*" : values.Album
                 ]
@@ -472,7 +489,7 @@ function randomizePlayer(player, session, callback) {
 
         // Start and radomize the player
 
-        player.randomPlay("tracks", function (reply) {
+        player.randomPlay("tracks", function(reply) {
             if (reply.ok)
                 callback(session.attributes, buildSpeechletResponse("Randomizing Player", "Randomizing. Playing " + player.name + " squeezebox", null, session.new));
             else
@@ -501,7 +518,7 @@ function startShuffle(player, session, callback) {
 
         // Start and radomize the player
 
-        player.startShuffle(function (reply) {
+        player.startShuffle(function(reply) {
             if (reply.ok)
                 callback(session.attributes, buildSpeechletResponse("Shuffling Player", "Shuffling. Playing " + player.name + " squeezebox", null, session.new));
             else
@@ -531,7 +548,7 @@ function stopShuffle(player, session, callback) {
 
         // Start and radomize the player
 
-        player.stopShuffle(function (reply) {
+        player.stopShuffle(function(reply) {
             if (reply.ok)
                 callback(session.attributes, buildSpeechletResponse("Stop shuffling Player", "Shuffling. Playing " + player.name + " squeezebox", null, session.new));
             else
@@ -576,7 +593,7 @@ function stopPlayer(player, session, callback) {
 
         // Stop the player
 
-        player.power(0, function (reply) {
+        player.power(0, function(reply) {
             if (reply.ok)
                 callback(session.attributes, buildSpeechletResponse("Stop Player", "Stopped " + player.name + " squeezebox", null, session.new));
             else {
@@ -607,7 +624,7 @@ function pausePlayer(player, session, callback) {
 
         // Pause the player
 
-        player.pause(function (reply) {
+        player.pause(function(reply) {
             if (reply.ok)
                 callback(session.attributes, buildSpeechletResponse("Pause Player", "Paused " + player.name + " squeezebox", null, session.new));
             else {
@@ -638,7 +655,7 @@ function previousTrack(player, session, callback) {
 
         // Skip back 1 track on the player
 
-        player.previous(function (reply) {
+        player.previous(function(reply) {
             if (reply.ok)
                 callback(session.attributes, buildSpeechletResponse("Skip Back", "Skipped back " + player.name + " squeezebox", null, session.new));
             else {
@@ -669,7 +686,7 @@ function nextTrack(player, session, callback) {
 
         // Skip forward 1 track on the player
 
-        player.next(function (reply) {
+        player.next(function(reply) {
             if (reply.ok)
                 callback(session.attributes, buildSpeechletResponse("Skip Forward", "Skipped forward " + player.name + " squeezebox", null, session.new));
             else {
@@ -727,7 +744,7 @@ function syncPlayers(squeezeserver, players, intent, session, callback) {
 
         if (player1 && player2) {
             console.log("Found players: %j and player2", player1, player2);
-            player1.sync(player2.playerindex, function (reply) {
+            player1.sync(player2.playerindex, function(reply) {
                 if (reply.ok)
                     callback(session.attributes, buildSpeechletResponse("Sync Players", "Synced " + player1.name + " to " + player2.name, null, session.new));
                 else {
@@ -805,7 +822,7 @@ function getPlayerVolume(player, session, callback, delta) {
 
         // Get the volume of the player
 
-        player.getVolume(function (reply) {
+        player.getVolume(function(reply) {
             if (reply.ok) {
                 var volume = Number(reply.result);
                 setPlayerVolume(player, volume + delta, session, callback);
@@ -843,7 +860,7 @@ function setPlayerVolume(player, volume, session, callback) {
 
         // Set the volume on the player
 
-        player.setVolume(volume, function (reply) {
+        player.setVolume(volume, function(reply) {
             if (reply.ok)
                 callback(session.attributes, buildSpeechletResponse("Set Player Volume", "Player " + player.name + " set to volume " + volume, null, session.new));
             else {
@@ -874,7 +891,7 @@ function unsyncPlayer(player, session, callback) {
 
         // Unsynchronize the player
 
-        player.unSync(function (reply) {
+        player.unSync(function(reply) {
             if (reply.ok)
                 callback(session.attributes, buildSpeechletResponse("Unsync Player", "Player " + player.name + " unsynced", null, session.new));
             else {
@@ -935,17 +952,17 @@ function whatsPlaying(player, session, callback) {
 
         // Ask the player it what it is playing. This is a series of requests for the song, artist and album
 
-        player.getCurrentTitle(function (reply) {
+        player.getCurrentTitle(function(reply) {
             if (reply.ok) {
 
                 // We got the title now get the artist
 
                 var title = reply.result;
-                player.getArtist(function (reply) {
+                player.getArtist(function(reply) {
 
                     if (reply.ok) {
                         var artist = reply.result;
-                        player.getAlbum(function (reply) {
+                        player.getAlbum(function(reply) {
 
                             if (reply.ok) {
                                 var album = reply.result;
@@ -995,7 +1012,7 @@ function findPlayerObject(squeezeserver, players, name) {
     for (var pl in players) {
         if (
             players[pl].name.toLowerCase() === name || // name matches the requested player
-            (name === "" && players.length === 1)      // name is undefined and there's only one player,
+            (name === "" && players.length === 1) // name is undefined and there's only one player,
             // so assume that's the one we want.
         ) {
             return squeezeserver.players[players[pl].playerid];

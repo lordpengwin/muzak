@@ -13,10 +13,26 @@
 
 var fs = require('fs');
 var _ = require('lodash');
+var config = require('./config');
+
+if (config.ssh_tunnel) {
+
+    var tunnel = require('tunnel-ssh');
+    var server = tunnel(config.ssh_tunnel, function(error, server) {
+        if (error) {
+            console.log(error);
+        }
+    });
+    // Use a listener to handle errors outside the callback 
+    server.on('error', function(err) {
+        // console.error('Something bad happened:', err);
+    });
+}
+
+
 var SqueezeServer = require('squeezenode-lordpengwin');
 // Configuration
 
-var config = require('./config');
 var defaultAssets = require('./default-assets.js');
 
 // Add the players from config to the defaultAssets
@@ -195,7 +211,7 @@ function getPlayerArray(a) {
     return output;
 }
 
-function getResults(func) {
+function getResults(slot) {
     return new Promise(
         function(resolve, reject) {
             var dumpResponse = function(reply) {
@@ -205,23 +221,30 @@ function getResults(func) {
                     reject(reply);
                 }
             };
-            func(dumpResponse, 5000);
+            squeezeserver.getInfo(dumpResponse, 5000, slot);
         }
     );
 }
 // Create a SqueezeServer object and connect to the server
 
 var squeezeserver = new SqueezeServer(config.squeezeserverURL, config.squeezeserverPort, config.squeezeServerUsername, config.squeezeServerPassword);
+squeezeserver.on('error', function(err) {
+    console.error('Something bad happened:', err);
+});
+
 squeezeserver.on('register', function() {
 
     var assets = defaultAssets;
     // Get a list of the albums on the server and print it out in the form of an utterance
-    getResults(squeezeserver.getAlbums)
+    getResults('albums')
         .then(result => dumpToFile('album', result, assets)
-            .then(getResults(squeezeserver.getArtists)
+            .then(getResults('artists')
                 .then(result => dumpToFile('artist', result, assets)
-                    .then(getResults(squeezeserver.getGenres)
+                    .then(getResults('genres')
                         .then(result => dumpToFile('genre', result, assets)
-                            .then(writeAssets(assets)))))));
+                            .then(getResults('playlists')
+                                .then(result => dumpToFile('playlist', result, assets)
+                                    .then(writeAssets(assets))
+                                    .then(server.close()))))))));
     // squeezeserver.getPlayers(dumpPlayers);
 });

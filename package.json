@@ -19,6 +19,7 @@
   "dependencies": {
     "geoffAtHome": "git+https://github.com/geoffAtHome/squeezenode.git",
     "lodash": "^4.17.4",
-    "squeezenode-lordpengwin": "github:GeoffAtHome/squeezenode"
+    "squeezenode-lordpengwin": "git+https://github.com/GeoffAtHome/squeezenode.git",
+    "tunnel-ssh": "^4.1.3"
   }
 }
