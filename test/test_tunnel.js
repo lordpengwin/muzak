@@ -1,4 +1,4 @@
-var config = require('./config');
+var config = require('./../config');
 var tunnel = require('tunnel-ssh');
 var server = tunnel(config.ssh_tunnel, function(error, server) {
     if (error) {

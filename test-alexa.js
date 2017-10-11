@@ -7,27 +7,26 @@
 
 var alexa = require('./muzak.js');
 var albums = require('./album.js');
-var event =
-    {
-        "session": {
-            "sessionId": "SessionId.db722cda-05c0-4ca0-898d-518892039909",
-            "application": {
-                "applicationId": "amzn1.ask.skill.d7815bc8-b1fa-408b-81ab-03def6670e0f"
-            },
-            "attributes": {},
-            "user": {
-                "userId": "amzn1.ask.account.AH4CSKQDMVFG4W7OFXU6XTSNCOMUHXXQB4W27JLRLX42RJCMF6V7HWVWWEDZT4JXTEDQ7K2DEEKZXBOVSN3BV3EUOVYLLP2565JICIWN4GWNAHBPFRQ2SYDDXQZGRPCIWNOQW6NXG7OWADY7JRPKDC6RGH4KM4NV7K7UWFSTUBZAJFLLTDU7TMPAU4K5ERPKFUIJYLTMNGVOAJQ"
-            },
-            "new": true
+var event = {
+    "session": {
+        "sessionId": "SessionId.db722cda-05c0-4ca0-898d-518892039909",
+        "application": {
+            "applicationId": "amzn1.ask.skill.d7815bc8-b1fa-408b-81ab-03def6670e0f"
         },
-        "request": {
-            "type": "LaunchRequest",
-            "requestId": "EdwRequestId.104ee817-0909-48a6-86de-ed7b685e90f1",
-            "locale": "en-GB",
-            "timestamp": "2017-05-01T13:01:13Z"
+        "attributes": {},
+        "user": {
+            "userId": "amzn1.ask.account.AH4CSKQDMVFG4W7OFXU6XTSNCOMUHXXQB4W27JLRLX42RJCMF6V7HWVWWEDZT4JXTEDQ7K2DEEKZXBOVSN3BV3EUOVYLLP2565JICIWN4GWNAHBPFRQ2SYDDXQZGRPCIWNOQW6NXG7OWADY7JRPKDC6RGH4KM4NV7K7UWFSTUBZAJFLLTDU7TMPAU4K5ERPKFUIJYLTMNGVOAJQ"
         },
-        "version": "1.0"
-    };
+        "new": true
+    },
+    "request": {
+        "type": "LaunchRequest",
+        "requestId": "EdwRequestId.104ee817-0909-48a6-86de-ed7b685e90f1",
+        "locale": "en-GB",
+        "timestamp": "2017-05-01T13:01:13Z"
+    },
+    "version": "1.0"
+};
 
 var selectOurRoom = {
     "session": {
@@ -148,7 +147,7 @@ var shuffle = {
             "applicationId": "amzn1.ask.skill.d7815bc8-b1fa-408b-81ab-03def6670e0f"
         },
         "attributes": {
-            "player": "our room"
+            "player": "phone"
         },
         "user": {
             "userId": "amzn1.ask.account.AH4CSKQDMVFG4W7OFXU6XTSNCOMUHXXQB4W27JLRLX42RJCMF6V7HWVWWEDZT4JXTEDQ7K2DEEKZXBOVSN3BV3EUOVYLLP2565JICIWN4GWNAHBPFRQ2SYDDXQZGRPCIWNOQW6NXG7OWADY7JRPKDC6RGH4KM4NV7K7UWFSTUBZAJFLLTDU7TMPAU4K5ERPKFUIJYLTMNGVOAJQ"
