@@ -5,6 +5,7 @@
 
 //  Integration with the squeeze server
 
+var tunnel = require('tunnel-ssh');
 var SqueezeServer = require('squeezenode-lordpengwin');
 var _ = require('lodash');
 var rePromptText = "What do you want me to do";
@@ -18,6 +19,25 @@ var artists = require('./artist.js');
 var genres = require('./genre.js');
 var playlists = require('./playlist.js');
 var info = { Album: albums, Artist: artists, Genre: genres, Playlist: playlists };
+
+var server;
+
+// check to see if we need to open an ssh tunnel
+if (config.ssh_tunnel) {
+    console.log("Opening tunnel");
+    server = tunnel(config.ssh_tunnel, function(error, server) {
+        if (error) {
+            console.log(error);
+        }
+    });
+    console.log("Tunnel open");
+    // Use a listener to handle errors outside the callback
+    server.on('error', function(err) {
+        // console.error('Something bad happened:', err);
+    });
+    console.log("Error handler");
+}
+
 
 /**
  * Route the incoming request based on type (LaunchRequest, IntentRequest,
@@ -92,23 +112,6 @@ function onLaunch(launchRequest, session, callback) {
     "use strict";
     console.log("onLaunch requestId=" + launchRequest.requestId + ", sessionId=" + session.sessionId);
 
-    // check to see if we need to open an ssh tunnel
-    if (config.ssh_tunnel) {
-        console.log("Opening tunnel");
-        var tunnel = require('tunnel-ssh');
-        var server = tunnel(config.ssh_tunnel, function(error, server) {
-            if (error) {
-                console.log(error);
-            }
-        });
-        console.log("Tunnel open");
-        // Use a listener to handle errors outside the callback
-        server.on('error', function(err) {
-            // console.error('Something bad happened:', err);
-        });
-        console.log("Error handler");
-    }
-
     // Connect to the squeeze server and wait for it to finish its registration.  We do this to make sure that it is online.
     var squeezeserver = new SqueezeServer(config.squeezeserverURL, config.squeezeserverPort, config.squeezeServerUsername, config.squeezeServerPassword);
     squeezeserver.on('register', function() {
@@ -136,22 +139,6 @@ function onIntent(intentRequest, session, callback) {
         return;
     }
 
-    // check to see if we need to open an ssh tunnel
-    if (config.ssh_tunnel) {
-        console.log("Opening tunnel");
-        var tunnel = require('tunnel-ssh');
-        var server = tunnel(config.ssh_tunnel, function(error, server) {
-            if (error) {
-                console.log(error);
-            }
-        });
-        console.log("Tunnel open");
-        // Use a listener to handle errors outside the callback
-        server.on('error', function(err) {
-            // console.error('Something bad happened:', err);
-        });
-        console.log("Error handler");
-    }
     // Connect to the squeeze server and wait for it to finish its registration
     var squeezeserver = new SqueezeServer(config.squeezeserverURL, config.squeezeserverPort, config.squeezeServerUsername, config.squeezeServerPassword);
     squeezeserver.on('register', function() {
