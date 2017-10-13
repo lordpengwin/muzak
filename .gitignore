@@ -20,6 +20,7 @@ config.js
 artist.js
 album.js
 genre.js
+title.js
 playlist.js
 speechAssets/speechAssets.json
 speechAssets/ALBUM.txt
@@ -27,9 +28,11 @@ speechAssets/ARTIST.txt
 speechAssets/GENRE.txt
 speechAssets/PLAYERS.txt
 speechAssets/PLAYLIST.txt
+speechAssets/TITLE.txt
 speechAssets/utterences.txt
 speechAssets/intents.json
 
 # VS Code
 .vscode
 package-lock.json
+

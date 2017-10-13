@@ -221,7 +221,7 @@ function getResults(slot) {
                     reject(reply);
                 }
             };
-            squeezeserver.getInfo(dumpResponse, 5000, slot);
+            squeezeserver.getInfo(dumpResponse, 50000, slot);
         }
     );
 }
@@ -240,11 +240,13 @@ squeezeserver.on('register', function() {
         .then(result => dumpToFile('album', result, assets)
             .then(getResults('artists')
                 .then(result => dumpToFile('artist', result, assets)
-                    .then(getResults('genres')
-                        .then(result => dumpToFile('genre', result, assets)
-                            .then(getResults('playlists')
-                                .then(result => dumpToFile('playlist', result, assets)
-                                    .then(writeAssets(assets))
-                                    .then(server.close()))))))));
+                    .then(getResults('titles')
+                        .then(result => dumpToFile('title', result, assets)
+                            .then(getResults('genres')
+                                .then(result => dumpToFile('genre', result, assets)
+                                    .then(getResults('playlists')
+                                        .then(result => dumpToFile('playlist', result, assets)
+                                            .then(writeAssets(assets))
+                                            .then(server.close()))))))))));
     // squeezeserver.getPlayers(dumpPlayers);
 });

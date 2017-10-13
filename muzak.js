@@ -18,7 +18,8 @@ var albums = require('./album.js');
 var artists = require('./artist.js');
 var genres = require('./genre.js');
 var playlists = require('./playlist.js');
-var info = { Album: albums, Artist: artists, Genre: genres, Playlist: playlists };
+var titles = require('./title.js');
+var info = { Album: albums, Artist: artists, Genre: genres, Playlist: playlists, Title: titles };
 
 var server;
 
@@ -401,7 +402,7 @@ function startPlayer(player, session, callback) {
 function playPlaylist(player, intent, session, callback) {
     "use strict";
     console.log("In playPlaylist with intent %j", intent);
-    var possibleSlots = ["Artist", "Album", "Genre", "Playlist"];
+    var possibleSlots = ["Playlist", "Genre", "Artist", "Album", "Title"];
     var intentSlots = _.mapKeys(_.get(intent, "slots"), (value, key) => { return key.charAt(0).toUpperCase() + key.toLowerCase().substring(1); });
     var values = {};
 
@@ -414,6 +415,8 @@ function playPlaylist(player, intent, session, callback) {
             case 'Artist':
             case 'Album':
             case 'Genre':
+            case 'Title':
+            case 'Playlist:':
                 values[slotName] = lookupInfo(slotName, _.get(intentSlots, slotName + ".value"));
                 break;
 
@@ -458,7 +461,7 @@ function playPlaylist(player, intent, session, callback) {
             }
         }
         if (text !== "") {
-            callback(session.attributes, buildSpeechResponse("Play Playlist", text, null, true));
+            callback(session.attributes, buildSpeechResponse("Play Playlist", text, rePromptText, false));
         } else {
             callback(session.attributes, buildSpeechResponse("Play Playlist", "You request was not found in the library. Please try again", rePromptText, false));
         }
