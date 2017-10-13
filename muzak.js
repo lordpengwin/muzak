@@ -1052,7 +1052,11 @@ function findPlayerObject(squeezeserver, players, name) {
 
 function normalizePlayer(playerName) {
 
-    playerName || (playerName = ''); // protect against `playerName` being undefined
+    // protect against `playerName` being undefined
+    if (!playerName) {
+        playerName = '';
+    }
+
 
     // After the switch to custom slots multi name players like living room became living-room. Revert the string back to what it was
 
