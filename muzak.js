@@ -442,7 +442,7 @@ function playPlaylist(player, intent, session, callback) {
                 text += values.Playlist + " playlist.";
             } else {
                 // Check that we have a genre, album or artist
-                if (_.isEmpty(values.Genre) && _.isEmpty(values.Album) && _.isEmpty(values.Artist)) {
+                if (_.isEmpty(values.Genre) && _.isEmpty(values.Album) && _.isEmpty(values.Title) && _.isEmpty(values.Artist)) {
                     text = "";
                 } else if (values.Genre) {
                     text += "songs in the " + values.Genre + " genre";
@@ -450,8 +450,10 @@ function playPlaylist(player, intent, session, callback) {
 
                     if (values.Album) {
                         text += values.Album;
+                    } else if (values.Title) {
+                        text += values.Title;
                     }
-                    if (values.Album && values.Artist) {
+                    if ((values.Album || values.Title) && values.Artist) {
                         text += ' by ';
                     }
                     if (values.Artist) {
@@ -469,7 +471,7 @@ function playPlaylist(player, intent, session, callback) {
 
     // If a value for playlist is present, ignore everything else and play that
     // playlist, otherwise play whatever artist and/or artist is present.
-    if (!_.isEmpty(values.Playlist) || !_.isEmpty(values.Genre) || !_.isEmpty(values.Album) || !_.isEmpty(values.Artist)) {
+    if (!_.isEmpty(values.Playlist) || !_.isEmpty(values.Genre) || !_.isEmpty(values.Album) || !_.isEmpty(values.Title) || !_.isEmpty(values.Artist)) {
 
         if (values.Playlist) {
             player.callMethod({
@@ -483,6 +485,7 @@ function playPlaylist(player, intent, session, callback) {
                     'loadalbum',
                     _.isEmpty(values.Genre) ? "*" : values.Genre, // LMS wants an asterisk if nothing if specified
                     _.isEmpty(values.Artist) ? "*" : values.Artist,
+                    _.isEmpty(values.Title) ? "*" : values.Title,
                     _.isEmpty(values.Album) ? "*" : values.Album
                 ]
             }).then(reply);
