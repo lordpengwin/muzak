@@ -147,12 +147,17 @@ function dumpToFile(slot, reply, assets) {
 function dumpSlotText(slot, types) {
     var index = _.findIndex(types, function(o) { return o.name == slot.toUpperCase(); });
     var text = '';
+    var dir = './speechAssets/';
+    
+    if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+    }    
     var array = types[index].values;
     _.forEach(array, function(value) {
         text += value.name.value + '\n';
     });
 
-    fs.writeFile('./speechAssets/' + slot.toUpperCase() + '.txt', text, 'utf8', callback);
+    fs.writeFile(dir + slot.toUpperCase() + '.txt', text, 'utf8', callback);
 }
 
 function dumpUtterencesText(intents) {
@@ -178,12 +183,12 @@ function dumpIntentsJson(intents) {
         var intent = { "intent": value.name };
         var slots = value.slots;
         // Do we have any slots?
-        if (slots && slots.length != 0) {
+        /* if (slots && slots.length != 0) {
             _.forEach(slots, function(slot) {
                 delete slot.samples;
             });
             intent = { "intent": value.name, "slots": slots };
-        }
+        } */
         json.intents.push(intent);
     });
     fs.writeFile('./speechAssets/intents.json', JSON.stringify(json, null, 2), 'utf8', callback);

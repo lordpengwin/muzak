@@ -27,7 +27,8 @@
 // Default speech assets.
 // When create-assets is run, the ARTIST, ALBUM and GENRE slots are filled out
 // from your squeezebox server
-module.exports = {
+module.exports = 
+{
     "intents": [{
         "name": "AMAZON.LoopOffIntent",
         "samples": []
@@ -211,6 +212,10 @@ module.exports = {
             "play {Album}",
             "play the {Album}",
             "play {Artist}",
+            "play {Title}",
+            "play the track {Title}",
+            "play the song {Title}",
+            "play {Title} by {Artist}",
             "to play {Genre}",
             "to play some {Genre}",
             "to play {Album}",
@@ -233,6 +238,11 @@ module.exports = {
                 {
             "name": "Album",
             "type": "ALBUM",
+            "samples": []
+        },
+                {
+            "name": "Title",
+            "type": "TITLE",
             "samples": []
         },
                 {
