@@ -180,14 +180,16 @@ function fail(respose) {
 
 function lookup(value) {
     var check = value.toLowerCase();
-    var result = albums.filter(function(obj) {
-        return obj.toLowerCase() === check;
-    })[0];
-
-    return result[1];
+    var result = albums.filter(item => check === item[0]);
+    if (!result[0]) {
+        return "";
+    }
+    return result[0][1];
 }
 
 context = { succeed, fail };
+a = lookup('Money for Nothing');
+b = lookup('xyzzy');
 
 alexa.handler(event, context);
 alexa.handler(shuffle, context);

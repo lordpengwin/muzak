@@ -83,11 +83,12 @@ function lookupInfo(slot, value) {
     "use strict";
     if (value) {
         var check = value.toLowerCase();
-        var result = info[slot].filter(function(obj) {
-            return obj[0] === check;
-        })[0];
+        var result = info[slot].filter(item => check === item[0]);
 
-        return result[1];
+        if (!result[0]) {
+            return "";
+        }
+        return result[0][1];
     }
 }
 
