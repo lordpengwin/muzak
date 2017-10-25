@@ -50,13 +50,71 @@ var selectOurRoom = {
             "slots": {
                 "Player": {
                     "name": "Player",
-                    "value": "Phone"
+                    "value": "our room"
                 }
             }
         }
     },
     "version": "1.0"
 };
+
+var playEveryBreathYouTake = {
+    "session": {
+      "new": true,
+      "sessionId": "SessionId.8d9c62a1-15cd-4842-aacb-530517c3ae89",
+      "application": {
+        "applicationId": "amzn1.ask.skill.d7815bc8-b1fa-408b-81ab-03def6670e0f"
+      },
+      "attributes": {},
+      "user": {
+        "userId": "amzn1.ask.account.AH4CSKQDMVFG4W7OFXU6XTSNCOMUHXXQB4W27JLRLX42RJCMF6V7HWVWWEDZT4JXTEDQ7K2DEEKZXBOVSN3BV3EUOVYLLP2565JICIWN4GWNAHBPFRQ2SYDDXQZGRPCIWNOQW6NXG7OWADY7JRPKDC6RGH4KM4NV7K7UWFSTUBZAJFLLTDU7TMPAU4K5ERPKFUIJYLTMNGVOAJQ"
+      }
+    },
+    "request": {
+      "type": "IntentRequest",
+      "requestId": "EdwRequestId.f60a1e44-86e4-4892-b9b5-694979eb90fd",
+      "intent": {
+        "name": "PlayPlaylist",
+        "slots": {
+          "Artist": {
+            "name": "Artist"
+          },
+          "Player": {
+            "name": "Player"
+          },
+          "Album": {
+            "name": "Album"
+          },
+          "Title": {
+            "name": "Title",
+            "value": "every breath you take"
+          },
+          "Genre": {
+            "name": "Genre"
+          }
+        }
+      },
+      "locale": "en-GB",
+      "timestamp": "2017-10-25T17:54:06Z"
+    },
+    "context": {
+      "AudioPlayer": {
+        "playerActivity": "IDLE"
+      },
+      "System": {
+        "application": {
+          "applicationId": "amzn1.ask.skill.d7815bc8-b1fa-408b-81ab-03def6670e0f"
+        },
+        "user": {
+          "userId": "amzn1.ask.account.AH4CSKQDMVFG4W7OFXU6XTSNCOMUHXXQB4W27JLRLX42RJCMF6V7HWVWWEDZT4JXTEDQ7K2DEEKZXBOVSN3BV3EUOVYLLP2565JICIWN4GWNAHBPFRQ2SYDDXQZGRPCIWNOQW6NXG7OWADY7JRPKDC6RGH4KM4NV7K7UWFSTUBZAJFLLTDU7TMPAU4K5ERPKFUIJYLTMNGVOAJQ"
+        },
+        "device": {
+          "supportedInterfaces": {}
+        }
+      }
+    },
+    "version": "1.0"
+  };
 
 var playDarkSideOfTheMoon = {
     "session": {
@@ -65,7 +123,7 @@ var playDarkSideOfTheMoon = {
             "applicationId": "amzn1.ask.skill.d7815bc8-b1fa-408b-81ab-03def6670e0f"
         },
         "attributes": {
-            "player": "phone"
+            "player": "our room"
         },
         "user": {
             "userId": "amzn1.ask.account.AH4CSKQDMVFG4W7OFXU6XTSNCOMUHXXQB4W27JLRLX42RJCMF6V7HWVWWEDZT4JXTEDQ7K2DEEKZXBOVSN3BV3EUOVYLLP2565JICIWN4GWNAHBPFRQ2SYDDXQZGRPCIWNOQW6NXG7OWADY7JRPKDC6RGH4KM4NV7K7UWFSTUBZAJFLLTDU7TMPAU4K5ERPKFUIJYLTMNGVOAJQ"
@@ -106,7 +164,7 @@ var playPinkFloyd = {
             "applicationId": "amzn1.ask.skill.d7815bc8-b1fa-408b-81ab-03def6670e0f"
         },
         "attributes": {
-            "player": "phone"
+            "player": "our room"
         },
         "user": {
             "userId": "amzn1.ask.account.AH4CSKQDMVFG4W7OFXU6XTSNCOMUHXXQB4W27JLRLX42RJCMF6V7HWVWWEDZT4JXTEDQ7K2DEEKZXBOVSN3BV3EUOVYLLP2565JICIWN4GWNAHBPFRQ2SYDDXQZGRPCIWNOQW6NXG7OWADY7JRPKDC6RGH4KM4NV7K7UWFSTUBZAJFLLTDU7TMPAU4K5ERPKFUIJYLTMNGVOAJQ"
@@ -147,7 +205,7 @@ var shuffle = {
             "applicationId": "amzn1.ask.skill.d7815bc8-b1fa-408b-81ab-03def6670e0f"
         },
         "attributes": {
-            "player": "phone"
+            "player": "our room"
         },
         "user": {
             "userId": "amzn1.ask.account.AH4CSKQDMVFG4W7OFXU6XTSNCOMUHXXQB4W27JLRLX42RJCMF6V7HWVWWEDZT4JXTEDQ7K2DEEKZXBOVSN3BV3EUOVYLLP2565JICIWN4GWNAHBPFRQ2SYDDXQZGRPCIWNOQW6NXG7OWADY7JRPKDC6RGH4KM4NV7K7UWFSTUBZAJFLLTDU7TMPAU4K5ERPKFUIJYLTMNGVOAJQ"
@@ -191,6 +249,7 @@ context = { succeed, fail };
 a = lookup('Money for Nothing');
 b = lookup('xyzzy');
 
-alexa.handler(event, context);
-alexa.handler(shuffle, context);
 // alexa.handler(playPinkFloyd, context);
+alexa.handler(playEveryBreathYouTake, context);
+// alexa.handler(event, context);
+// alexa.handler(shuffle, context);

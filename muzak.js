@@ -474,7 +474,13 @@ function playPlaylist(player, intent, session, callback) {
     // playlist, otherwise play whatever artist and/or artist is present.
     if (!_.isEmpty(values.Playlist) || !_.isEmpty(values.Genre) || !_.isEmpty(values.Album) || !_.isEmpty(values.Title) || !_.isEmpty(values.Artist)) {
 
-        if (values.Playlist) {
+        if (values.Title) {
+            player.callMethod({
+                method: 'playlist',
+                params: [ 'loadtracks', 'track.titlesearch='+values.Title ]
+            }).then(reply);
+        }
+        else if (values.Playlist) {
             player.callMethod({
                 method: 'playlist',
                 params: ['play', values.Playlist]
@@ -486,7 +492,6 @@ function playPlaylist(player, intent, session, callback) {
                     'loadalbum',
                     _.isEmpty(values.Genre) ? "*" : values.Genre, // LMS wants an asterisk if nothing if specified
                     _.isEmpty(values.Artist) ? "*" : values.Artist,
-                    _.isEmpty(values.Title) ? "*" : values.Title,
                     _.isEmpty(values.Album) ? "*" : values.Album
                 ]
             }).then(reply);
