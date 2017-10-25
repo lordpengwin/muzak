@@ -12,6 +12,7 @@
     "artist.js",
     "album.js",
     "genre.js",
+    "title.js",
     "playlist.js"
   ],
   "devDependencies": {
