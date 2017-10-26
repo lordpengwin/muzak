@@ -489,6 +489,8 @@ function playPlaylist(player, intent, session, callback) {
                     text = "";
                 } else if (values.Genre) {
                     text += "songs in the " + values.Genre + " genre";
+                } else if (values.Title) {
+                    text += "songs with the title " + values.Title;
                 } else {
 
                     if (values.Album) {
@@ -519,7 +521,7 @@ function playPlaylist(player, intent, session, callback) {
         if (values.Title) {
             player.callMethod({
                 method: 'playlist',
-                params: [ 'loadtracks', 'album.titlesearch=' + values.Album, 'track.titlesearch=' + values.Title]
+                params: [ 'loadtracks', 'track.titlesearch=' + values.Title]
             }).then(reply);
         }
         else if (values.Playlist) {
