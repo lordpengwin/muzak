@@ -135,10 +135,23 @@ function onIntent(intentRequest, session, callback) {
     console.log("onIntent requestId=" + intentRequest.requestId + ", sessionId=" + session.sessionId);
 
     // Check for a Close intent
+    switch(intentRequest.intent.intentName) {
+        case "Close":
+            closeInteractiveSession(callback);
+            return;
 
-    if (intentRequest.intent.intentName == "Close") {
-        closeInteractiveSession(callback);
-        return;
+        case "AMAZON.HelpIntent":
+            giveHelp(session, callback);
+            return;
+
+        case "AMAZON.RepeatIntent":
+            return;
+
+        case "AMAZON.StartOverIntent":
+            return;
+        
+        default:
+            break;
     }
 
     // Connect to the squeeze server and wait for it to finish its registration
@@ -178,13 +191,8 @@ function dispatchIntent(squeezeserver, players, intent, session, callback) {
             syncPlayers(squeezeserver, players, intent, session, callback);
             break;
 
-
         case "NamePlayers":
             namePlayers(players, session, callback);
-            break;
-
-        case "AMAZON.HelpIntent":
-            giveHelp(session, callback);
             break;
 
         default:
@@ -235,9 +243,11 @@ function dispatchSecondaryIntent(squeezeserver, players, intent, session, callba
                 break;
 
             case "AMAZON.LoopOffIntent":
+                repeatPlayList(player, false, session, callback);
                 break;
 
             case "AMAZON.LoopOnIntent":
+                repeatPlayList(player, true, session, callback);
                 break;
 
             case "AMAZON.NextIntent":
@@ -248,18 +258,12 @@ function dispatchSecondaryIntent(squeezeserver, players, intent, session, callba
                 previousTrack(player, session, callback);
                 break;
 
-            case "AMAZON.RepeatIntent":
-                break;
-
             case "AMAZON.ShuffleOffIntent":
                 stopShuffle(player, session, callback);
                 break;
 
             case "AMAZON.ShuffleOnIntent":
                 startShuffle(player, session, callback);
-                break;
-
-            case "AMAZON.StartOverIntent":
                 break;
 
             case "StartPlayer":
@@ -309,7 +313,6 @@ function dispatchSecondaryIntent(squeezeserver, players, intent, session, callba
             default:
                 callback(session.attributes, buildSpeechResponse("Invalid Request", intentName + " is not a valid request", rePromptText, session.new));
                 throw " intent";
-
         }
     }
 }
@@ -389,6 +392,45 @@ function startPlayer(player, session, callback) {
     } catch (ex) {
         console.log("Caught exception in startPlayer %j", ex);
         callback(session.attributes, buildSpeechResponse("Start Player", "Caught Exception", null, true));
+    }
+}
+
+/**
+ * Function for the repeatPlaylist intent, which is used to play specifically
+ * requested content - an artist, album, genre, or playlist.
+ *
+ * @param {Object} player - The squeezeserver player.
+ * @param {Object} repeat - True to turn repeat on. False to turn repeat off
+ */
+
+function repeatPlaylist(player, repeat, session, callback) {
+    "use strict";
+    console.log("In repeatPlayList with intent %j", intent);
+    console.log("before reply");
+    var reply = function(result) {
+        var text = "Whoops, something went wrong.";
+
+        if (_.get(result, "ok")) {
+            text = "Repeat turned ";
+            if (repeat == true) {
+                text += "on";
+            } else {
+                text += "off";
+            }
+        }
+        callback(session.attributes, buildSpeechResponse("Repeat Playlist", text, rePromptText, false));
+    };
+
+    if (repeat == true) {
+        player.callMethod({
+            method: 'playlist',
+            params: [ 'repeat', '2']
+        }).then(reply);
+    } else {
+        player.callMethod({
+            method: 'playlist',
+            params: [ 'repeat', '0']
+        }).then(reply);
     }
 }
 
@@ -477,7 +519,7 @@ function playPlaylist(player, intent, session, callback) {
         if (values.Title) {
             player.callMethod({
                 method: 'playlist',
-                params: [ 'loadtracks', 'track.titlesearch='+values.Title ]
+                params: [ 'loadtracks', 'album.titlesearch=' + values.Album, 'track.titlesearch=' + values.Title]
             }).then(reply);
         }
         else if (values.Playlist) {

@@ -83,11 +83,12 @@ var playEveryBreathYouTake = {
             "name": "Player"
           },
           "Album": {
-            "name": "Album"
-          },
+            "name": "Album",
+            "value": "donnie darko"
+        },
           "Title": {
             "name": "Title",
-            "value": "every breath you take"
+            "value": "mad world"
           },
           "Genre": {
             "name": "Genre"
