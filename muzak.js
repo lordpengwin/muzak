@@ -396,16 +396,16 @@ function startPlayer(player, session, callback) {
 }
 
 /**
- * Function for the repeatPlaylist intent, which is used to play specifically
+ * Function for the repeatPlayList intent, which is used to play specifically
  * requested content - an artist, album, genre, or playlist.
  *
  * @param {Object} player - The squeezeserver player.
  * @param {Object} repeat - True to turn repeat on. False to turn repeat off
  */
 
-function repeatPlaylist(player, repeat, session, callback) {
+function repeatPlayList(player, repeat, session, callback) {
     "use strict";
-    console.log("In repeatPlayList with intent %j", intent);
+    console.log("In repeatPlayList with intent %j", true);
     console.log("before reply");
     var reply = function(result) {
         var text = "Whoops, something went wrong.";

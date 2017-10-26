@@ -199,6 +199,50 @@ var playPinkFloyd = {
     "version": "1.0"
 };
 
+var loopOn = {
+        "version": "1.0",
+        "session": {
+            "new": false,
+            "sessionId": "amzn1.echo-api.session.8ad06777-9ce1-447c-bcca-7a3aabf2daae",
+            "application": {
+                "applicationId": "amzn1.ask.skill.d7815bc8-b1fa-408b-81ab-03def6670e0f"
+            },
+            "user": {
+                "userId": "amzn1.ask.account.AH4CSKQDMVFG4W7OFXU6XTSNCOMUHXXQB4W27JLRLX42RJCMF6V7HWVWWEDZT4JXTEDQ7K2DEEKZXBOVSN3BV3EUOVYLLP2565JICIWN4GWNAHBPFRQ2SYDDXQZGRPCIWNOQW6NXG7OWADY7JRPKDC6RGH4KM4NV7K7UWFSTUBZAJFLLTDU7TMPAU4K5ERPKFUIJYLTMNGVOAJQ"
+            }
+        },
+        "context": {
+            "AudioPlayer": {
+                "playerActivity": "IDLE"
+            },
+            "System": {
+                "application": {
+                    "applicationId": "amzn1.ask.skill.d7815bc8-b1fa-408b-81ab-03def6670e0f"
+                },
+                "user": {
+                    "userId": "amzn1.ask.account.AH4CSKQDMVFG4W7OFXU6XTSNCOMUHXXQB4W27JLRLX42RJCMF6V7HWVWWEDZT4JXTEDQ7K2DEEKZXBOVSN3BV3EUOVYLLP2565JICIWN4GWNAHBPFRQ2SYDDXQZGRPCIWNOQW6NXG7OWADY7JRPKDC6RGH4KM4NV7K7UWFSTUBZAJFLLTDU7TMPAU4K5ERPKFUIJYLTMNGVOAJQ"
+                },
+                "device": {
+                    "deviceId": "amzn1.ask.device.AEVFS5474VQS6SSNCI5Q3ZHACHX5ZHCNQK4SITFO5YMGCBQYEH3L6GP6IRU5CLEQS3RZVUIPLSIPVWKHYBZ2CVZKHXMXWBJMTLYI33GFIXATCSAQWG6MBHR6JZBBYJNGOQFOEEYFAAY5MEEEVYEZVQDYYB7Q",
+                    "supportedInterfaces": {
+                        "AudioPlayer": {}
+                    }
+                },
+                "apiEndpoint": "https://api.eu.amazonalexa.com"
+            }
+        },
+        "request": {
+            "type": "IntentRequest",
+            "requestId": "amzn1.echo-api.request.9aa3a27c-c35e-4903-bcca-655f3d9bb723",
+            "timestamp": "2017-10-26T18:17:08Z",
+            "locale": "en-GB",
+            "intent": {
+                "name": "AMAZON.LoopOffIntent",
+                "confirmationStatus": "NONE"
+            }
+        }
+    };    
+
 var shuffle = {
     "session": {
         "sessionId": "SessionId.9ff46a93-d276-4fda-9e36-a60844f48c64",
@@ -251,6 +295,7 @@ a = lookup('Money for Nothing');
 b = lookup('xyzzy');
 
 // alexa.handler(playPinkFloyd, context);
-alexa.handler(playEveryBreathYouTake, context);
+alexa.handler(loopOn, context);
+// alexa.handler(playEveryBreathYouTake, context);
 // alexa.handler(event, context);
 // alexa.handler(shuffle, context);
