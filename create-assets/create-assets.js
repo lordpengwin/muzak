@@ -13,7 +13,7 @@
 
 var fs = require('fs');
 var _ = require('lodash');
-var config = require('./config');
+var config = require('./../config');
 
 if (config.ssh_tunnel) {
 
@@ -37,9 +37,6 @@ var defaultAssets = require('./default-assets.js');
 
 // Add the players from config to the defaultAssets
 defaultAssets.types.push({ "name": "PLAYERS", "values": getPlayerArray(config.players) });
-dumpSlotText("PLAYERS", defaultAssets.types);
-dumpUtterencesText(defaultAssets.intents);
-dumpIntentsJson(defaultAssets.intents);
 
 /**
  * Check if the albums is valid from the point of view if being in an utterance
@@ -135,8 +132,6 @@ function dumpToFile(slot, reply, assets) {
             assets.types.push(values);
 
             // Dump out to speech assets
-            dumpSlotText(slot, assets.types);
-
             var text = 'module.exports = ' + JSON.stringify(result, null, 2) + ';';
             fs.writeFile('./' + slot + '.js', text, 'utf8', callback);
             resolve(reply);
@@ -144,59 +139,14 @@ function dumpToFile(slot, reply, assets) {
     );
 }
 
-function dumpSlotText(slot, types) {
-    var index = _.findIndex(types, function(o) { return o.name == slot.toUpperCase(); });
-    var text = '';
+
+function writeAssets(assets) {
     var dir = './speechAssets/';
     
     if (!fs.existsSync(dir)){
         fs.mkdirSync(dir);
     }    
-    var array = types[index].values;
-    _.forEach(array, function(value) {
-        text += value.name.value + '\n';
-    });
-
-    fs.writeFile(dir + slot.toUpperCase() + '.txt', text, 'utf8', callback);
-}
-
-function dumpUtterencesText(intents) {
-    var text = '';
-    _.forEach(intents, function(intent) {
-        // Get the intent
-        var name = intent.name;
-        var samples = intent.samples;
-        // Add a line for each sample
-        _.forEach(samples, function(sample) {
-            text += name + ' ' + sample + '\n';
-        });
-        // Add a blank line
-        text += '\n';
-    });
-    fs.writeFile('./speechAssets/utterences.txt', text, 'utf8', callback);
-}
-
-function dumpIntentsJson(intents) {
-    var json = { "intents": [] };
-    _.forEach(intents, function(value) {
-        // Get the intent
-        var intent = { "intent": value.name };
-        var slots = value.slots;
-        // Do we have any slots?
-        /* if (slots && slots.length != 0) {
-            _.forEach(slots, function(slot) {
-                delete slot.samples;
-            });
-            intent = { "intent": value.name, "slots": slots };
-        } */
-        json.intents.push(intent);
-    });
-    fs.writeFile('./speechAssets/intents.json', JSON.stringify(json, null, 2), 'utf8', callback);
-}
-
-
-function writeAssets(assets) {
-    fs.writeFile('./speechAssets/speechAssets.json', JSON.stringify(assets, null, 2), 'utf8', callback);
+    fs.writeFile(dir + 'speechAssets.json', JSON.stringify(assets, null, 2), 'utf8', callback);
 }
 
 function getArray(a) {

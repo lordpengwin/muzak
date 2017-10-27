@@ -5,7 +5,7 @@
 
 //  Integration with the squeeze server
 
-var alexa = require('./muzak.js');
+var alexa = require('./index.js');
 var albums = require('./album.js');
 var event = {
     "session": {
