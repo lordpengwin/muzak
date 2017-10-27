@@ -7,8 +7,8 @@
     "test": "claudia test-lambda --event test/help.fixture.json"
   },
   "files": [
-    "config.js",
     "muzak.js",
+    "config.js",
     "artist.js",
     "album.js",
     "genre.js",
