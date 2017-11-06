@@ -129,14 +129,6 @@ function dumpToFile(slot, reply, assets) {
             // Make results unique
             var result = uniq(reply.result, slot);
 
-            /* {
-                "id": null,
-                "name": {
-                    "value": "worship",
-                    "synonyms": []
-                }
-            } */
-
             var values = { "name": slot.toUpperCase(), "values": getArray(result) };
             assets.languageModel.types.push(values);
 
@@ -201,6 +193,10 @@ squeezeserver.on('error', function(err) {
 squeezeserver.on('register', function() {
 
     var assets = defaultAssets;
+
+    // Include invocation name from config file
+    assets.languageModel.invocationName = config.invocationName;
+
     // Get a list of the albums on the server and print it out in the form of an utterance
     getResults('albums')
         .then(result => dumpToFile('album', result, assets)

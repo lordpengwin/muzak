@@ -3,7 +3,6 @@
 // from your squeezebox server
 module.exports = {
     "languageModel": {
-        "invocationName": "ask melody",
         "intents": [{
                 "name": "AMAZON.CancelIntent",
                 "samples": []
