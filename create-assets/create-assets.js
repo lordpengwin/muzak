@@ -36,7 +36,7 @@ var SqueezeServer = require('squeezenode-lordpengwin');
 var defaultAssets = require('./default-assets.js');
 
 // Add the players from config to the defaultAssets
-defaultAssets.types.push({ "name": "PLAYERS", "values": getPlayerArray(config.players) });
+defaultAssets.languageModel.types.push({ "name": "PLAYERS", "values": getPlayerArray(config.players) });
 
 /**
  * Check if the albums is valid from the point of view if being in an utterance
@@ -128,8 +128,17 @@ function dumpToFile(slot, reply, assets) {
 
             // Make results unique
             var result = uniq(reply.result, slot);
+
+            /* {
+                "id": null,
+                "name": {
+                    "value": "worship",
+                    "synonyms": []
+                }
+            } */
+
             var values = { "name": slot.toUpperCase(), "values": getArray(result) };
-            assets.types.push(values);
+            assets.languageModel.types.push(values);
 
             // Dump out to speech assets
             var text = 'module.exports = ' + JSON.stringify(result, null, 2) + ';';
@@ -142,17 +151,19 @@ function dumpToFile(slot, reply, assets) {
 
 function writeAssets(assets) {
     var dir = './speechAssets/';
-    
-    if (!fs.existsSync(dir)){
+
+    if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
-    }    
+    }
     fs.writeFile(dir + 'speechAssets.json', JSON.stringify(assets, null, 2), 'utf8', callback);
 }
 
 function getArray(a) {
     var output = [];
     _.forEach(a, function(value) {
-        output.push({ "name": { "value": value[0] } });
+        if (value[0] != "") {
+            output.push({ "id": null, "name": { "value": value[0], "synonyms": [] } });
+        }
     });
     return output;
 }
@@ -161,7 +172,7 @@ function getArray(a) {
 function getPlayerArray(a) {
     var output = [];
     _.forEach(a, function(value) {
-        output.push({ "name": { "value": value } });
+        output.push({ "id": null, "name": { "value": value, "synonyms": [] } });
     });
     return output;
 }
