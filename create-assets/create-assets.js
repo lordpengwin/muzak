@@ -189,7 +189,7 @@ squeezeserver.on('register', function() {
                             .then(getResults('genres')
                                 .then(result => dumpToFile('genre', result, bundle)
                                     .then(getResults('playlists')
-                                        .then(result => dumpToFile('playlist', bundle)
+                                        .then(result => dumpToFile('playlist', result, bundle)
                                             .then(writeAssets(bundle.assets))
                                             .then(server.close()))))))))));
     // squeezeserver.getPlayers(dumpPlayers);
