@@ -15,10 +15,6 @@ var fs = require('fs');
 var _ = require('lodash');
 var config = require('./../config');
 
-var rxRemove = new RegExp(config.regex);
-var ignore = config.ignore;
-
-
 if (config.ssh_tunnel) {
 
     var tunnel = require('tunnel-ssh');
@@ -56,16 +52,9 @@ function isValidSlot(slot) {
 
 
 function doNotIgnore(slot, remove) {
-    if (slot === "") {
+    if ((slot === "") || (remove.rxRemove.test(slot)) || (-1 !== remove.ignore.indexOf(slot))) {
         return false;
     }
-    if (remove.rxRemove.test(slot)) {
-        return false;
-    }
-    if (-1 !== remove.ignore.indexOf(slot)) {
-        return false;
-    }
-
     return true;
 }
 
@@ -182,11 +171,10 @@ squeezeserver.on('error', function(err) {
 
 squeezeserver.on('register', function() {
 
-    var bundle = {};
-    bundle.assets = defaultAssets;
-    bundle.remove = {};
-    bundle.remove.rxRemove = rxRemove;
-    bundle.remove.ignore = ignore;
+    var bundle = {
+        'assets': defaultAssets,
+        'remove': { 'rxRemove': new RegExp(config.regex), 'ignore': config.ignore }
+    };
 
     // Include invocation name from config file
     bundle.assets.languageModel.invocationName = config.invocationName;
