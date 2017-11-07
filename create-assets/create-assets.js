@@ -15,6 +15,10 @@ var fs = require('fs');
 var _ = require('lodash');
 var config = require('./../config');
 
+var rxRemove = new RegExp(config.regex);
+var ignore = config.ignore;
+
+
 if (config.ssh_tunnel) {
 
     var tunnel = require('tunnel-ssh');
@@ -51,31 +55,17 @@ function isValidSlot(slot) {
 }
 
 
-// This needs to be re-factored into a configuration file!!!
-function doNotIgnore(slot) {
+function doNotIgnore(slot, remove) {
     if (slot === "") {
         return false;
     }
-    var unknown = new RegExp(/unknown/i);
-    if (unknown.test(slot)) {
+    if (remove.rxRemove.test(slot)) {
         return false;
     }
-    var untitled = new RegExp(/untitled/i);
-    if (untitled.test(slot)) {
+    if (-1 !== remove.ignore.indexOf(slot)) {
         return false;
     }
-    if (slot === "<Undefined>") {
-        return false;
-    }
-    if (slot === "アリシア・キーズ") {
-        return false;
-    }
-    if (slot === "流行音乐") {
-        return false;
-    }
-    if (slot === "ＢＬＩＮＫ　１８２") {
-        return false;
-    }
+
     return true;
 }
 
@@ -89,11 +79,11 @@ function fixUpSlot(value) {
 // Create a list of pairs and a unique list.
 // Create a new list, from the list of pairs that match the unique list
 // Job done!
-function uniq(a, slot) {
+function uniq(a, slot, remove) {
     var array = [];
     _.forEach(a, function(entry) {
         var value = entry[slot];
-        if (isValidSlot(value) && doNotIgnore(value)) {
+        if (isValidSlot(value) && doNotIgnore(value, remove)) {
             var lowerCase = fixUpSlot(value);
             var item = [lowerCase, value];
             array.push(item);
@@ -118,7 +108,7 @@ function callback(response) {
 }
 
 
-function dumpToFile(slot, reply, assets) {
+function dumpToFile(slot, reply, bundle) {
     return new Promise(
         function(resolve, reject) {
             if (!reply.ok) {
@@ -127,10 +117,10 @@ function dumpToFile(slot, reply, assets) {
             }
 
             // Make results unique
-            var result = uniq(reply.result, slot);
+            var result = uniq(reply.result, slot, bundle.remove);
 
             var values = { "name": slot.toUpperCase(), "values": getArray(result) };
-            assets.languageModel.types.push(values);
+            bundle.assets.languageModel.types.push(values);
 
             // Dump out to speech assets
             var text = 'module.exports = ' + JSON.stringify(result, null, 2) + ';';
@@ -192,23 +182,27 @@ squeezeserver.on('error', function(err) {
 
 squeezeserver.on('register', function() {
 
-    var assets = defaultAssets;
+    var bundle = {};
+    bundle.assets = defaultAssets;
+    bundle.remove = {};
+    bundle.remove.rxRemove = rxRemove;
+    bundle.remove.ignore = ignore;
 
     // Include invocation name from config file
-    assets.languageModel.invocationName = config.invocationName;
+    bundle.assets.languageModel.invocationName = config.invocationName;
 
     // Get a list of the albums on the server and print it out in the form of an utterance
     getResults('albums')
-        .then(result => dumpToFile('album', result, assets)
+        .then(result => dumpToFile('album', result, bundle)
             .then(getResults('artists')
-                .then(result => dumpToFile('artist', result, assets)
+                .then(result => dumpToFile('artist', result, bundle)
                     .then(getResults('titles')
-                        .then(result => dumpToFile('title', result, assets)
+                        .then(result => dumpToFile('title', result, bundle)
                             .then(getResults('genres')
-                                .then(result => dumpToFile('genre', result, assets)
+                                .then(result => dumpToFile('genre', result, bundle)
                                     .then(getResults('playlists')
-                                        .then(result => dumpToFile('playlist', result, assets)
-                                            .then(writeAssets(assets))
+                                        .then(result => dumpToFile('playlist', bundle)
+                                            .then(writeAssets(bundle.assets))
                                             .then(server.close()))))))))));
     // squeezeserver.getPlayers(dumpPlayers);
 });
