@@ -12,7 +12,6 @@
 //  Integration with the squeeze server
 
 var fs = require('fs');
-var _ = require('lodash');
 var config = require('./../config');
 
 if (config.ssh_tunnel) {
@@ -59,6 +58,7 @@ function doNotIgnore(slot, remove) {
 }
 
 function fixUpSlot(value) {
+    // var charsToSpaces = new RegExp(/[):?\-~(!`+"\[\]\\/\;]/g);
     var charsToSpaces = new RegExp(/[):?\-~(!`+"\[\]\\/\;]/g);
     var removeMultipleSpaces = new RegExp(/  /g);
     var result = value.toLowerCase().replace(charsToSpaces, " ").replace(removeMultipleSpaces, " ").trim();
@@ -70,25 +70,27 @@ function fixUpSlot(value) {
 // Job done!
 function uniq(a, slot, remove) {
     var array = [];
-    _.forEach(a, function(entry) {
+
+    for(let entry of a) {
         var value = entry[slot];
         if (isValidSlot(value) && doNotIgnore(value, remove)) {
             var lowerCase = fixUpSlot(value);
             var item = [lowerCase, value];
             array.push(item);
         } else {
-            // console.log(value);
+            console.log(value);
         }
-    });
-    var unified = _.uniqWith(array, comparator);
-
-    return unified;
-
+    };
+    var unique = array.filter( onlyUnique );    
+    
+    return unique;
 }
 
-function comparator(a, b) {
-    return a[0] == b[0];
+
+function onlyUnique(value, index, self) { 
+    return self.findIndex(i => value[0] === i[0]) === index;
 }
+
 
 function callback(response) {
     if (response) {
@@ -131,20 +133,20 @@ function writeAssets(assets) {
 
 function getArray(a) {
     var output = [];
-    _.forEach(a, function(value) {
+    for(let value of a) {
         if (value[0] != "") {
             output.push({ "id": null, "name": { "value": value[0], "synonyms": [] } });
         }
-    });
+    };
     return output;
 }
 
 
 function getPlayerArray(a) {
     var output = [];
-    _.forEach(a, function(value) {
+    for(let value of a) {
         output.push({ "id": null, "name": { "value": value, "synonyms": [] } });
-    });
+    };
     return output;
 }
 
