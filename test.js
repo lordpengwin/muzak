@@ -5,13 +5,11 @@
 
 //  Integration with the squeeze server
 
-var SqueezeServer = require('squeezenode-lordpengwin');
-var _ = require('lodash');
-var repromptText = "What do you want me to do";
+var SqueezeServer = require("squeezenode-lordpengwin");
+var _ = require("lodash");
 
 // Configuration
-
-var config = require('./config');
+var config = require("./config");
 
 var squeeze = new SqueezeServer(config.squeezeserverURL, config.squeezeserverPort, config.squeezeServerUsername, config.squeezeServerPassword);
     
