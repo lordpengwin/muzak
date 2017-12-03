@@ -41,7 +41,7 @@ class Utils {
         }
       },
       shouldEndSession: shouldEndSession
-    }
+    };
   }
 
   /**
@@ -58,7 +58,7 @@ class Utils {
       version: "1.0",
       sessionAttributes: sessionAttributes,
       response: speechletResponse
-    }
+    };
   }
 }
 

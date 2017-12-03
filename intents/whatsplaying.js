@@ -32,33 +32,33 @@ class WhatsPlaying extends Intent
                                 if (reply.ok) 
                                 {
                                     var album = reply.result;
-                                    callback(session.attributes, Utils.buildSpeechResponse("What"s Playing", "Player " + player.name + " is playing " + title + " by " + artist + " from " + album, null, session.new));
+                                    callback(session.attributes, Utils.buildSpeechResponse("What's Playing", "Player " + player.name + " is playing " + title + " by " + artist + " from " + album, null, session.new));
                                 }
                                 else 
                                 {
                                     console.log("Failed to get album");
-                                    callback(session.attributes, Utils.buildSpeechResponse("What"s Playing", "Player " + player.name + " is playing " + title + " by " + artist, null, session.new));
+                                    callback(session.attributes, Utils.buildSpeechResponse("What's Playing", "Player " + player.name + " is playing " + title + " by " + artist, null, session.new));
                                 }
                             });
                         } 
                         else 
                         {
                             console.log("Failed to get current artist");
-                            callback(session.attributes, Utils.buildSpeechResponse("What"s Playing", "Player " + player.name + " is playing " + title, null, session.new));
+                            callback(session.attributes, Utils.buildSpeechResponse("What's Playing", "Player " + player.name + " is playing " + title, null, session.new));
                         }
                     });
                 } 
                 else 
                 {
                     console.log("Failed to getCurrentTitle %j", reply);
-                    callback(session.attributes, Utils.buildSpeechResponse("What"s Playing", "Failed to get current song for  " + player.name, null, true));
+                    callback(session.attributes, Utils.buildSpeechResponse("What's Playing", "Failed to get current song for  " + player.name, null, true));
                 }
             });
         } 
         catch (ex) 
         {
             console.log("Caught exception in whatsPlaying %j", ex);
-            callback(session.attributes, Utils.buildSpeechResponse("What"s Playing", "Caught Exception", null, true));
+            callback(session.attributes, Utils.buildSpeechResponse("What's Playing", "Caught Exception", null, true));
         }
     }
 }
