@@ -4,13 +4,18 @@
  */
 
 //  Integration with the squeeze server
-var Dispatcher = require("./dispatcher");
+
 var tunnel = require("tunnel-ssh");
-var SqueezeServer = require("squeezenode-lordpengwin");
 var _ = require("lodash");
 
 // Configuration
+var SqueezeServer = require("squeezenode-lordpengwin");
 var config = require("./config");
+
+// Slot info
+const Utils = require("./utils");
+const Dispatcher = require("./dispatcher");
+
 var server;
 
 // check to see if we need to open an ssh tunnel
@@ -23,8 +28,8 @@ if (config.ssh_tunnel) {
     });
     console.log("Tunnel open");
     // Use a listener to handle errors outside the callback
-    server.on('error', function(err) {
-        // console.error('Something bad happened:', err);
+    server.on("error", function(err) {
+        // console.error("Something bad happened:", err);
     });
     console.log("Error handler");
 }
@@ -38,29 +43,28 @@ if (config.ssh_tunnel) {
  * @param context
  */
 exports.handler = function(event, context) {
-    "use strict";
     try {
 
         console.log("Event is %j", event);
 
         if (event.session.new) {
-            onSessionStarted({ requestId: event.request.requestId }, event.session);
+            Dispatcher.onSessionStarted({ requestId: event.request.requestId }, event.session);
         }
 
         if (event.request.type === "LaunchRequest") {
-            onLaunch(event.request,
+            Dispatcher.onLaunch(event.request,
                 event.session,
                 function callback(sessionAttributes, speechResponse) {
-                    context.succeed(buildResponse(sessionAttributes, speechResponse));
+                    context.succeed(Utils.buildResponse(sessionAttributes, speechResponse));
                 });
         } else if (event.request.type === "IntentRequest") {
-            onIntent(event.request,
+            Dispatcher.onIntent(event.request,
                 event.session,
                 function callback(sessionAttributes, speechResponse) {
-                    context.succeed(buildResponse(sessionAttributes, speechResponse));
+                    context.succeed(Utils.buildResponse(sessionAttributes, speechResponse));
                 });
         } else if (event.request.type === "SessionEndedRequest") {
-            onSessionEnded(event.request, event.session);
+            Dispatcher.onSessionEnded(event.request, event.session);
             context.succeed();
         }
     } catch (e) {

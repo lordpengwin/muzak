@@ -115,7 +115,7 @@ function dumpToFile(slot, reply, bundle) {
 
             // Dump out to speech assets
             var text = 'module.exports = ' + JSON.stringify(result, null, 2) + ';';
-            fs.writeFile('./' + slot + '.js', text, 'utf8', callback);
+            fs.writeFile('./info/' + slot + '.js', text, 'utf8', callback);
             resolve(reply);
         }
     );
