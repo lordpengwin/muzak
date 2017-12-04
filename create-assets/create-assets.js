@@ -11,31 +11,17 @@
 
 //  Integration with the squeeze server
 
-var fs = require('fs');
-var config = require('./../config');
+const fs = require('fs');
+const _ = require('lodash');
+const SqueezeServer = require('squeezenode-lordpengwin');
 
-if (config.ssh_tunnel) {
-
-    var tunnel = require('tunnel-ssh');
-    var server = tunnel(config.ssh_tunnel, function(error, server) {
-        if (error) {
-            console.log(error);
-        }
-    });
-    // Use a listener to handle errors outside the callback 
-    server.on('error', function(err) {
-        // console.error('Something bad happened:', err);
-    });
-}
-
-
-var SqueezeServer = require('squeezenode-lordpengwin');
 // Configuration
-
-var defaultAssets = require('./default-assets.js');
+const config = require('./../config');
+const defaultAssets = require('./default-assets.js');
+var server = require('../ssh-tunnel')();
 
 // Add the players from config to the defaultAssets
-defaultAssets.languageModel.types.push({ "name": "PLAYERS", "values": getPlayerArray(config.players) });
+defaultAssets.languageModel.types.push({ "name": "PLAYERS", "values": getArray(config.players) });
 
 /**
  * Check if the albums is valid from the point of view if being in an utterance
@@ -58,7 +44,6 @@ function doNotIgnore(slot, remove) {
 }
 
 function fixUpSlot(value) {
-    // var charsToSpaces = new RegExp(/[):?\-~(!`+"\[\]\\/\;]/g);
     var charsToSpaces = new RegExp(/[):?\-~(!`+"\[\]\\/\;]/g);
     var removeMultipleSpaces = new RegExp(/  /g);
     var result = value.toLowerCase().replace(charsToSpaces, " ").replace(removeMultipleSpaces, " ").trim();
@@ -70,8 +55,7 @@ function fixUpSlot(value) {
 // Job done!
 function uniq(a, slot, remove) {
     var array = [];
-
-    for(let entry of a) {
+    for (let entry of a) {
         var value = entry[slot];
         if (isValidSlot(value) && doNotIgnore(value, remove)) {
             var lowerCase = fixUpSlot(value);
@@ -80,17 +64,17 @@ function uniq(a, slot, remove) {
         } else {
             console.log(value);
         }
-    };
-    var unique = array.filter( onlyUnique );    
-    
-    return unique;
+    }
+    // Remove duplicates
+    var unified = _.uniqWith(array, comparator);
+
+    return unified;
+
 }
 
-
-function onlyUnique(value, index, self) { 
-    return self.findIndex(i => value[0] === i[0]) === index;
+function comparator(a, b) {
+    return a[0] == b[0];
 }
-
 
 function callback(response) {
     if (response) {
@@ -133,20 +117,11 @@ function writeAssets(assets) {
 
 function getArray(a) {
     var output = [];
-    for(let value of a) {
-        if (value[0] != "") {
-            output.push({ "id": null, "name": { "value": value[0], "synonyms": [] } });
+    for (let item of a) {
+        if (item != "") {
+            output.push({ "id": null, "name": { "value": item, "synonyms": [] } });
         }
-    };
-    return output;
-}
-
-
-function getPlayerArray(a) {
-    var output = [];
-    for(let value of a) {
-        output.push({ "id": null, "name": { "value": value, "synonyms": [] } });
-    };
+    }
     return output;
 }
 

@@ -1,8 +1,7 @@
 const Intent = require("../intent");
 const Utils = require("../utils");
 
-class Select extends Intent 
-{    
+class Select extends Intent {
     /**
      * Select the given player for an interactive session.
      *
@@ -10,12 +9,11 @@ class Select extends Intent
      * @param session The current session
      * @param callback The callback to use to return the result
      */
-    static select(player, session, callback) 
-    {
+    static select(player, session, callback) {
         // The player is already selected
         "use strict";
         callback(session.attributes, Utils.buildSpeechResponse("Select Player", "Selected player " + player.name, null, false));
     }
 }
-    
+
 module.exports = Select.select;

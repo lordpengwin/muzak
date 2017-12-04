@@ -1,8 +1,7 @@
 const Intent = require("../intent");
 const Utils = require("../utils");
 
-class Name extends Intent
-{    
+class Name extends Intent {
     /**
      * Report player count and names
      *
@@ -10,46 +9,32 @@ class Name extends Intent
      * @param session The current session
      * @param callback The callback to use to return the result
      */
-    static name(players, session, callback) 
-    {
+    static name(players, session, callback) {
         var playerNames = null;
         var numPlayers = 0;
-        try 
-        {
+        try {
             // Build a list of player names
-            for (var pl in players) 
-            {
+            for (var pl in players) {
                 numPlayers = numPlayers + 1;
-                if (playerNames === null) 
-                {
+                if (playerNames === null) {
                     playerNames = this.normalizePlayer(players[pl].name.toLowerCase());
-                }
-                else 
-                {
+                } else {
                     playerNames = playerNames + ". " + this.normalizePlayer(players[pl].name.toLowerCase());
                 }
             }
             // Report back the player count and individual names
-            if (playerNames === null) 
-            {
+            if (playerNames === null) {
                 callback(session.attributes, Utils.buildSpeechResponse("Name Players", "There are no squeezeboxes currently in your system", null, session.new));
-            }
-            else 
-            {
+            } else {
                 var singlePlural;
-                if (numPlayers > 1) 
-                {
+                if (numPlayers > 1) {
                     singlePlural = " squeezeboxes. ";
-                }
-                else 
-                {
+                } else {
                     singlePlural = " squeezebox. ";
                 }
                 callback(session.attributes, Utils.buildSpeechResponse("Name Players", "You have " + numPlayers + singlePlural + playerNames, null, session.new));
             }
-        } 
-        catch (ex) 
-        {
+        } catch (ex) {
             console.log("Caught exception while reporting player count and names", ex);
             callback(session.attributes, Utils.buildSpeechResponse("Name Players", "Caught exception while reporting squeezebox names", null, true));
         }

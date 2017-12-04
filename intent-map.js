@@ -9,7 +9,7 @@ const Name = require("./intents/name");
 const NextTrack = require("./intents/nexttrack");
 const Pause = require("./intents/pause");
 const PlayPlaylist = require("./intents/play-playlist");
-const PreviousTrack= require("./intents/PreviousTrack");
+const PreviousTrack = require("./intents/PreviousTrack");
 const Randomize = require("./intents/randomize");
 const Repeat = require("./intents/repeat");
 const Select = require("./intents/select");
@@ -19,11 +19,10 @@ const StartShuffle = require("./intents/startshuffle");
 const Stop = require("./intents/stop");
 const StopShuffle = require("./intents/stopshuffle");
 const Sync = require("./intents/sync");
-const Unsync= require("./intents/unsync");
+const Unsync = require("./intents/unsync");
 const WhatsPlaying = require("./intents/whatsplaying");
 
-class IntentMap
-{ 
+class IntentMap {
     /**
      * Called when the user specifies an intent for this skill.
      *
@@ -37,7 +36,7 @@ class IntentMap
         console.log("onIntent requestId=" + intentRequest.requestId + ", sessionId=" + session.sessionId);
 
         // Check for a Close intent
-        switch(intentRequest.intent.intentName) {
+        switch (intentRequest.intent.intentName) {
             case "Close":
                 closeInteractiveSession(callback);
                 return;
@@ -51,7 +50,7 @@ class IntentMap
 
             case "AMAZON.StartOverIntent":
                 return;
-            
+
             default:
                 break;
         }
@@ -82,14 +81,12 @@ class IntentMap
      * @param callback The callback to use to return the result
      */
 
-    static dispatchIntent(squeezeserver, players, intent, session, callback)
-    {
+    static dispatchIntent(squeezeserver, players, intent, session, callback) {
         "use strict";
         var intentName = intent.name;
         console.log("Got intent: %j", intent);
         console.log("Session is %j", session);
-        switch (intent) 
-        {
+        switch (intent) {
             case "SyncPlayers":
                 syncPlayers(squeezeserver, players, intent, session, callback);
                 break;
@@ -104,8 +101,7 @@ class IntentMap
         }
     }
 
-    static dispatchSecondaryIntent(squeezeserver, players, intent, session, callback)
-    {
+    static dispatchSecondaryIntent(squeezeserver, players, intent, session, callback) {
         "use strict";
         var intentName = intent.name;
 
@@ -115,24 +111,20 @@ class IntentMap
 
         // Try to find the target player
         var player = Intent.findPlayerObject(squeezeserver, players, name);
-        if (player === null || player === undefined) 
-        {
+        if (player === null || player === undefined) {
 
-            // Couldn"t find the player, return an error response
+            // Couldn't find the player, return an error response
 
             console.log("Player not found: " + name);
             callback(session.attributes, Utils.buildSpeechResponse(intentName, "Player not found", null, session.new));
 
-        } 
-        else 
-        {
+        } else {
 
             console.log("Player is " + player);
             session.attributes = { player: player.name.toLowerCase() };
 
             // Call the target intent
-            switch (intentName) 
-            {
+            switch (intentName) {
                 case "AMAZON.PauseIntent":
                 case "AMAZON.ResumeIntent":
                     Pause(player, session, callback);

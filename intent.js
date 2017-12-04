@@ -1,4 +1,3 @@
-
 class Intent {
 
     /**
@@ -57,7 +56,7 @@ class Intent {
 
         return playerName;
     }
-    
+
 }
 
 module.exports = Intent;

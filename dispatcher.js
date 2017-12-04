@@ -1,4 +1,3 @@
-
 // Configuration
 const SqueezeServer = require("squeezenode-lordpengwin");
 const config = require("./config");
@@ -6,10 +5,10 @@ const Utils = require("./utils");
 const IntentMap = require("./intent-map");
 
 class Dispatcher {
-    
+
     /**
-    * Called when the session starts.
-    */
+     * Called when the session starts.
+     */
     static onSessionStarted(sessionStartedRequest, session) {
         "use strict";
         console.log("onSessionStarted requestId=" + sessionStartedRequest.requestId + ", sessionId=" + session.sessionId);

@@ -1,8 +1,7 @@
 const Intent = require("../intent");
 const Utils = require("../utils");
 
-class StopShuffle extends Intent
-{    
+class StopShuffle extends Intent {
     /**
      * Start a player to play shuffle tracks
      *
@@ -10,27 +9,19 @@ class StopShuffle extends Intent
      * @param session The current session
      * @param callback The callback to use to return the result
      */
-    static stopShuffle(player, session, callback) 
-    {
+    static stopShuffle(player, session, callback) {
         "use strict";
         console.log("In randomizePlayer with player %s", player.name);
-        try 
-        {
+        try {
             // Stop randomize the player
-            player.stopShuffle(function(reply) 
-            {
-                if (reply.ok) 
-                {
+            player.stopShuffle(function(reply) {
+                if (reply.ok) {
                     callback(session.attributes, Utils.buildSpeechResponse("Stop shuffling Player", "Shuffling. Playing " + player.name + " squeezebox", null, session.new));
-                }
-                else 
-                {
+                } else {
                     callback(session.attributes, Utils.buildSpeechResponse("Stop shuffling Player", "Failed to stop shuffle and play " + player.name + " squeezebox", null, true));
                 }
             });
-        } 
-        catch (ex) 
-        {
+        } catch (ex) {
             console.log("Caught exception in randomizePlayer %j", ex);
             callback(session.attributes, Utils.buildSpeechResponse("Stop shuffling Player", "Caught Exception", null, true));
         }
