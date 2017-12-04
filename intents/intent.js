@@ -1,3 +1,5 @@
+const Persist = require("../persist/persist");
+
 class Intent {
 
     /**
@@ -8,20 +10,32 @@ class Intent {
      * @param name The name of the player to find
      * @returns The target player or undefined if it is not found
      */
-
     static findPlayerObject(squeezeserver, players, name) {
 
         if (players) {
-            name = this.normalizePlayer(name);
-            console.log("In findPlayerObject with " + name);
+            // If we don't have a name try and get it from the database
+            if (name != "") {
+                name = this.normalizePlayer(name);
+                console.log("In findPlayerObject with " + name);
 
-            // Look for the player in the players list that matches the given name. Then return the corresponding player object
-            // from the squeezeserver stored by the player's id
+                // Look for the player in the players list that matches the given name. Then return the corresponding player object
+                // from the squeezeserver stored by the player's id
 
-            // NOTE: For some reason squeezeserver.players[] is empty but you can still reference values in it. I think it
-            //       is a weird javascript timing thing
+                // NOTE: For some reason squeezeserver.players[] is empty but you can still reference values in it. I think it
+                //       is a weird javascript timing thing
+            } else {
+                Persist.retrieve().then(result => findPlayer(squeezeserver, players, results));
+            }
+        }
+        console.log("Player %s not found", name);
+    }
+
+    static findPlayer(squeezeserver, players, name) {
+        if (players) {
             let player = players.filter(pl => pl.name.toLowerCase() === name);
             if (player.length == 1) {
+                // store the name for future use
+                Persist.store(name);
                 return squeezeserver.players[player[0].playerid];
             }
         }
