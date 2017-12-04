@@ -106,9 +106,9 @@ class PlayPlaylist extends Intent {
                         method: 'playlist',
                         params: [
                             'loadalbum',
-                            values.Genre ? "*" : values.Genre, // LMS wants an asterisk if nothing if specified
-                            values.Artist ? "*" : values.Artist,
-                            values.Album ? "*" : values.Album
+                            !values.Genre ? "*" : values.Genre, // LMS wants an asterisk if nothing if specified
+                            !values.Artist ? "*" : values.Artist,
+                            !values.Album ? "*" : values.Album
                         ]
                     }).then(reply);
                 }

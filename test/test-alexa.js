@@ -333,6 +333,6 @@ b = lookup("xyzzy");
 // alexa.handler(playPinkFloyd, context);
 // alexa.handler(help, context);
 // alexa.handler(loopOn, context);
-// alexa.handler(playEveryBreathYouTake, context);
+alexa.handler(playEveryBreathYouTake, context);
 // alexa.handler(event, context);
-alexa.handler(shuffle, context);
+// alexa.handler(shuffle, context);
