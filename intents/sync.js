@@ -28,31 +28,31 @@ class Sync extends Intent {
             }
             session.attributes = { player: player1.name.toLowerCase() };
             player2 = null;
-            for (var pl in players) {
-                if (players[pl].name.toLowerCase() === this.normalizePlayer(intent.slots.SecondPlayer.value)) {
-                    player2 = players[pl];
-                }
+            for (let pl of players) {
+                if (pl.name.toLowerCase() === this.normalizePlayer(intent.slots.SecondPlayer.value)) {
+                    player2 = p];
             }
-            // If we found the target players, sync them
-            if (player1 && player2) {
-                console.log("Found players: %j and player2", player1, player2);
-                player1.sync(player2.playerindex, function(reply) {
-                    if (reply.ok) {
-                        callback(session.attributes, Utils.buildSpeechResponse("Sync Players", "Synced " + player1.name + " to " + player2.name, null, session.new));
-                    } else {
-                        console.log("Failed to sync %j", reply);
-                        callback(session.attributes, Utils.buildSpeechResponse("Sync Players", "Failed to sync players " + player1.name + " and " + player2.name, null, true));
-                    }
-                });
-            } else {
-                console.log("Player not found: ");
-                callback(session.attributes, Utils.buildSpeechResponse("Sync Players", "Player not found", null, session.new));
-            }
-        } catch (ex) {
-            console.log("Caught exception in syncPlayers %j for " + player1 + " and " + player2, ex);
-            callback(session.attributes, Utils.buildSpeechResponse("Sync Players", "Caught Exception", null, true));
         }
+        // If we found the target players, sync them
+        if (player1 && player2) {
+            console.log("Found players: %j and player2", player1, player2);
+            player1.sync(player2.playerindex, function(reply) {
+                if (reply.ok) {
+                    callback(session.attributes, Utils.buildSpeechResponse("Sync Players", "Synced " + player1.name + " to " + player2.name, null, session.new));
+                } else {
+                    console.log("Failed to sync %j", reply);
+                    callback(session.attributes, Utils.buildSpeechResponse("Sync Players", "Failed to sync players " + player1.name + " and " + player2.name, null, true));
+                }
+            });
+        } else {
+            console.log("Player not found: ");
+            callback(session.attributes, Utils.buildSpeechResponse("Sync Players", "Player not found", null, session.new));
+        }
+    } catch (ex) {
+        console.log("Caught exception in syncPlayers %j for " + player1 + " and " + player2, ex);
+        callback(session.attributes, Utils.buildSpeechResponse("Sync Players", "Caught Exception", null, true));
     }
+}
 }
 
 module.exports = Sync.sync;

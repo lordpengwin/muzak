@@ -20,13 +20,13 @@ class Intent {
         // NOTE: For some reason squeezeserver.players[] is empty but you can still reference values in it. I think it
         //       is a weird javascript timing thing
 
-        for (var pl in players) {
+        for (let pl of players) {
             if (
-                players[pl].name.toLowerCase() === name || // name matches the requested player
+                pl.name.toLowerCase() === name || // name matches the requested player
                 (name === "" && players.length === 1) // name is undefined and there's only one player,
                 // so assume that's the one we want.
             ) {
-                return squeezeserver.players[players[pl].playerid];
+                return squeezeserver.players[pl.playerid];
             }
         }
 

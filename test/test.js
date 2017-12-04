@@ -12,18 +12,18 @@ var _ = require("lodash");
 var config = require("./config");
 
 var squeeze = new SqueezeServer(config.squeezeserverURL, config.squeezeserverPort, config.squeezeServerUsername, config.squeezeServerPassword);
-    
+
 function playerIdByName(name, callback) {
-    var found = false;
-    squeeze.getPlayers( function(reply) {
-        for (var id in reply.result) {
-            if(reply.result[id].name === name) {
+    let found = false;
+    squeeze.getPlayers(function(reply) {
+        for (let id of reply.result) {
+            if (id.name === name) {
                 found = true;
-                callback ({ok: true, playerId: reply.result[id].playerid});
+                callback({ ok: true, playerId: id.playerid });
             }
         }
         if (!found)
-            callback ({ok: false});
+            callback({ ok: false });
     });
 }
 
