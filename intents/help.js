@@ -1,17 +1,14 @@
-
-const Intent = require("../intent");
+const Intent = require("./intent");
 const Utils = require("../utils");
 
-class Help extends Intent 
-{
+class Help extends Intent {
     /**
      * Provide the user a list of commands that they can say
      *
      * @param session The current session
      * @param callback The callback to use to return the result
      */
-    static help(session, callback) 
-    {
+    static help(session, callback) {
         console.log("In giveHelp");
         callback(session.attributes, Utils.buildSpeechResponse("Help", "You can say things like. " +
             "start player X, " +

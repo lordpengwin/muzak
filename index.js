@@ -5,35 +5,14 @@
 
 //  Integration with the squeeze server
 
-var tunnel = require("tunnel-ssh");
-var _ = require("lodash");
-
-// Configuration
-var SqueezeServer = require("squeezenode-lordpengwin");
-var config = require("./config");
-
-// Slot info
+const tunnel = require("tunnel-ssh");
+const SqueezeServer = require("squeezenode-lordpengwin");
 const Utils = require("./utils");
 const Dispatcher = require("./dispatcher");
 
-var server;
-
-// check to see if we need to open an ssh tunnel
-if (config.ssh_tunnel) {
-    console.log("Opening tunnel");
-    server = tunnel(config.ssh_tunnel, function(error, server) {
-        if (error) {
-            console.log(error);
-        }
-    });
-    console.log("Tunnel open");
-    // Use a listener to handle errors outside the callback
-    server.on("error", function(err) {
-        // console.error("Something bad happened:", err);
-    });
-    console.log("Error handler");
-}
-
+// Configuration
+const config = require("./config");
+var server = require('./ssh-tunnel')();
 
 /**
  * Route the incoming request based on type (LaunchRequest, IntentRequest,

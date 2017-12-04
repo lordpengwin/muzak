@@ -1,7 +1,7 @@
-const Intent = require("../intent");
+const Intent = require("./intent");
 const Utils = require("../utils");
 
-class PreviousTrack extends Intent {    
+class PreviousTrack extends Intent {
     /**
      * Play previous track on player
      *
@@ -10,30 +10,22 @@ class PreviousTrack extends Intent {
      * @param callback The callback to use to return the result
      */
 
-    static previousTrack(player, session, callback)
-    {
+    static previousTrack(player, session, callback) {
         "use strict";
-        try 
-        {
+        try {
             console.log("In previousTrack with player %s", player.name);
 
             // Skip back 1 track on the player
-            player.previous(function(reply) 
-            {
-                if (reply.ok) 
-                {
+            player.previous(function(reply) {
+                if (reply.ok) {
                     callback(session.attributes, Utils.buildSpeechResponse("Skip Back", "Skipped back " + player.name + " squeezebox", null, session.new));
-                }
-                else
-                {
+                } else {
                     console.log("Reply %j", reply);
                     callback(session.attributes, Utils.buildSpeechResponse("Skip Back", "Failed to skip back player " + player.name + " squeezebox", null, true));
                 }
             });
 
-        } 
-        catch (ex)
-        {
+        } catch (ex) {
             console.log("Caught exception in previousTrack %j", ex);
             callback(session.attributes, Utils.buildSpeechResponse("Skip Back", "Caught Exception", null, true));
         }

@@ -1,9 +1,9 @@
 // Slot info
-const albums = require("./info/album");
-const artists = require("./info/artist");
-const genres = require("./info/genre");
-const playlists = require("./info/playlist");
-const  titles = require("./info/title");
+const albums = require("./album");
+const artists = require("./artist");
+const genres = require("./genre");
+const playlists = require("./playlist");
+const titles = require("./title");
 const info = { Album: albums, Artist: artists, Genre: genres, Playlist: playlists, Title: titles };
 
 function lookupInfo(slot, value) {
@@ -12,10 +12,10 @@ function lookupInfo(slot, value) {
         let check = value.toLowerCase();
         let result = info[slot].filter(item => check === item[0]);
 
-        if (!result[0]) {
-            return "";
+        if (result[0]) {
+            return result[0][1];
         }
-        return result[0][1];
+        return "";
     }
 }
 

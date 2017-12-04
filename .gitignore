@@ -24,7 +24,5 @@ info/title.js
 info/playlist.js
 speechAssets/speechAssets.json
 
-# VS Code
-.vscode
 package-lock.json
 

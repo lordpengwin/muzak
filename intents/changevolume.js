@@ -1,8 +1,8 @@
-const Intent = require("../intent");
+const Intent = require("./intent");
 const Utils = require("../utils");
 
 class ChangeVolume extends Intent {
-        /**
+    /**
      * Get the current volume of a player and then perform a change static on it
      *
      * @param player The player to get the volume for
@@ -11,27 +11,20 @@ class ChangeVolume extends Intent {
      * @param delta The amount to change the player volume
      */
 
-    static changeVolume(player, session, callback, delta) 
-    {
+    static changeVolume(player, session, callback, delta) {
         console.log("In  Change Volume with player %s", player.name);
         try {
             // Get the volume of the player
-            player.getVolume(function(reply) 
-            {
-                if (reply.ok) 
-                {
+            player.getVolume(function(reply) {
+                if (reply.ok) {
                     var volume = Number(reply.result);
                     setPlayerVolume(player, volume + delta, session, callback);
-                }
-                else
-                {
+                } else {
                     callback(session.attributes, Utils.buildSpeechResponse("Get Player Volume", "Failed to get volume for player " + player.name, null, true));
                 }
             });
 
-        } 
-        catch (ex) 
-        {
+        } catch (ex) {
             console.log("Caught exception in stopPlayer %j", ex);
             callback(session.attributes, Utils.buildSpeechResponse("Get Player Volume", "Caught Exception", null, true));
         }

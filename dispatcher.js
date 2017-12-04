@@ -1,15 +1,14 @@
-
 // Configuration
 const SqueezeServer = require("squeezenode-lordpengwin");
 const config = require("./config");
 const Utils = require("./utils");
-const IntentMap = require("./intent-map");
+const IntentMap = require("./intents/intent-map");
 
 class Dispatcher {
-    
+
     /**
-    * Called when the session starts.
-    */
+     * Called when the session starts.
+     */
     static onSessionStarted(sessionStartedRequest, session) {
         "use strict";
         console.log("onSessionStarted requestId=" + sessionStartedRequest.requestId + ", sessionId=" + session.sessionId);
@@ -23,7 +22,6 @@ class Dispatcher {
      * @param session The current session
      * @param callback A callback used to return the result
      */
-
     static onLaunch(launchRequest, session, callback) {
         "use strict";
         console.log("onLaunch requestId=" + launchRequest.requestId + ", sessionId=" + session.sessionId);
@@ -43,19 +41,16 @@ class Dispatcher {
      * @param session The current session
      * @param callback A callback used to return results
      */
-
     static onIntent(intentRequest, session, callback) {
         "use strict";
         console.log("onIntent requestId=" + intentRequest.requestId + ", sessionId=" + session.sessionId);
         IntentMap.onIntent(intentRequest, session, callback);
     }
 
-
     /**
      * Called when the user ends the session.
      * Is not called when the skill returns shouldEndSession=true.
      */
-
     static onSessionEnded(sessionEndedRequest, session) {
         "use strict";
         console.log("onSessionEnded requestId=" + sessionEndedRequest.requestId + ", sessionId=" + session.sessionId);
@@ -66,7 +61,6 @@ class Dispatcher {
      *
      * @param callback A callback to execute to return the response
      */
-
     static startInteractiveSession(callback) {
 
         // If we wanted to initialize the session to have some attributes we could add those here.
@@ -86,7 +80,6 @@ class Dispatcher {
      *
      * @param callback A callback to execute to return the response
      */
-
     static closeInteractiveSession(callback) {
         "use strict";
         var sessionAttributes = {};
@@ -95,9 +88,8 @@ class Dispatcher {
         var shouldEndSession = true;
 
         // Format the default response
-
         callback(sessionAttributes, Utils.buildSpeechResponse(cardTitle, speechOutput, null, shouldEndSession));
     }
-
 }
+
 module.exports = Dispatcher;

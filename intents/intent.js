@@ -1,4 +1,3 @@
-
 class Intent {
 
     /**
@@ -12,25 +11,20 @@ class Intent {
 
     static findPlayerObject(squeezeserver, players, name) {
 
-        name = this.normalizePlayer(name);
-        console.log("In findPlayerObject with " + name);
+        if (players) {
+            name = this.normalizePlayer(name);
+            console.log("In findPlayerObject with " + name);
 
-        // Look for the player in the players list that matches the given name. Then return the corresponding player object
-        // from the squeezeserver stored by the player's id
+            // Look for the player in the players list that matches the given name. Then return the corresponding player object
+            // from the squeezeserver stored by the player's id
 
-        // NOTE: For some reason squeezeserver.players[] is empty but you can still reference values in it. I think it
-        //       is a weird javascript timing thing
-
-        for (var pl in players) {
-            if (
-                players[pl].name.toLowerCase() === name || // name matches the requested player
-                (name === "" && players.length === 1) // name is undefined and there's only one player,
-                // so assume that's the one we want.
-            ) {
-                return squeezeserver.players[players[pl].playerid];
+            // NOTE: For some reason squeezeserver.players[] is empty but you can still reference values in it. I think it
+            //       is a weird javascript timing thing
+            let player = players.filter(pl => pl.name.toLowerCase() === name);
+            if (player.length == 1) {
+                return squeezeserver.players[player[0].playerid];
             }
         }
-
         console.log("Player %s not found", name);
     }
 
@@ -57,7 +51,7 @@ class Intent {
 
         return playerName;
     }
-    
+
 }
 
 module.exports = Intent;

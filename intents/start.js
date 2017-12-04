@@ -1,8 +1,7 @@
-const Intent = require("../intent");
 const Utils = require("../utils");
+const Intent = require("./intent");
 
-class Start extends Intent 
-{    
+class Start extends Intent {
     /**
      * Start a player to play the last used playlist item(s)
      *
@@ -10,26 +9,19 @@ class Start extends Intent
      * @param session The current session
      * @param callback The callback to use to return the result
      */
-    static start(player, session, callback) 
-    {
+    static start(player, session, callback) {
         "use strict";
         console.log("In start with player %s", player.name);
-        try 
-        {
+        try {
             // Start the player
-            player.play(function(reply) 
-            {
-                if (reply.ok) 
-                {
+            player.play(function(reply) {
+                if (reply.ok) {
                     callback(session.attributes, Utils.buildSpeechResponse("Start Player", "Playing " + player.name + " squeezebox", null, session.new));
-                } else 
-                {
+                } else {
                     callback(session.attributes, Utils.buildSpeechResponse("Start Player", "Failed to start player " + player.name + " squeezebox", null, true));
                 }
             });
-        } 
-        catch (ex) 
-        {
+        } catch (ex) {
             console.log("Caught exception in startPlayer %j", ex);
             callback(session.attributes, Utils.buildSpeechResponse("Start Player", "Caught Exception", null, true));
         }
