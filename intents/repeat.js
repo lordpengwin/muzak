@@ -1,6 +1,6 @@
 const _ = require("lodash");
-const Intent = require("../intent");
 const Utils = require("../utils");
+const Intent = require("./intent");
 
 class Repeat extends Intent {
     /**

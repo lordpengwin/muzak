@@ -1,26 +1,26 @@
 const SqueezeServer = require("squeezenode-lordpengwin");
-const config = require("./config");
-const Intent = require("./intent");
-const Utils = require("./utils");
+const config = require("../config");
+const Utils = require("../utils");
 
-const ChangeVolume = require("./intents/changeVolume");
-const Help = require("./intents/help");
-const Name = require("./intents/name");
-const NextTrack = require("./intents/nextTrack");
-const Pause = require("./intents/pause");
-const PlayPlaylist = require("./intents/play-playlist");
-const PreviousTrack = require("./intents/PreviousTrack");
-const Randomize = require("./intents/randomize");
-const Repeat = require("./intents/repeat");
-const Select = require("./intents/select");
-const SetVolume = require("./intents/setVolume");
-const Start = require("./intents/start");
-const StartShuffle = require("./intents/startShuffle");
-const Stop = require("./intents/stop");
-const StopShuffle = require("./intents/stopShuffle");
-const Sync = require("./intents/sync");
-const Unsync = require("./intents/unsync");
-const WhatsPlaying = require("./intents/whatsPlaying");
+const Intent = require("./intent");
+const ChangeVolume = require("./changeVolume");
+const Help = require("./help");
+const Name = require("./name");
+const NextTrack = require("./nextTrack");
+const Pause = require("./pause");
+const PlayPlaylist = require("./play-playlist");
+const PreviousTrack = require("./PreviousTrack");
+const Randomize = require("./randomize");
+const Repeat = require("./repeat");
+const Select = require("./select");
+const SetVolume = require("./setVolume");
+const Start = require("./start");
+const StartShuffle = require("./startShuffle");
+const Stop = require("./stop");
+const StopShuffle = require("./stopShuffle");
+const Sync = require("./sync");
+const Unsync = require("./unsync");
+const WhatsPlaying = require("./whatsPlaying");
 
 class IntentMap {
     /**

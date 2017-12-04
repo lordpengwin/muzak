@@ -1,4 +1,4 @@
-const Intent = require("../intent");
+const Intent = require("./intent");
 const Utils = require("../utils");
 
 class Name extends Intent {
@@ -14,12 +14,12 @@ class Name extends Intent {
         var numPlayers = 0;
         try {
             // Build a list of player names
-            for (let pl of players) {
+            for (let pl in players) {
                 numPlayers = numPlayers + 1;
                 if (playerNames === null) {
-                    playerNames = this.normalizePlayer(pl.name.toLowerCase());
+                    playerNames = this.normalizePlayer(players[pl].name.toLowerCase());
                 } else {
-                    playerNames = playerNames + ". " + this.normalizePlayer(pl.name.toLowerCase());
+                    playerNames = playerNames + ". " + this.normalizePlayer(players[pl].name.toLowerCase());
                 }
             }
             // Report back the player count and individual names

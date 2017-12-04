@@ -32,7 +32,5 @@ speechAssets/TITLE.txt
 speechAssets/utterences.txt
 speechAssets/intents.json
 
-# VS Code
-.vscode
 package-lock.json
 

@@ -1,7 +1,7 @@
 const _ = require("lodash");
-const Intent = require("../intent");
 const Utils = require("../utils");
 const Info = require("../info/info");
+const Intent = require("./intent");
 
 
 class PlayPlaylist extends Intent {
@@ -22,19 +22,19 @@ class PlayPlaylist extends Intent {
         console.log("Map keys done");
 
         // Transform our slot data into a friendlier object.
-        for (let slotName of possibleSlots) {
-            switch (slotName) {
+        for (let slotName in possibleSlots) {
+            switch (possibleSlots[slotName]) {
                 case 'Artist':
                 case 'Album':
                 case 'Genre':
                 case 'Title':
                 case 'Playlist:':
-                    values[slotName] = Info(slotName, _.get(intentSlots, slotName + ".value"));
+                    values[possibleSlots[slotName]] = Info(possibleSlots[slotName], _.get(intentSlots, possibleSlots[slotName] + ".value"));
                     break;
 
                 default:
-                    values[slotName] = _.startCase(
-                        _.get(intentSlots, slotName + ".value")
+                    values[possibleSlots[slotName]] = _.startCase(
+                        _.get(intentSlots, possibleSlots[slotName] + ".value")
                     );
                     break;
             }

@@ -1,5 +1,5 @@
-const Intent = require("../intent");
 const Utils = require("../utils");
+const Intent = require("./intent");
 
 class Start extends Intent {
     /**

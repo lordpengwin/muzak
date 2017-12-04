@@ -1,4 +1,4 @@
-const Intent = require("../intent");
+const Intent = require("./intent");
 const Utils = require("../utils");
 
 class Pause extends Intent {

@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [{
+            "type": "node",
+            "request": "launch",
+            "name": "Test alexa",
+            "program": "${workspaceFolder}/test/test-alexa.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Test tunnel",
+            "program": "${workspaceFolder}/test/test_tunnel.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Create Assets",
+            "program": "${workspaceRoot}/create-assets/create-assets.js"
+        }
+    ]
+}
