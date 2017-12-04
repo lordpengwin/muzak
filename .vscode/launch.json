@@ -3,6 +3,12 @@
     "configurations": [{
             "type": "node",
             "request": "launch",
+            "name": "Persist",
+            "program": "${workspaceFolder}/persist/persist.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Test alexa",
             "program": "${workspaceFolder}/test/test-alexa.js"
         },

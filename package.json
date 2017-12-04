@@ -19,6 +19,7 @@
     "claudia": "^2.9.0"
   },
   "dependencies": {
+    "aws-sdk": "^2.162.0",
     "geoffAtHome": "git+https://github.com/geoffAtHome/squeezenode.git",
     "lodash": "^4.17.4",
     "tunnel-ssh": "^4.1.3"
