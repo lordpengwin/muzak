@@ -1,1 +1,1 @@
-claudia update --name muzak --region eu-west-1 --handler muzak.handler
+claudia update --name muzak --region eu-west-1 --handler index.handler

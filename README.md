@@ -11,7 +11,7 @@ How To Use
 * Copy the provided `config.js-sample` file and enter the required values to allow the skill to connect to your squeezebox server. Update the players array with the name of your Squeezebox players. Save as `config.js`.
 * This should include the URL and credentials for your Logitech Media Server and the App ID of the Alexa skill created above
 * Run `npm install` to download npm dependencies.
-* Run `node ./create-assets/create-assets.js` to produce speechAssets/speechAssets.json
+* Run `create.cmd` to produce speechAssets/speechAssets.json and to create the Dynamo database to persist player name across sessions.
 * Create an Alexa skill to use to connect to your server.
 * Use the speechAssets.json to configure you Alexa Skiil via the Skill Builder Beta. Drag and drop the file on the code editor.
 
@@ -23,7 +23,7 @@ How To Use
 * Run `claudia create --region us-east-1 --handler muzak.handler`
 * **Note**: If you already have an existing Lambda function for muzak, you can pass the name of your function to `claudia create` using the `--name` parameter.
 * You can publish future code changes by simply executing `claudia update --name muzak --region us-east-1 --handler muzak.handler`.
-
+* A copy of this command is in `update.cmd`. Edit this file to meet your requirements.
 
 #### Manually
 * Create a function in Amazon Lambda

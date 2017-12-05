@@ -15,36 +15,17 @@ const tableName = 'PlayerName';
 class Persist {
 
     static retrieve() {
-        console.log('Retrieving from database');
-
-        var docClient = new AWS.DynamoDB.DocumentClient();
+        var docClient = new AWS.DynamoDB();
         var params = {
-            TableName: tableName,
-            Key: {
-                'Name': { S: '' }
-            }
+            TableName: tableName
         };
 
         console.log('about to get DynamoDB name table');
 
-        return docClient.scan(params, (err, data) => {
-            if (err) {
-                console.log('ERROR');
-                console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
-                // say(res, 'We have a problem. We could not read the appointments database.');
-                return [];
-            } else {
-                console.log('GOOD');
-                console.log(data);
-                var name = data.Items[0].Value;
-                return name;
-            }
-        });
+        return docClient.scan(params).promise();
     }
 
     static store(value) {
-        console.log('Store value in database');
-
         var docClient = new AWS.DynamoDB();
         var params = {
             TableName: tableName,
@@ -53,30 +34,10 @@ class Persist {
                 'Value': { S: value }
             }
         };
-
-        console.log('about to store DynamoDB name table');
-
-        docClient.putItem(params, (err, data) => {
-            if (err) {
-                console.log('ERROR');
-                console.error("Unable to store item. Error JSON:", JSON.stringify(err, null, 2));
-                // say(res, 'We have a problem. We could not read the appointments database.');
-                if (err.code === "ResourceNotFoundException") {
-                    // Try creating the database
-                    create();
-                }
-                return false;
-            } else {
-                console.log('GOOD');
-                console.log(data);
-            }
-            return true;
-        });
+        return docClient.putItem(params).promise();
     }
 
     static create() {
-        console.log('Create table in database');
-
         var docClient = new AWS.DynamoDB();
         var params = {
             AttributeDefinitions: [{
@@ -93,43 +54,15 @@ class Persist {
             },
             TableName: tableName
         }
-
-        console.log('about to Create table in  DynamoDB');
-
-        docClient.createTable(params, (err, data) => {
-            if (err) {
-                console.log('ERROR');
-                console.error("Unable to create table. Error JSON:", JSON.stringify(err, null, 2));
-                // say(res, 'We have a problem. We could not read the appointments database.');
-                return [];
-            } else {
-                console.log('GOOD');
-                console.log(data);
-            }
-        });
+        return docClient.createTable(params).promise();
     }
 
     static deleteTable() {
-        console.log('Delete  table in database');
-
         var docClient = new AWS.DynamoDB();
         var params = {
             TableName: tableName
         }
-
-        console.log('about to delete table in  DynamoDB');
-
-        docClient.deleteTable(params, (err, data) => {
-            if (err) {
-                console.log('ERROR');
-                console.error("Unable to Delete table. Error JSON:", JSON.stringify(err, null, 2));
-                // say(res, 'We have a problem. We could not read the appointments database.');
-                return [];
-            } else {
-                console.log('GOOD');
-                console.log(data);
-            }
-        });
+        return docClient.deleteTable(params).promise();
     }
 }
 

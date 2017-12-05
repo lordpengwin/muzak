@@ -11,7 +11,7 @@ class Sync extends Intent {
      * @param session The current session
      * @param callback The callback to use to return the result
      */
-    static sync(squeezeserver, players, intent, session, callback) {
+    static sync(squeezeserver, players, intent, session, lastname, callback) {
         // Need to make sure that both players are turned on.
         "use strict";
         var player1 = null;
@@ -20,7 +20,7 @@ class Sync extends Intent {
             console.log("In syncPlayers with intent %j", intent);
             // Try to find the target players. We need the squeezeserver player object for the first, but only the player info
             // object for the second.
-            player1 = this.findPlayerObject(squeezeserver, players, ((typeof intent.slots.FirstPlayer.value !== "undefined") && (intent.slots.FirstPlayer.value !== null) ? intent.slots.FirstPlayer.value : session.attributes.player));
+            player1 = this.findPlayerObject(squeezeserver, players, ((typeof intent.slots.FirstPlayer.value !== "undefined") && (intent.slots.FirstPlayer.value !== null) ? intent.slots.FirstPlayer.value : session.attributes.player), lastname);
             if (player1 === null) {
                 // Couldn't find the player, return an error response
                 console.log("Player not found: " + intent.slots.FirstPlayer.value);

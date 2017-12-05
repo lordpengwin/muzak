@@ -1,6 +1,7 @@
 const SqueezeServer = require("squeezenode-lordpengwin");
 const config = require("../config");
 const Utils = require("../utils");
+const Persist = require("../persist/persist");
 
 const Intent = require("./intent");
 const ChangeVolume = require("./changeVolume");
@@ -45,12 +46,6 @@ class IntentMap {
                 Help(session, callback);
                 return;
 
-            case "AMAZON.RepeatIntent":
-                return;
-
-            case "AMAZON.StartOverIntent":
-                return;
-
             default:
                 break;
         }
@@ -59,11 +54,13 @@ class IntentMap {
         var squeezeserver = new SqueezeServer(config.squeezeserverURL, config.squeezeserverPort, config.squeezeServerUsername, config.squeezeServerPassword);
         squeezeserver.on("register", function() {
 
+
             // Get the list of players as any request will require them
             squeezeserver.getPlayers(function(reply) {
                 if (reply.ok) {
                     console.log("getPlayers: %j", reply);
-                    IntentMap.dispatchIntent(squeezeserver, reply.result, intentRequest.intent, session, callback);
+                    // We will get the persisted player name before dispatching the intent as all these intents required the player name
+                    Persist.retrieve().then(result => IntentMap.dispatchIntent(squeezeserver, reply.result, intentRequest.intent, session, result.Items[0].Value.S, callback));
                 } else {
                     callback(session.attributes, Utils.buildSpeechResponse("Get Players", "Failed to get list of players", null, true));
                 }
@@ -81,14 +78,14 @@ class IntentMap {
      * @param callback The callback to use to return the result
      */
 
-    static dispatchIntent(squeezeserver, players, intent, session, callback) {
+    static dispatchIntent(squeezeserver, players, intent, session, lastname, callback) {
         "use strict";
         var intentName = intent.name;
         console.log("Got intent: %j", intent);
         console.log("Session is %j", session);
         switch (intent) {
             case "SyncPlayers":
-                syncPlayers(squeezeserver, players, intent, session, callback);
+                syncPlayers(squeezeserver, players, intent, session, lastname, callback);
                 break;
 
             case "NamePlayers":
@@ -96,12 +93,12 @@ class IntentMap {
                 break;
 
             default:
-                this.dispatchSecondaryIntent(squeezeserver, players, intent, session, callback);
+                this.dispatchSecondaryIntent(squeezeserver, players, intent, session, lastname, callback);
                 break;
         }
     }
 
-    static dispatchSecondaryIntent(squeezeserver, players, intent, session, callback) {
+    static dispatchSecondaryIntent(squeezeserver, players, intent, session, lastname, callback) {
         "use strict";
         var intentName = intent.name;
 
@@ -110,7 +107,7 @@ class IntentMap {
             (typeof session.attributes !== "undefined" ? session.attributes.player : ""));
 
         // Try to find the target player
-        var player = Intent.findPlayerObject(squeezeserver, players, name);
+        var player = Intent.findPlayerObject(squeezeserver, players, name, lastname);
         if (player === null || player === undefined) {
 
             // Couldn't find the player, return an error response
@@ -139,6 +136,9 @@ class IntentMap {
                     Repeat(player, false, session, callback);
                     break;
 
+                case "AMAZON.RepeatIntent":
+                    return;
+    
                 case "AMAZON.LoopOnIntent":
                     Repeat(player, true, session, callback);
                     break;
@@ -147,6 +147,7 @@ class IntentMap {
                     NextTrack(player, session, callback);
                     break;
 
+                case "AMAZON.StartOverIntent":
                 case "AMAZON.PreviousIntent":
                     PreviousTrack(player, session, callback);
                     break;
