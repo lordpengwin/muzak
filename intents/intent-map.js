@@ -4,24 +4,24 @@ const Utils = require("../utils");
 const Persist = require("../persist/persist");
 
 const Intent = require("./intent");
-const ChangeVolume = require("./changeVolume");
+const ChangeVolume = require("./changevolume");
 const Help = require("./help");
 const Name = require("./name");
-const NextTrack = require("./nextTrack");
+const NextTrack = require("./nexttrack");
 const Pause = require("./pause");
 const PlayPlaylist = require("./play-playlist");
-const PreviousTrack = require("./PreviousTrack");
+const PreviousTrack = require("./previoustrack");
 const Randomize = require("./randomize");
 const Repeat = require("./repeat");
 const Select = require("./select");
-const SetVolume = require("./setVolume");
+const SetVolume = require("./setvolume");
 const Start = require("./start");
-const StartShuffle = require("./startShuffle");
+const StartShuffle = require("./startshuffle");
 const Stop = require("./stop");
-const StopShuffle = require("./stopShuffle");
+const StopShuffle = require("./stopshuffle");
 const Sync = require("./sync");
 const Unsync = require("./unsync");
-const WhatsPlaying = require("./whatsPlaying");
+const WhatsPlaying = require("./whatsplaying");
 
 class IntentMap {
     /**
