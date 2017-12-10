@@ -13,6 +13,7 @@ const PlayPlaylist = require("./play-playlist");
 const PreviousTrack = require("./previoustrack");
 const Randomize = require("./randomize");
 const Repeat = require("./repeat");
+const Resume = require("./resume");
 const Select = require("./select");
 const SetVolume = require("./setvolume");
 const Start = require("./start");
@@ -103,7 +104,7 @@ class IntentMap {
         var intentName = intent.name;
 
         // Get the name of the player to look-up from the intent slot if present
-        var name = ((typeof intent.slots !== "undefined") && (typeof intent.slots.Player.value !== "undefined") && (intent.slots.Player.value !== null) ? intent.slots.Player.value :
+        var name = ((typeof intent.slots !== "undefined") && (typeof intent.slots.Player !== "undefined") && (typeof intent.slots.Player.value !== "undefined") && (intent.slots.Player.value !== null) ? intent.slots.Player.value :
             (typeof session.attributes !== "undefined" ? session.attributes.player : ""));
 
         // Try to find the target player
@@ -123,8 +124,11 @@ class IntentMap {
             // Call the target intent
             switch (intentName) {
                 case "AMAZON.PauseIntent":
+                Pause(player, session, callback);
+                break;
+
                 case "AMAZON.ResumeIntent":
-                    Pause(player, session, callback);
+                    Resume(player, session, callback);
                     break;
 
                 case "AMAZON.StopIntent":

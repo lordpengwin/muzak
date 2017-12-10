@@ -30,7 +30,7 @@ class Intent {
             let player = players.filter(pl => pl.name.toLowerCase() === name);
             if (player.length == 1) {
                 // store the name for future use
-                Persist.store(name).then(console.log("Stored name OK")).catch(console.log("Stored name failed"));
+                Persist.store(name).then(console.log("Stored name OK")).catch(err => console.log("Stored name failed. %j", err));
                 return squeezeserver.players[player[0].playerid];
             }
         }

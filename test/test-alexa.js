@@ -7,6 +7,9 @@
 
 var alexa = require("../index.js");
 var albums = require("../info/album");
+var repeat = require("./repeat.fixture.json");
+var pause = require("./pause.fixture.json");
+var resume = require("./resume.fixture.json");
 var event = {
     "session": {
         "sessionId": "SessionId.db722cda-05c0-4ca0-898d-518892039909",
@@ -333,6 +336,6 @@ b = lookup("xyzzy");
 // alexa.handler(playPinkFloyd, context);
 // alexa.handler(help, context);
 // alexa.handler(loopOn, context);
-alexa.handler(playEveryBreathYouTake, context);
+alexa.handler(pause, context);
 // alexa.handler(event, context);
 // alexa.handler(shuffle, context);

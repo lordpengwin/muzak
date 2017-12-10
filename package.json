@@ -29,6 +29,7 @@
     "intents/previoustrack.js",
     "intents/randomize.js",
     "intents/repeat.js",
+    "intents/resume.js",
     "intents/select.js",
     "intents/setvolume.js",
     "intents/start.js",
