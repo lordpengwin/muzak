@@ -12,7 +12,6 @@
 //  Integration with the squeeze server
 
 const fs = require('fs');
-const _ = require('lodash');
 const SqueezeServer = require('squeezenode-lordpengwin');
 
 // Configuration
@@ -69,10 +68,22 @@ function uniq(a, slot, remove) {
         }
     }
     // Remove duplicates
-    var unified = _.uniqWith(array, comparator);
+    var unified = uniqWith(array, comparator);
 
     return unified;
 
+}
+
+function uniqWith(array, comparator) {
+    let resArr = [];
+    array.filter(function (item) {
+        let index = resArr.findIndex(x => comparator(x, item));
+        if (index <= -1) {
+            resArr.push(item);
+        }
+        return null;
+    });
+    return resArr;
 }
 
 function comparator(a, b) {
