@@ -1,6 +1,7 @@
 {
     "version": "0.2.0",
-    "configurations": [{
+    "configurations": [
+        {
             "type": "node",
             "request": "launch",
             "name": "Persist",
@@ -23,6 +24,12 @@
             "request": "launch",
             "name": "Create Assets",
             "program": "${workspaceRoot}/create-assets/create-assets.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Test database",
+            "program": "${workspaceFolder}/persist/test-database.js"
         }
     ]
 }

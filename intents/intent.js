@@ -1,4 +1,3 @@
-
 class Intent {
 
     /**
@@ -11,14 +10,13 @@ class Intent {
      */
     static findPlayerObject(squeezeserver, players, name, lastname) {
         const Persist = require("../persist/persist");
-        
+
         if (players) {
             // If we don't have a name try and get it from the database
             if (name != "") {
                 name = this.normalizePlayer(name);
                 console.log("In findPlayerObject with " + name);
-            }
-            else {
+            } else {
                 name = lastname;
             }
 
@@ -28,10 +26,18 @@ class Intent {
             // NOTE: For some reason squeezeserver.players[] is empty but you can still reference values in it. I think it
             //       is a weird javascript timing thing
             let player = players.filter(pl => pl.name.toLowerCase() === name);
+
             if (player.length == 1) {
                 // store the name for future use
                 Persist.store(name).then(console.log("Stored name OK")).catch(err => console.log("Stored name failed. %j", err));
                 return squeezeserver.players[player[0].playerid];
+            } else {
+                // If only one player on
+                if (players.length == 1) {
+                    // store the name for future use
+                    Persist.store(players[0].name).then(console.log("Stored name OK")).catch(err => console.log("Stored name failed. %j", err));
+                    return squeezeserver.players[players[0].playerid];
+                }
             }
         }
         console.log("Player %s not found", name);

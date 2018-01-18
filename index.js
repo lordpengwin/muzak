@@ -21,13 +21,15 @@ var server = require('./ssh-tunnel')();
  * @param event
  * @param context
  */
-exports.handler = function(event, context) {
+exports.handler = function (event, context) {
     try {
 
         console.log("Event is %j", event);
 
         if (event.session.new) {
-            Dispatcher.onSessionStarted({ requestId: event.request.requestId }, event.session);
+            Dispatcher.onSessionStarted({
+                requestId: event.request.requestId
+            }, event.session);
         }
 
         if (event.request.type === "LaunchRequest") {

@@ -53,15 +53,15 @@ class IntentMap {
 
         // Connect to the squeeze server and wait for it to finish its registration
         var squeezeserver = new SqueezeServer(config.squeezeserverURL, config.squeezeserverPort, config.squeezeServerUsername, config.squeezeServerPassword);
-        squeezeserver.on("register", function() {
+        squeezeserver.on("register", function () {
 
 
             // Get the list of players as any request will require them
-            squeezeserver.getPlayers(function(reply) {
+            squeezeserver.getPlayers(function (reply) {
                 if (reply.ok) {
                     console.log("getPlayers: %j", reply);
                     // We will get the persisted player name before dispatching the intent as all these intents required the player name
-                    Persist.retrieve().then(result => IntentMap.dispatchIntent(squeezeserver, reply.result, intentRequest.intent, session, result.Items[0].Value.S, callback));
+                    Persist.retrieve().then(result => IntentMap.dispatchIntent(squeezeserver, reply.result, intentRequest.intent, session, result.Items[0].Value.S, callback)).catch(err => IntentMap.dispatchIntent(squeezeserver, reply.result, intentRequest.intent, session, "", callback));
                 } else {
                     callback(session.attributes, Utils.buildSpeechResponse("Get Players", "Failed to get list of players", null, true));
                 }
@@ -119,13 +119,15 @@ class IntentMap {
         } else {
 
             console.log("Player is " + player);
-            session.attributes = { player: player.name.toLowerCase() };
+            session.attributes = {
+                player: player.name.toLowerCase()
+            };
 
             // Call the target intent
             switch (intentName) {
                 case "AMAZON.PauseIntent":
-                Pause(player, session, callback);
-                break;
+                    Pause(player, session, callback);
+                    break;
 
                 case "AMAZON.ResumeIntent":
                     Resume(player, session, callback);
@@ -142,7 +144,7 @@ class IntentMap {
 
                 case "AMAZON.RepeatIntent":
                     return;
-    
+
                 case "AMAZON.LoopOnIntent":
                     Repeat(player, true, session, callback);
                     break;
