@@ -1,5 +1,5 @@
 {
-  "name": "muzak",
+  "name": "index",
   "version": "1.0.0",
   "description": "Amazon Echo Skill for Logitech/Squeezebox Media Server",
   "license": "MIT",
@@ -7,14 +7,47 @@
     "test": "claudia test-lambda --event test/help.fixture.json"
   },
   "files": [
+    "index.js",
     "config.js",
-    "muzak.js"
+    "utils.js",
+    "dispatcher.js",
+    "ssh-tunnel.js",
+    "info/artist.js",
+    "info/album.js",
+    "info/genre.js",
+    "info/title.js",
+    "info/playlist.js",
+    "info/info.js",
+    "intents/changevolume.js",
+    "intents/help.js",
+    "intents/intent-map.js",
+    "intents/intent.js",
+    "intents/name.js",
+    "intents/nexttrack.js",
+    "intents/pause.js",
+    "intents/play-playlist.js",
+    "intents/previoustrack.js",
+    "intents/randomize.js",
+    "intents/repeat.js",
+    "intents/resume.js",
+    "intents/select.js",
+    "intents/setvolume.js",
+    "intents/start.js",
+    "intents/startshuffle.js",
+    "intents/stop.js",
+    "intents/stopshuffle.js",
+    "intents/sync.js",
+    "intents/unsync.js",
+    "intents/whatsplaying.js",
+    "persist/persist.js"
   ],
   "devDependencies": {
     "claudia": "^2.9.0"
   },
   "dependencies": {
+    "aws-sdk": "^2.162.0",
+    "geoffAtHome": "git+https://github.com/geoffAtHome/squeezenode.git",
     "lodash": "^4.17.4",
-    "squeezenode-lordpengwin": "git+https://github.com/lordpengwin/squeezenode.git"
+    "tunnel-ssh": "^4.1.3"
   }
 }

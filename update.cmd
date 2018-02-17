@@ -1,0 +1,1 @@
+claudia update --name index --region eu-west-1 --handler index.handler

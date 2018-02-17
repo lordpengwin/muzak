@@ -1,0 +1,57 @@
+{
+    "session": {
+        "new": false,
+        "sessionId": "SessionId.968e4219-8261-4904-81ff-39ea00661470",
+        "application": {
+            "applicationId": "amzn1.ask.skill.d7815bc8-b1fa-408b-81ab-03def6670e0f"
+        },
+        "attributes": {},
+        "user": {
+            "userId": "amzn1.ask.account.AH4CSKQDMVFG4W7OFXU6XTSNCOMUHXXQB4W27JLRLX42RJCMF6V7HWVWWEDZT4JXTEDQ7K2DEEKZXBOVSN3BV3EUOVYLLP2565JICIWN4GWNAHBPFRQ2SYDDXQZGRPCIWNOQW6NXG7OWADY7JRPKDC6RGH4KM4NV7K7UWFSTUBZAJFLLTDU7TMPAU4K5ERPKFUIJYLTMNGVOAJQ"
+        }
+    },
+    "request": {
+        "type": "IntentRequest",
+        "requestId": "EdwRequestId.f7aceac0-adbe-4ed4-9aec-b23de7e8b7a2",
+        "intent": {
+            "name": "PlayPlaylist",
+            "slots": {
+                "Artist": {
+                    "name": "Artist"
+                },
+                "Player": {
+                    "name": "Player"
+                },
+                "Album": {
+                    "name": "Album"
+                },
+                "Title": {
+                    "name": "Title",
+                    "value": "dark side of the moon"
+                },
+                "Genre": {
+                    "name": "Genre"
+                }
+            }
+        },
+        "locale": "en-GB",
+        "timestamp": "2018-01-18T14:58:13Z"
+    },
+    "context": {
+        "AudioPlayer": {
+            "playerActivity": "IDLE"
+        },
+        "System": {
+            "application": {
+                "applicationId": "amzn1.ask.skill.d7815bc8-b1fa-408b-81ab-03def6670e0f"
+            },
+            "user": {
+                "userId": "amzn1.ask.account.AH4CSKQDMVFG4W7OFXU6XTSNCOMUHXXQB4W27JLRLX42RJCMF6V7HWVWWEDZT4JXTEDQ7K2DEEKZXBOVSN3BV3EUOVYLLP2565JICIWN4GWNAHBPFRQ2SYDDXQZGRPCIWNOQW6NXG7OWADY7JRPKDC6RGH4KM4NV7K7UWFSTUBZAJFLLTDU7TMPAU4K5ERPKFUIJYLTMNGVOAJQ"
+            },
+            "device": {
+                "supportedInterfaces": {}
+            }
+        }
+    },
+    "version": "1.0"
+}

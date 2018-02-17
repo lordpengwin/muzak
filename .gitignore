@@ -17,3 +17,12 @@ node_modules/
 muzak.zip
 claudia.json
 config.js
+info/artist.js
+info/album.js
+info/genre.js
+info/title.js
+info/playlist.js
+speechAssets/speechAssets.json
+
+package-lock.json
+
