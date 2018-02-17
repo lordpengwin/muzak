@@ -49,6 +49,8 @@ function fixUpSlot(value) {
     var charsToSpaces = new RegExp(/[):?\-~(!`+"\[\]\\/\;]/g);
     var removeMultipleSpaces = new RegExp(/  /g);
     var result = value.toLowerCase().replace(charsToSpaces, " ").replace(removeMultipleSpaces, " ").trim();
+    if (result.length > 139)
+        result = result.substr(0, 138);
     return result;
 }
 
@@ -163,9 +165,17 @@ function getArray(a) {
     return output;
 }
 
+/**
+ * Send a request to the squeezeserver for information on a category
+ *
+ * @param slot The category to get the information on e.g. album, artist, title, genre, playlist
+*/
+
 function getResults(slot) {
+
     return new Promise(
         function (resolve, reject) {
+
             var dumpResponse = function (reply) {
                 if (reply.ok) {
                     resolve(reply);
@@ -173,7 +183,14 @@ function getResults(slot) {
                     reject(reply);
                 }
             };
-            squeezeserver.getInfo(dumpResponse, 50000, slot);
+
+            // See if the configuration has a limit on this slit
+
+            var limit = config.limits[slot];
+            if ( limit === undefined)
+                limit = 50000;
+            console.log("Getting " + limit + " " + slot);
+            squeezeserver.getInfo(dumpResponse, limit, slot);
         }
     );
 }

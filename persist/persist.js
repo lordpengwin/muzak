@@ -1,7 +1,7 @@
 var AWS = require('aws-sdk');
 
 AWS.config.update({
-    region: "eu-west-1"
+    region: "us-east-1"
 });
 
 const tableName = 'PlayerName';

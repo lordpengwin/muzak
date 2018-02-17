@@ -1,1 +1,1 @@
-claudia update --name index --region eu-west-1 --handler index.handler
+claudia update --name index --region us-east-1 --handler index.handler

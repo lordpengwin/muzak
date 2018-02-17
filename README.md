@@ -71,3 +71,4 @@ An interactive mode is supported where multiple commands may be issued in one se
 Credits
 -------
 * This skill uses an enhanced version of Piotr Raczynski's squeezenode Node.JS module. It has been modified to support basic HTTP authentication as well as some additional functionality
+* A lot of great work on this was done on a fork created by GitHub user GeoffAtHome

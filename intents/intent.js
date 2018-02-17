@@ -1,3 +1,7 @@
+/**
+ * Base class for all intents.
+ */
+
 class Intent {
 
     /**
@@ -6,13 +10,17 @@ class Intent {
      * @param squeezeserver The SqueezeServer to get the Player object from
      * @param players A list of players to search
      * @param name The name of the player to find
+     * @param lastname The name of the last player that we used
      * @returns The target player or undefined if it is not found
      */
-    static findPlayerObject(squeezeserver, players, name, lastname) {
-        const Persist = require("../persist/persist");
 
+    static findPlayerObject(squeezeserver, players, name, lastname) {
+
+        const Persist = require("../persist/persist");
         if (players) {
+
             // If we don't have a name try and get it from the database
+
             if (name != "") {
                 name = this.normalizePlayer(name);
                 console.log("In findPlayerObject with " + name);
@@ -25,21 +33,29 @@ class Intent {
 
             // NOTE: For some reason squeezeserver.players[] is empty but you can still reference values in it. I think it
             //       is a weird javascript timing thing
-            let player = players.filter(pl => pl.name.toLowerCase() === name);
 
+            let player = players.filter(pl => pl.name.toLowerCase() === name);
             if (player.length == 1) {
+
                 // store the name for future use
+
                 Persist.store(name).then(console.log("Stored name OK")).catch(err => console.log("Stored name failed. %j", err));
                 return squeezeserver.players[player[0].playerid];
+
             } else {
-                // If only one player on
+
+                // If only one player in the list, use it even though it didn't match the name
+
                 if (players.length == 1) {
+
                     // store the name for future use
+
                     Persist.store(players[0].name).then(console.log("Stored name OK")).catch(err => console.log("Stored name failed. %j", err));
                     return squeezeserver.players[players[0].playerid];
                 }
             }
         }
+
         console.log("Player %s not found", name);
     }
 
@@ -53,10 +69,10 @@ class Intent {
     static normalizePlayer(playerName) {
 
         // protect against `playerName` being undefined
-        if (!playerName) {
+
+        if (! playerName) {
             playerName = '';
         }
-
 
         // After the switch to custom slots multi name players like living room became living-room. Revert the string back to what it was
 

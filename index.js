@@ -11,17 +11,20 @@ const Utils = require("./utils");
 const Dispatcher = require("./dispatcher");
 
 // Configuration
+
 const config = require("./config");
 var server = require('./ssh-tunnel')();
 
 /**
- * Route the incoming request based on type (LaunchRequest, IntentRequest,
- * etc.) The JSON body of the request is provided in the event parameter.
+ * Route the incoming request based on type (LaunchRequest, IntentRequest,etc.) The JSON body of the request is provided
+ * in the event parameter.
  *
- * @param event
- * @param context
+ * @param event The event to service
+ * @param context The current request context
  */
+
 exports.handler = function (event, context) {
+
     try {
 
         console.log("Event is %j", event);
@@ -33,22 +36,29 @@ exports.handler = function (event, context) {
         }
 
         if (event.request.type === "LaunchRequest") {
+
             Dispatcher.onLaunch(event.request,
                 event.session,
                 function callback(sessionAttributes, speechResponse) {
                     context.succeed(Utils.buildResponse(sessionAttributes, speechResponse));
                 });
+
         } else if (event.request.type === "IntentRequest") {
+
             Dispatcher.onIntent(event.request,
                 event.session,
                 function callback(sessionAttributes, speechResponse) {
                     context.succeed(Utils.buildResponse(sessionAttributes, speechResponse));
                 });
+
         } else if (event.request.type === "SessionEndedRequest") {
+
             Dispatcher.onSessionEnded(event.request, event.session);
             context.succeed();
         }
+
     } catch (e) {
+
         console.log("Caught exception %j", e);
         context.fail("Exception: " + e);
     }

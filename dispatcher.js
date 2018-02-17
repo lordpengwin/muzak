@@ -9,9 +9,11 @@ class Dispatcher {
     /**
      * Called when the session starts.
      */
+
     static onSessionStarted(sessionStartedRequest, session) {
+
         "use strict";
-        console.log("onSessionStarted requestId=" + sessionStartedRequest.requestId + ", sessionId=" + session.sessionId);
+        console.log("Dispatcher.onSessionStarted requestId=" + sessionStartedRequest.requestId + ", sessionId=" + session.sessionId);
     }
 
     /**
@@ -22,15 +24,17 @@ class Dispatcher {
      * @param session The current session
      * @param callback A callback used to return the result
      */
+
     static onLaunch(launchRequest, session, callback) {
+
         "use strict";
-        console.log("onLaunch requestId=" + launchRequest.requestId + ", sessionId=" + session.sessionId);
+        console.log("Dispatcher.onLaunch requestId=" + launchRequest.requestId + ", sessionId=" + session.sessionId);
 
         // Connect to the squeeze server and wait for it to finish its registration.  We do this to make sure that it is online.
         var squeezeserver = new SqueezeServer(config.squeezeserverURL, config.squeezeserverPort, config.squeezeServerUsername, config.squeezeServerPassword);
         squeezeserver.on('register', function() {
             console.log("SqueezeServer registered");
-            this.startInteractiveSession(callback);
+            Dispatcher.startInteractiveSession(callback);
         });
     }
 
@@ -41,9 +45,11 @@ class Dispatcher {
      * @param session The current session
      * @param callback A callback used to return results
      */
+
     static onIntent(intentRequest, session, callback) {
+
         "use strict";
-        console.log("onIntent requestId=" + intentRequest.requestId + ", sessionId=" + session.sessionId);
+        console.log("Dispatcher.onIntent requestId=" + intentRequest.requestId + ", sessionId=" + session.sessionId);
         IntentMap.onIntent(intentRequest, session, callback);
     }
 
@@ -51,9 +57,11 @@ class Dispatcher {
      * Called when the user ends the session.
      * Is not called when the skill returns shouldEndSession=true.
      */
+
     static onSessionEnded(sessionEndedRequest, session) {
+
         "use strict";
-        console.log("onSessionEnded requestId=" + sessionEndedRequest.requestId + ", sessionId=" + session.sessionId);
+        console.log("Dispatcher.onSessionEnded requestId=" + sessionEndedRequest.requestId + ", sessionId=" + session.sessionId);
     }
 
     /**
@@ -61,10 +69,13 @@ class Dispatcher {
      *
      * @param callback A callback to execute to return the response
      */
+
     static startInteractiveSession(callback) {
 
         // If we wanted to initialize the session to have some attributes we could add those here.
+
         "use strict";
+        console.log("in startInteractiveSession");
         var sessionAttributes = {};
         var cardTitle = "Control Started";
         var speechOutput = "Squeezebox control started";
@@ -80,7 +91,9 @@ class Dispatcher {
      *
      * @param callback A callback to execute to return the response
      */
+
     static closeInteractiveSession(callback) {
+
         "use strict";
         var sessionAttributes = {};
         var cardTitle = "Control Ended";

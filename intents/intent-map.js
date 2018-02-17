@@ -34,10 +34,12 @@ class IntentMap {
      */
 
     static onIntent(intentRequest, session, callback) {
+
         "use strict";
-        console.log("onIntent requestId=" + intentRequest.requestId + ", sessionId=" + session.sessionId);
+        console.log("IntentMap.onIntent requestId=" + intentRequest.requestId + ", sessionId=" + session.sessionId);
 
         // Check for a Close intent
+
         switch (intentRequest.intent.intentName) {
             case "Close":
                 closeInteractiveSession(callback);
@@ -52,16 +54,22 @@ class IntentMap {
         }
 
         // Connect to the squeeze server and wait for it to finish its registration
+
         var squeezeserver = new SqueezeServer(config.squeezeserverURL, config.squeezeserverPort, config.squeezeServerUsername, config.squeezeServerPassword);
         squeezeserver.on("register", function () {
 
 
             // Get the list of players as any request will require them
+
             squeezeserver.getPlayers(function (reply) {
+
                 if (reply.ok) {
-                    console.log("getPlayers: %j", reply);
+
                     // We will get the persisted player name before dispatching the intent as all these intents required the player name
-                    Persist.retrieve().then(result => IntentMap.dispatchIntent(squeezeserver, reply.result, intentRequest.intent, session, result.Items[0].Value.S, callback)).catch(err => IntentMap.dispatchIntent(squeezeserver, reply.result, intentRequest.intent, session, "", callback));
+
+                    console.log("getPlayers: %j", reply);
+                    Persist.retrieve()
+                           .then(result => IntentMap.dispatchIntent(squeezeserver, reply.result, intentRequest.intent, session, result.Items[0].Value.S, callback)).catch(err => IntentMap.dispatchIntent(squeezeserver, reply.result, intentRequest.intent, session, "", callback));
                 } else {
                     callback(session.attributes, Utils.buildSpeechResponse("Get Players", "Failed to get list of players", null, true));
                 }
@@ -76,14 +84,16 @@ class IntentMap {
      * @param players A list of players on the server
      * @param intent The target intent
      * @param session The current session
+     * @param lastname The name of the player used in the last request
      * @param callback The callback to use to return the result
      */
 
     static dispatchIntent(squeezeserver, players, intent, session, lastname, callback) {
+
         "use strict";
-        var intentName = intent.name;
         console.log("Got intent: %j", intent);
         console.log("Session is %j", session);
+
         switch (intent) {
             case "SyncPlayers":
                 syncPlayers(squeezeserver, players, intent, session, lastname, callback);
@@ -99,15 +109,31 @@ class IntentMap {
         }
     }
 
+    /**
+     * This dispatches intents that target a specific player
+     *
+     * @param squeezeserver The handle to the SqueezeServer
+     * @param players A list of the players
+     * @param intent The current intent
+     * @param session The current session
+     * @param lastname
+     * @param callback The callback to use to return the result
+     */
+
     static dispatchSecondaryIntent(squeezeserver, players, intent, session, lastname, callback) {
+
         "use strict";
         var intentName = intent.name;
 
         // Get the name of the player to look-up from the intent slot if present
-        var name = ((typeof intent.slots !== "undefined") && (typeof intent.slots.Player !== "undefined") && (typeof intent.slots.Player.value !== "undefined") && (intent.slots.Player.value !== null) ? intent.slots.Player.value :
-            (typeof session.attributes !== "undefined" ? session.attributes.player : ""));
+
+        var name = ((typeof intent.slots !== "undefined") &&
+                    (typeof intent.slots.Player !== "undefined") &&
+                    (typeof intent.slots.Player.value !== "undefined") &&
+                    (intent.slots.Player.value !== null) ? intent.slots.Player.value : (typeof session.attributes !== "undefined" ? session.attributes.player : ""));
 
         // Try to find the target player
+
         var player = Intent.findPlayerObject(squeezeserver, players, name, lastname);
         if (player === null || player === undefined) {
 
@@ -124,6 +150,7 @@ class IntentMap {
             };
 
             // Call the target intent
+
             switch (intentName) {
                 case "AMAZON.PauseIntent":
                     Pause(player, session, callback);
@@ -135,6 +162,7 @@ class IntentMap {
 
                 case "AMAZON.StopIntent":
                 case "AMAZON.CancelIntent":
+                case "StopPlayer":
                     Stop(player, session, callback);
                     break;
 

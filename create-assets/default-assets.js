@@ -188,6 +188,10 @@ module.exports = {
                     "play the artist {Artist}",
                     "play the song {Title}",
                     "play the track {Title}",
+                    "play {Artist} on {Player}",
+                    "play {Album} on {Player}",
+                    "play {Genre} on {Player}",
+                    "play {Album} by {Artist} on {Player}",
                     "to play {Album}",
                     "to play {Artist} {Album}",
                     "to play {Artist}",
@@ -195,7 +199,11 @@ module.exports = {
                     "to play some {Genre}",
                     "to play the {Album}",
                     "to play the album {Album} by {Artist}",
-                    "to play the album {Album} by the {Artist}"
+                    "to play the album {Album} by the {Artist}",
+                    "to play {Artist} on {Player}",
+                    "to play {Album} on {Player}",
+                    "to play {Genre} on {Player}",
+                    "to play {Album} by {Artist} on {Player}"
                 ],
                 "slots": [{
                         "name": "Player",
@@ -304,6 +312,18 @@ module.exports = {
                     "start random player {Player} squeeze box",
                     "randomize music in {Player} squeeze box",
                     "randomize music on {Player} squeeze box"
+                ],
+                "slots": [{
+                    "name": "Player",
+                    "type": "PLAYERS"
+                }]
+            },
+	    {
+		"name": "StopPlayer",
+                "samples": [
+                    "stop {Player}",
+                    "cancel {Player}",
+                    "quit {Player}"
                 ],
                 "slots": [{
                     "name": "Player",
