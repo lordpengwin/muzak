@@ -31,6 +31,7 @@ class Dispatcher {
         console.log("Dispatcher.onLaunch requestId=" + launchRequest.requestId + ", sessionId=" + session.sessionId);
 
         // Connect to the squeeze server and wait for it to finish its registration.  We do this to make sure that it is online.
+
         var squeezeserver = new SqueezeServer(config.squeezeserverURL, config.squeezeserverPort, config.squeezeServerUsername, config.squeezeServerPassword);
         squeezeserver.on('register', function() {
             console.log("SqueezeServer registered");

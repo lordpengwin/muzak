@@ -25,6 +25,7 @@ const Unsync = require("./unsync");
 const WhatsPlaying = require("./whatsplaying");
 
 class IntentMap {
+
     /**
      * Called when the user specifies an intent for this skill.
      *
@@ -94,9 +95,10 @@ class IntentMap {
         console.log("Got intent: %j", intent);
         console.log("Session is %j", session);
 
-        switch (intent) {
+        switch (intent.name) {
+
             case "SyncPlayers":
-                syncPlayers(squeezeserver, players, intent, session, lastname, callback);
+                Sync(squeezeserver, players, intent, session, lastname, callback);
                 break;
 
             case "NamePlayers":
@@ -152,6 +154,7 @@ class IntentMap {
             // Call the target intent
 
             switch (intentName) {
+
                 case "AMAZON.PauseIntent":
                     Pause(player, session, callback);
                     break;
