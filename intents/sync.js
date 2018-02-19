@@ -1,5 +1,10 @@
+"use strict";
 const Utils = require("../utils");
 const Intent = require("./intent");
+
+/**
+ * Implementation of the SyncPlayers intent
+ */
 
 class Sync extends Intent {
 
@@ -10,6 +15,7 @@ class Sync extends Intent {
      * @param players A list of players on the server
      * @param intent The target intent
      * @param session The current session
+     * @param lastname The name of the last player used in previous intents
      * @param callback The callback to use to return the result
      */
 
@@ -17,7 +23,6 @@ class Sync extends Intent {
 
         // Need to make sure that both players are turned on.
 
-        "use strict";
         console.log("In syncPlayers with intent %j", intent);
 
         var player1 = null;
@@ -27,8 +32,8 @@ class Sync extends Intent {
             // Try to find the target players. We need the squeezeserver player object for the first, but only the player info
             // object for the second.
 
-            var playername = ((typeof intent.slots.FirstPlayer.value !== "undefined") && (intent.slots.FirstPlayer.value !== null) ? intent.slots.FirstPlayer.value : session.attributes.player);
-            player1 = Intent.findPlayerObject(squeezeserver, players, playername, lastname);
+            let playerName = ((typeof intent.slots.FirstPlayer.value !== "undefined") && (intent.slots.FirstPlayer.value !== null) ? intent.slots.FirstPlayer.value : session.attributes.player);
+            player1 = Intent.findPlayerObject(squeezeserver, players, playerName, lastname);
             if (player1 === null) {
 
                 // Couldn't find the player, return an error response
@@ -38,13 +43,10 @@ class Sync extends Intent {
             }
             session.attributes = { player: player1.name.toLowerCase() };
 
-            player2 = null;
-            playername = Intent.normalizePlayer(((typeof intent.slots.SecondPlayer.value !== "undefined") && (intent.slots.SecondPlayer.value !== null) ? intent.slots.SecondPlayer.value : session.attributes.player));
-            for (let pl in players) {
-                if (players[pl].name.toLowerCase() === playername) {
+            playerName = Intent.normalizePlayer(((typeof intent.slots.SecondPlayer.value !== "undefined") && (intent.slots.SecondPlayer.value !== null) ? intent.slots.SecondPlayer.value : session.attributes.player));
+            for (let pl in players)
+                if (players[pl].name.toLowerCase() === playerName)
                     player2 = players[pl];
-                }
-            }
 
             // If we found the target players, sync them
 
