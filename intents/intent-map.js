@@ -1,3 +1,5 @@
+"use strict";
+
 const SqueezeServer = require("squeezenode-lordpengwin");
 const config = require("../config");
 const Utils = require("../utils");
@@ -24,6 +26,10 @@ const Sync = require("./sync");
 const Unsync = require("./unsync");
 const WhatsPlaying = require("./whatsplaying");
 
+/**
+ * Class to map intents to the target handler.
+ */
+
 class IntentMap {
 
     /**
@@ -36,7 +42,6 @@ class IntentMap {
 
     static onIntent(intentRequest, session, callback) {
 
-        "use strict";
         console.log("IntentMap.onIntent requestId=" + intentRequest.requestId + ", sessionId=" + session.sessionId);
 
         // Check for a Close intent
@@ -68,7 +73,6 @@ class IntentMap {
 
                     // We will get the persisted player name before dispatching the intent as all these intents required the player name
 
-                    console.log("getPlayers: %j", reply);
                     Persist.retrieve()
                            .then(result => IntentMap.dispatchIntent(squeezeserver, reply.result, intentRequest.intent, session, result.Items[0].Value.S, callback)).catch(err => IntentMap.dispatchIntent(squeezeserver, reply.result, intentRequest.intent, session, "", callback));
                 } else {
@@ -91,9 +95,8 @@ class IntentMap {
 
     static dispatchIntent(squeezeserver, players, intent, session, lastname, callback) {
 
-        "use strict";
         console.log("Got intent: %j", intent);
-        console.log("Session is %j", session);
+        //console.log("Session is %j", session);
 
         switch (intent.name) {
 
@@ -124,7 +127,6 @@ class IntentMap {
 
     static dispatchSecondaryIntent(squeezeserver, players, intent, session, lastname, callback) {
 
-        "use strict";
         var intentName = intent.name;
 
         // Get the name of the player to look-up from the intent slot if present
@@ -198,7 +200,13 @@ class IntentMap {
                     break;
 
                 case "StartPlayer":
-                    Start(player, session, callback);
+
+                    // Check if we always want a new playlist on start
+
+                    if (config.randomizeOnPlay)
+                        Randomize(player, session, callback);
+                    else
+                        Start(player, session, callback);
                     break;
 
                 case "PlayPlaylist":

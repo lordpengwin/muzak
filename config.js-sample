@@ -25,6 +25,9 @@ config.ssh_tunnel = {
 // List the name of your squeezebox players 
 config.players = [ "Player one", "Player two", "Player three" ];
 
+// Always randomize on play
+//config.randomizeOnPlay = true;
+
 // Invocation name to invoke intent
 config.invocationName = "ask muzak";
 

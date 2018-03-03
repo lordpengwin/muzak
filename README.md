@@ -28,7 +28,7 @@ How To Use
 #### Manually
 * Create a function in Amazon Lambda
 * In the muzak top level directory Zip up the files to upload to Lambda
-  zip -r muzak.zip muzak.js config.js node_modules
+  zip -r muzak.zip *.js intents persist info node_modules
 
 ### Commands:
 
